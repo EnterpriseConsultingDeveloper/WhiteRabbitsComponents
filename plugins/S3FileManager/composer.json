@@ -1,0 +1,24 @@
+{
+    "name": "whiterabbit/S3FileManager",
+    "description": "S3FileManager plugin for CakePHP",
+    "type": "cakephp-plugin",
+    "require": {
+        "php": ">=5.4.16",
+        "cakephp/cakephp": "~3.0",
+        "kartik-v/bootstrap-fileinput": "dev-master"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "*"
+    },
+    "autoload": {
+        "psr-4": {
+            "S3FileManager\\": "src"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "S3FileManager\\Test\\": "tests",
+            "Cake\\Test\\": "./vendor/cakephp/cakephp/tests"
+        }
+    }
+}
