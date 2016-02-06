@@ -184,15 +184,16 @@ class S3FileHelper extends Helper
                 $plainUrl = $this->_s3Client->getObjectUrl($bucketName, $path, '+10 minutes');
 
                 $fileName = $options['filename'];
-                //debug($this->guessKindOfFile($plainUrl)); die;
                 if ($this->guessKindOfFile($fileName) === 'text') {
                     $html .= "<div class=\"file-preview-text\" title=\"" . $options['title'] . "\">";
                     $html .= $options['description'];
                     $html .= "<span class=\"wrap-indicator\"  title=\"" . $options['title'] . "\">" . $options['description'] . "</span>";
                     $html .= "</div>";
                 } elseif ($this->guessKindOfFile($fileName) === 'image') {
+                    $html .= "<span onclick=\"$(\'#info-div\').html(\'" . $plainUrl . "\')\" >";
                     $options['class'] = 'file-preview-image';
                     $html .=  $this->Html->image($plainUrl, $options);
+                    $html .= "</span>";
                 } else {
                     $html .= "<div class=\"file-preview-text\">";
                     $html .= "<h2><i class=\"glyphicon glyphicon-file\"></i></h2>";

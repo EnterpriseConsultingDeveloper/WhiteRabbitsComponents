@@ -35,14 +35,36 @@
             </div>
         </div>
         <div role="tabpanel" class="tab-pane active" id="fileListTab">
-            <div class="large-12 medium-12 columns content">
+            <div class="large-8 medium-8 columns content">
                 <label class="control-label">Preview</label>
                 <input id="preview" name="preview[]" type="file" multiple class="file-loading">
+            </div>
+            <div class="large-4 medium-4 columns content">
+                <label class="control-label">Info</label>
+                <div id="info-div" style="word-wrap:break-word;">Ciao</div>
             </div>
         </div>
     </div>
 
+</div>
 
+<!-- Modal -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel">Modal title</h4>
+            </div>
+            <div class="modal-body">
+                ...
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary">Save changes</button>
+            </div>
+        </div>
+    </div>
 </div>
 
 
@@ -76,10 +98,10 @@
             uploadUrl: 'http://localhost/WhiteRabbitComponents/s3-file-manager/files/uploadFile.json'
         }).on('filebatchuploadcomplete', function(event, files, extra) {
             console.log('File batch upload complete');
-            location.reload();
+            //location.reload();
+        }).on('fileselect', function(event, numFiles, label) {
+            console.log("change", event, numFiles, label);
         });
-
-
 
         var ip = [
         <?php foreach ($files as $file): ?>
@@ -118,7 +140,11 @@
                 showClose: false,
                 showRemove: false,
                 disabled: true,
-                //layoutTemplates: {main1: '{preview}'}
+                previewTemplate: {image: '<div class="file-preview-frame" id="{previewId}" data-fileindex="{fileindex}">\n' +
+                                    '   <div class="aaa"><img src="{data}" class="file-preview-image" title="{caption}" alt="{caption}"></div>\n' +
+                                    '   {footer}\n' +
+                                    '</div>\n',}
+        //layoutTemplates: {main1: '{preview}'}
         });
     });
 </script>
