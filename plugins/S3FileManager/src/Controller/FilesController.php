@@ -129,13 +129,18 @@ class FilesController extends AppController
     public function explore($bucket)
     {
         $file = $this->Files->newEntity();
-        $folders = $this->Files->Folders->find('list', ['limit' => 200]);
-        $this->set(compact('file', 'folders'));
-        $this->set('_serialize', ['file']);
 
+        $folders = $this->Files->Folders->find('list', [
+            'conditions' => array('bucket' => $bucket),
+            'limit' => 200
+        ]);
 
-        $folders = $this->Files->Folders->find('list', ['limit' => 200]);
-        $files = $this->Files->findAllByFolderId(1);
+        $actualFolder = $this->Files->Folders->find('all', [
+            'conditions' => ['bucket' => $bucket],
+            'order' => ['id' => 'ASC']
+        ])->first();
+
+        $files = $this->Files->findAllByFolderId($actualFolder->id);
 
         $this->set(compact('file', 'files', 'folders'));
         $this->set('_serialize', ['file', 'files']);

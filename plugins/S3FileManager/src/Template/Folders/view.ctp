@@ -19,6 +19,10 @@
             <td><?= h($folder->name) ?></td>
         </tr>
         <tr>
+            <th><?= __('Name') ?></th>
+            <td><?= h($folder->bucket) ?></td>
+        </tr>
+        <tr>
             <th><?= __('Parent Folder') ?></th>
             <td><?= $folder->has('parent_folder') ? $this->Html->link($folder->parent_folder->name, ['controller' => 'Folders', 'action' => 'view', $folder->parent_folder->id]) : '' ?></td>
         </tr>

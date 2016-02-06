@@ -14,6 +14,7 @@
         <legend><?= __('Add Folder') ?></legend>
         <?php
             echo $this->Form->input('name');
+            echo $this->Form->input('bucket');
             echo $this->Form->input('parent_id', ['options' => $parentFolders, 'empty' => true]);
         ?>
     </fieldset>

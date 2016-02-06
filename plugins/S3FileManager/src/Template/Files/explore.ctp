@@ -74,7 +74,11 @@
             uploadAsync: true,
             allowedFileTypes: ['image', 'text', 'video', 'object'],
             uploadUrl: 'http://localhost/WhiteRabbitComponents/s3-file-manager/files/uploadFile.json'
+        }).on('filebatchuploadcomplete', function(event, files, extra) {
+            console.log('File batch upload complete');
+            location.reload();
         });
+
 
 
         var ip = [

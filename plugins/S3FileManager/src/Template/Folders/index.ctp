@@ -13,6 +13,7 @@
             <tr>
                 <th><?= $this->Paginator->sort('id') ?></th>
                 <th><?= $this->Paginator->sort('name') ?></th>
+                <th><?= $this->Paginator->sort('bucket') ?></th>
                 <th><?= $this->Paginator->sort('parent_id') ?></th>
                 <th><?= $this->Paginator->sort('created') ?></th>
                 <th><?= $this->Paginator->sort('modified') ?></th>
@@ -24,6 +25,7 @@
             <tr>
                 <td><?= $this->Number->format($folder->id) ?></td>
                 <td><?= h($folder->name) ?></td>
+                <td><?= h($folder->bucket) ?></td>
                 <td><?= $folder->has('parent_folder') ? $this->Html->link($folder->parent_folder->name, ['controller' => 'Folders', 'action' => 'view', $folder->parent_folder->id]) : '' ?></td>
                 <td><?= h($folder->created) ?></td>
                 <td><?= h($folder->modified) ?></td>
