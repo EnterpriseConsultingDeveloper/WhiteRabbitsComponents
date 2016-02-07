@@ -68,7 +68,7 @@ class AppController extends Controller
 
     public function beforeFilter(Event $event)
     {
-        $this->request->session()->write('Auth.User.customer_site', 'dinofratelli');
+        //$this->request->session()->write('Auth.User.customer_site', 'dinofratelli');
 
     }
 }

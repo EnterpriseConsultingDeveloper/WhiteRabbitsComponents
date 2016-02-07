@@ -126,17 +126,19 @@ class FilesController extends AppController
      * @return \Cake\Network\Response|null
      *
      */
-    public function explore($bucket)
+    public function explore($site)
     {
+        $this->request->session()->write('Auth.User.customer_site', $site);
+
         $file = $this->Files->newEntity();
 
         $folders = $this->Files->Folders->find('list', [
-            'conditions' => array('bucket' => $bucket),
+            'conditions' => array('bucket' => $site),
             'limit' => 200
         ]);
 
         $actualFolder = $this->Files->Folders->find('all', [
-            'conditions' => ['bucket' => $bucket],
+            'conditions' => ['bucket' => $site],
             'order' => ['id' => 'ASC']
         ])->first();
 

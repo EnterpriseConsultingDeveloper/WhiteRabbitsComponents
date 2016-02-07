@@ -41,30 +41,11 @@
             </div>
             <div class="large-4 medium-4 columns content">
                 <label class="control-label">Info</label>
-                <div id="info-div" style="word-wrap:break-word;">Ciao</div>
+                <div id="info-div" style="word-wrap:break-word;"></div>
             </div>
         </div>
     </div>
 
-</div>
-
-<!-- Modal -->
-<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title" id="myModalLabel">Modal title</h4>
-            </div>
-            <div class="modal-body">
-                ...
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary">Save changes</button>
-            </div>
-        </div>
-    </div>
 </div>
 
 
@@ -95,12 +76,11 @@
             //'elErrorContainer': '#errorBlock',
             uploadAsync: true,
             allowedFileTypes: ['image', 'text', 'video', 'object'],
-            uploadUrl: 'http://localhost/WhiteRabbitComponents/s3-file-manager/files/uploadFile.json'
+            uploadUrl: '<?= $this->Url->build(["controller" => "Files", "action" => "uploadFile", "_ext" => "json"]); ?>',
+            //uploadUrl: 'http://localhost/WhiteRabbitComponents/s3-file-manager/files/uploadFile.json'
         }).on('filebatchuploadcomplete', function(event, files, extra) {
             console.log('File batch upload complete');
-            //location.reload();
-        }).on('fileselect', function(event, numFiles, label) {
-            console.log("change", event, numFiles, label);
+            location.reload();
         });
 
         var ip = [
@@ -114,7 +94,7 @@
             initialPreview: ip,
             initialPreviewConfig: [
                 <?php foreach ($files as $file): ?>
-                {caption: "<?= $file->original_filename ?>", width: "120px", url: "http://localhost/WhiteRabbitComponents/s3-file-manager/files/deleteFile.json", key: <?= $file->id ?>},
+                {caption: "<?= $file->file ?>", width: "120px", url: "<?= $this->Url->build(["controller" => "Files", "action" => "deleteFile", "_ext" => "json"]); ?>", key: <?= $file->id ?>},
                 <?php endforeach; ?>
             ],
             overwriteInitial: false,
