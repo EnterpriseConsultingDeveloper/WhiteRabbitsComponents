@@ -22,16 +22,6 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="index.php" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/webroot/index.php">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
       <file leaf-file-name="home.ctp" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/Template/Pages/home.ctp">
           <provider selected="true" editor-type-id="text-editor">
@@ -45,12 +35,32 @@
       <file leaf-file-name="S3FileHelper.php" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/plugins/S3FileManager/src/View/Helper/S3FileHelper.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-24.346153">
+            <state vertical-scroll-proportion="-20.423077">
               <caret line="192" column="84" selection-start-line="192" selection-start-column="84" selection-end-line="192" selection-end-column="84" />
               <folding>
                 <marker date="1454785996484" expanded="true" signature="5578:5611" placeholder="..." />
                 <marker date="1454785996484" expanded="true" signature="6246:6371" placeholder="..." />
               </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="fileinput.min.css" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/plugins/S3FileManager/webroot/css/fileinput.min.css">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0">
+              <caret line="10" column="3231" selection-start-line="10" selection-start-column="3231" selection-end-line="10" selection-end-column="3231" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="fileinput.css" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/plugins/S3FileManager/webroot/css/fileinput.css">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.92511016">
+              <caret line="255" column="1" selection-start-line="255" selection-start-column="1" selection-end-line="255" selection-end-column="1" />
+              <folding />
             </state>
           </provider>
         </entry>
@@ -87,16 +97,6 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="edit.ctp" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/plugins/S3FileManager/src/Template/Folders/edit.ctp">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="22" column="12" selection-start-line="22" selection-start-column="12" selection-end-line="22" selection-end-column="12" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
       <file leaf-file-name="view.ctp" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/plugins/S3FileManager/src/Template/Folders/view.ctp">
           <provider selected="true" editor-type-id="text-editor">
@@ -107,10 +107,10 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="explore.ctp" pinned="false" current-in-tab="true">
+      <file leaf-file-name="explore.ctp" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/plugins/S3FileManager/src/Template/Files/explore.ctp">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.32539684">
+            <state vertical-scroll-proportion="-11.038462">
               <caret line="78" column="64" selection-start-line="78" selection-start-column="64" selection-end-line="78" selection-end-column="64" />
               <folding>
                 <element signature="n#style#0;n#div#0;n#div#1;n#div#1;n#div#0;n#div#0;n#!!top" expanded="true" />
@@ -163,6 +163,8 @@
         <option value="$PROJECT_DIR$/src/Controller/AppController.php" />
         <option value="$PROJECT_DIR$/plugins/S3FileManager/src/Controller/FilesController.php" />
         <option value="$PROJECT_DIR$/plugins/S3FileManager/src/Template/Files/explore.ctp" />
+        <option value="$PROJECT_DIR$/plugins/S3FileManager/webroot/css/fileinput.min.css" />
+        <option value="$PROJECT_DIR$/plugins/S3FileManager/webroot/css/fileinput.css" />
       </list>
     </option>
   </component>
@@ -352,6 +354,54 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
+              <option name="myItemId" value="webroot" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="WhiteRabbitComponents" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="WhiteRabbitComponents" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="plugins" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="S3FileManager" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="webroot" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="css" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="WhiteRabbitComponents" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="WhiteRabbitComponents" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="plugins" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="S3FileManager" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
               <option name="myItemId" value="src" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
@@ -488,14 +538,6 @@
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/plugins/S3FileManager/src/Controller/FoldersController.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="3" column="17" selection-start-line="3" selection-start-column="4" selection-end-line="3" selection-end-column="17" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/plugins/S3FileManager/src/Template/Folders/add.ctp">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
@@ -626,14 +668,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="-11.692307">
           <caret line="32" column="0" selection-start-line="32" selection-start-column="0" selection-end-line="33" selection-end-column="33" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/plugins/S3FileManager/webroot/css/fileinput.css">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -870,13 +904,12 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/plugins/S3FileManager/src/View/Helper/S3FileHelper.php">
+    <entry file="file://$PROJECT_DIR$/plugins/S3FileManager/src/Template/Files/explore.ctp">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-24.346153">
-          <caret line="192" column="84" selection-start-line="192" selection-start-column="84" selection-end-line="192" selection-end-column="84" />
+        <state vertical-scroll-proportion="-11.038462">
+          <caret line="78" column="64" selection-start-line="78" selection-start-column="64" selection-end-line="78" selection-end-column="64" />
           <folding>
-            <marker date="1454785996484" expanded="true" signature="5578:5611" placeholder="..." />
-            <marker date="1454785996484" expanded="true" signature="6246:6371" placeholder="..." />
+            <element signature="n#style#0;n#div#0;n#div#1;n#div#1;n#div#0;n#div#0;n#!!top" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -889,13 +922,30 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/plugins/S3FileManager/src/Template/Files/explore.ctp">
+    <entry file="file://$PROJECT_DIR$/plugins/S3FileManager/src/View/Helper/S3FileHelper.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.32539684">
-          <caret line="78" column="64" selection-start-line="78" selection-start-column="64" selection-end-line="78" selection-end-column="64" />
+        <state vertical-scroll-proportion="-20.423077">
+          <caret line="192" column="84" selection-start-line="192" selection-start-column="84" selection-end-line="192" selection-end-column="84" />
           <folding>
-            <element signature="n#style#0;n#div#0;n#div#1;n#div#1;n#div#0;n#div#0;n#!!top" expanded="true" />
+            <marker date="1454785996484" expanded="true" signature="5578:5611" placeholder="..." />
+            <marker date="1454785996484" expanded="true" signature="6246:6371" placeholder="..." />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/plugins/S3FileManager/webroot/css/fileinput.min.css">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="10" column="3231" selection-start-line="10" selection-start-column="3231" selection-end-line="10" selection-end-column="3231" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/plugins/S3FileManager/webroot/css/fileinput.css">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.92511016">
+          <caret line="255" column="1" selection-start-line="255" selection-start-column="1" selection-end-line="255" selection-end-column="1" />
+          <folding />
         </state>
       </provider>
     </entry>

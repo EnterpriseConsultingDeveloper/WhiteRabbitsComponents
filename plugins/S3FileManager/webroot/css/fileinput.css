@@ -251,3 +251,6 @@
     width:100%;
     height:100%;
 }
+.file-preview-frame, .file-preview-image, .file-preview-other {
+    max-width: 160px;
+}
