@@ -1,5 +1,5 @@
 {
-    "name": "whiterabbit/S3FileManager",
+    "name": "whiterabbit/s3file-manager",
     "description": "S3FileManager plugin for CakePHP",
     "type": "cakephp-plugin",
     "require": {
