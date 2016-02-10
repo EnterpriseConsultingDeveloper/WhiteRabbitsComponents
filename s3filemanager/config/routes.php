@@ -9,12 +9,3 @@ Router::plugin(
         $routes->fallbacks('InflectedRoute');
     }
 );
-
-Router::prefix('admin', function ($routes) {
-    $routes->plugin('S3FileManager',
-        ['path' => '/s3_file_manager'],
-        function ($routes) {
-            $routes->extensions(['json']);
-            $routes->fallbacks('InflectedRoute');
-    });
-});
