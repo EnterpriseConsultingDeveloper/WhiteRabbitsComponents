@@ -60,7 +60,7 @@ class FilesTable extends Table
     public function validationDefault(Validator $validator)
     {
         $validator
-            ->integer('id')
+            ->add('id', 'valid', ['rule' => 'numeric'])
             ->allowEmpty('id', 'create');
 
         $validator

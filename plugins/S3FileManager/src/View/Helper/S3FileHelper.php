@@ -190,7 +190,8 @@ class S3FileHelper extends Helper
                     $html .= "<span class=\"wrap-indicator\"  title=\"" . $options['title'] . "\">" . $options['description'] . "</span>";
                     $html .= "</div>";
                 } elseif ($this->guessKindOfFile($fileName) === 'image') {
-                    $html .= "<span onclick=\"$(\'#info-div\').html(\'" . $plainUrl . "\')\" >";
+                    //$html .= "<span onclick=\"$(\'#info-div\').html(\'" . $plainUrl . "\')\" >";
+                    $html .= "<span onclick=\"insertFile(\'" . $plainUrl . "\')\" >";
                     $options['class'] = 'file-preview-image';
                     $html .=  $this->Html->image($plainUrl, $options);
                     $html .= "</span>";

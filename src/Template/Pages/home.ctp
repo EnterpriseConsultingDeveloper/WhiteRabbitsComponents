@@ -48,7 +48,9 @@ $cakeDescription = 'CakePHP: the rapid development php framework';
                 <div class="columns large-12 ctp-warning checks">
                     <ul>
                         <li><?= $this->Html->link(__('Manage Folders'), ['controller' => 'S3FileManager/Folders', 'action' => 'index']) ?></li>
-                        <li><?= $this->Html->link(__('Manage Files'), ['controller' => 'S3FileManager/Files', 'action' => 'explore']) ?></li>
+                        <li><?= $this->Html->link(__('Manage Files'), ['controller' => 'S3FileManager/Files', 'action' => 'explore', 'dinofratelli']) ?></li>
+
+
                     </ul>
                 </div>
             </div>

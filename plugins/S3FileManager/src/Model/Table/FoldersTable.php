@@ -57,7 +57,7 @@ class FoldersTable extends Table
     public function validationDefault(Validator $validator)
     {
         $validator
-            ->integer('id')
+            ->add('id', 'valid', ['rule' => 'numeric'])
             ->allowEmpty('id', 'create');
 
         $validator
@@ -65,11 +65,9 @@ class FoldersTable extends Table
             ->notEmpty('name');
 
         $validator
-            ->integer('lft')
             ->allowEmpty('lft');
 
         $validator
-            ->integer('rght')
             ->allowEmpty('rght');
 
         return $validator;

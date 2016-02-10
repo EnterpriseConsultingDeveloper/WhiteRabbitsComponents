@@ -126,9 +126,12 @@ class FilesController extends AppController
      * @return \Cake\Network\Response|null
      *
      */
-    public function explore($site)
+    public function explore($site, $formField)
     {
+        //$this->viewBuilder()->layout('blank'); // Vista per blank
+        $this->viewBuilder()->layout('ajax'); // Vista per ajax
         $this->request->session()->write('Auth.User.customer_site', $site);
+        $this->request->session()->write('targetFormFieldName', $formField);
 
         $file = $this->Files->newEntity();
 
@@ -142,12 +145,13 @@ class FilesController extends AppController
             'order' => ['id' => 'ASC']
         ])->first();
 
+        if($actualFolder == null) {
+            // Errore - return 404???
+        }
         $files = $this->Files->findAllByFolderId($actualFolder->id);
-
         $this->set(compact('file', 'files', 'folders'));
         $this->set('_serialize', ['file', 'files']);
     }
-
 
 
     /**
