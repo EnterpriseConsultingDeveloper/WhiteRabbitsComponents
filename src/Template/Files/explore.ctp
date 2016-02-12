@@ -42,7 +42,6 @@
             </div>
         </div>
     </div>
-
 </div>
 
 
@@ -65,21 +64,21 @@
     <?php endforeach; ?>
     ];
 
+
     var initialPreviewConfigs = [
     <?php foreach ($files as $file): ?>
     {caption: "<?= $file->file ?>", width: "120px", url: "<?= $this->Url->build(["controller" => "Files", "action" => "deleteFile", "_ext" => "json"]); ?>", key: <?= $file->id ?>},
     <?php endforeach; ?>
     ];
 
+
     function insertFile(filePath) {
-        console.log('insert');
         $('#myInsertButton').attr('file-path', filePath);
         $('#info-div').html(filePath);
     }
 
     $(document).ready(function () {
         $('#exploreTab a').click(function (e) {
-            console.log(e);
             e.preventDefault();
             $(this).tab('show');
         })
@@ -88,12 +87,19 @@
             uploadAsync: true,
             allowedFileTypes: ['image', 'text', 'video', 'object'],
             uploadUrl: '<?= $this->Url->build(["controller" => "Files", "action" => "uploadFile", "_ext" => "json"]); ?>',
-        }).on('filebatchuploadcomplete', function (event, files, extra) {
-            //location.reload();
-            $('#exploreTab a[href="#fileListTab"]').tab('show'); // Select tab by name
-            $("#preview").fileinput('refresh', {previewClass:'bg-info'});
-        });
-
+            uploadExtraData: {
+                img_folder: $('#folder-id option:selected').val()
+            }
+        })
+                .on("filebatchselected", function(event, files) {
+                    // trigger upload method immediately after files are selected
+                    $("#myFile").fileinput("upload");
+                })
+                .on('filebatchuploadcomplete', function (event, files, extra) {
+                    $.get("<?= $this->Url->build(["controller" => "Files", "action" => "explore", $this->request->session()->read("Auth.User.customer_site"), 'exploreCallback']); ?>", function(data){
+                        $('.modal').find('.modal-body').html(data);
+                    });
+                });
 
         $("#preview").fileinput({
             initialPreview: initialPreviewFiles,
@@ -116,10 +122,12 @@
             },
             allowedFileTypes: ['image', 'text', 'video', 'object'],
             previewClass: "bg-warning",
+            browseClass: "hidden",
+            showCaption: false,
+            showRemove: false,
             showUpload: false,
             showCancel: false,
             showClose: false,
-            showRemove: false,
             disabled: true,
             previewTemplate: {
                 image: '<div class="file-preview-frame" id="{previewId}" data-fileindex="{fileindex}">\n' +

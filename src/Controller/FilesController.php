@@ -131,7 +131,7 @@ class FilesController extends AppController
         //$this->viewBuilder()->layout('blank'); // Vista per blank
         $this->viewBuilder()->layout('ajax'); // Vista per ajax
         $this->request->session()->write('Auth.User.customer_site', $site);
-        $this->request->session()->write('targetFormFieldName', $formField);
+        //$this->request->session()->write('targetFormFieldName', $formField);
 
         $file = $this->Files->newEntity();
 
@@ -146,11 +146,12 @@ class FilesController extends AppController
         ])->first();
 
         if($actualFolder == null) {
-            // Errore - return 404???
+            $this->Flash->error(__('Please first add a Folder, then upload images!'));
+        } else {
+            $files = $this->Files->findAllByFolderId($actualFolder->id);
+            $this->set(compact('file', 'files', 'folders'));
+            $this->set('_serialize', ['file', 'files']);
         }
-        $files = $this->Files->findAllByFolderId($actualFolder->id);
-        $this->set(compact('file', 'files', 'folders'));
-        $this->set('_serialize', ['file', 'files']);
     }
 
 
@@ -165,7 +166,7 @@ class FilesController extends AppController
     {
         $file = $this->Files->newEntity();
         $file->file = $_FILES['file'];
-        $file->folder_id = 1;
+        $file->folder_id = $_POST['img_folder'];
 
         if ($this->Files->save($file)) {
             $this->Flash->success(__('The file has been saved.'));
@@ -203,74 +204,30 @@ class FilesController extends AppController
         $this->set('_serialize', ['file']);
 
         //return $this->redirect(['action' => 'explore']);
+    }
+
+
+    public function getFiles()
+    {
+        $site = $this->request->session()->read('Auth.User.customer_site');
+        //$this->request->session()->write('targetFormFieldName', $formField);
+
+
+        $folders = $this->Files->Folders->find('list', [
+            'conditions' => array('bucket' => $site),
+            'limit' => 200
+        ]);
+
+        $actualFolder = $this->Files->Folders->find('all', [
+            'conditions' => ['bucket' => $site],
+            'order' => ['id' => 'ASC']
+        ])->first();
+
+        $files = $this->Files->findAllByFolderId($actualFolder->id);
+        $this->set(compact('files'));
+        $this->set('_serialize', ['files']);
 
     }
+
 }
 
-
-/*
-        * // upload.php
-// 'images' refers to your file input name attribute
-if (empty($_FILES['images'])) {
-   echo json_encode(['error'=>'No files found for upload.']);
-   // or you can throw an exception
-   return; // terminate
-}
-
-// get the files posted
-$images = $_FILES['images'];
-
-// get user id posted
-$userid = empty($_POST['userid']) ? '' : $_POST['userid'];
-
-// get user name posted
-$username = empty($_POST['username']) ? '' : $_POST['username'];
-
-// a flag to see if everything is ok
-$success = null;
-
-// file paths to store
-$paths= [];
-
-// get file names
-$filenames = $images['name'];
-
-// loop and process files
-for($i=0; $i < count($filenames); $i++){
-   $ext = explode('.', basename($filenames[$i]));
-   $target = "uploads" . DIRECTORY_SEPARATOR . md5(uniqid()) . "." . array_pop($ext);
-   if(move_uploaded_file($images['tmp_name'][$i], $target)) {
-       $success = true;
-       $paths[] = $target;
-   } else {
-       $success = false;
-       break;
-   }
-}
-
-// check and process based on successful status
-if ($success === true) {
-   // call the function to save all data to database
-   // code for the following function `save_data` is not
-   // mentioned in this example
-   save_data($userid, $username, $paths);
-
-   // store a successful response (default at least an empty array). You
-   // could return any additional response info you need to the plugin for
-   // advanced implementations.
-   $output = [];
-   // for example you can get the list of files uploaded this way
-   // $output = ['uploaded' => $paths];
-} elseif ($success === false) {
-   $output = ['error'=>'Error while uploading images. Contact the system administrator'];
-   // delete any uploaded files
-   foreach ($paths as $file) {
-       unlink($file);
-   }
-} else {
-   $output = ['error'=>'No files were processed.'];
-}
-
-// return a json encoded response for plugin to process successfully
-echo json_encode($output);
-        */
