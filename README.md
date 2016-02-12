@@ -6,20 +6,23 @@ You can install the plugin cackephp-utils into your CakePHP application using [c
 following lines in the root of your application.
 
 ```
-composer require whiterabbit/s3filemanager 
- ```
+composer require whiterabbit/s3file-manager 
+```
+
+## Alert!
+ We are rewriting actual docs. Please be patient!  
  
- ## Configuration
+## Configuration
  
  You will need to add the following line to your application's bootstrap.php file:
  
- ```php
+```php
  Plugin::load('S3FileManager');
- ```
+```
  
  And in your AppController add
  
- ```php
+```php
  use S3FileManager\Controller\WRTrait;
  
  class AppController extends Controller
