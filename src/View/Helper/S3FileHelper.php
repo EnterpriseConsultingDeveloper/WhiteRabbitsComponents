@@ -19,7 +19,7 @@ use Aws\S3\S3Client;
 use Aws\Credentials\Credentials;
 use Cake\View\View;
 
-require_once(ROOT .DS. 'src' . DS . 'Lib' . DS . 'aws' . DS .'aws-autoloader.php');
+require_once(ROOT . DS . 'src' . DS . 'Lib' . DS . 'aws' . DS . 'aws-autoloader.php');
 
 /**
  * S3File helper
@@ -51,7 +51,6 @@ require_once(ROOT .DS. 'src' . DS . 'Lib' . DS . 'aws' . DS .'aws-autoloader.php
  * if you want to show an HTML piece of code when no image is retrieved pass, for example, in $options ['noimagehtml'=>'<span>no image</span>']
  *
  */
-
 class S3FileHelper extends Helper
 {
     /**
@@ -95,9 +94,9 @@ class S3FileHelper extends Helper
 
         $credentials = new Credentials($config['S3Key'], $config['S3Secret']);
         $options = [
-            'region'            => $config['S3Region'],
-            'version'           => $config['S3Version'],
-            'http'    => [
+            'region' => $config['S3Region'],
+            'version' => $config['S3Version'],
+            'http' => [
                 'verify' => false
             ],
             'signature_version' => $config['S3SignatureVersion'],
@@ -111,6 +110,7 @@ class S3FileHelper extends Helper
                 'helpers' => ['Html'],
             ]);
     }
+
     /**
      * image
      *
@@ -139,7 +139,7 @@ class S3FileHelper extends Helper
             try {
                 $plainUrl = $this->_s3Client->getObjectUrl($bucketName, $path, '+10 minutes');
                 $html .= $this->Html->image($plainUrl, $options);
-            } catch(\Exception $e) {
+            } catch (\Exception $e) {
                 $html .= $this->getDefaultImage($options);
             }
         } else {
@@ -174,12 +174,12 @@ class S3FileHelper extends Helper
 
         if (
             $path != null && $path != '' &&
-            $this->guessKindOfFile($path) === 'image'
-        )
-        {
+            $this->guessKindOfFile($path) === 'image' &&
+            @getimagesize($path)
+        ) {
             try {
                 $html .= $this->Html->image($path, $options);
-            } catch(\Exception $e) {
+            } catch (\Exception $e) {
                 $html .= $this->getDefaultImage($options);
             }
         } else {
@@ -231,15 +231,15 @@ class S3FileHelper extends Helper
                     //$html .= "<span onclick=\"$(\'#info-div\').html(\'" . $plainUrl . "\')\" >";
                     $html .= "<span onclick=\"insertFile(\'" . $plainUrl . "\')\" >";
                     $options['class'] = 'file-preview-image';
-                    $html .=  $this->Html->image($plainUrl, $options);
+                    $html .= $this->Html->image($plainUrl, $options);
                     $html .= "</span>";
                 } else {
                     $html .= "<div class=\"file-preview-text\">";
                     $html .= "<h2><i class=\"glyphicon glyphicon-file\"></i></h2>";
-                    $html .= $options['originalFilename'] . + "</div>";
+                    $html .= $options['originalFilename'] . +"</div>";
                 }
 
-            } catch(\Exception $e) {
+            } catch (\Exception $e) {
                 $html .= "No preview!";
             }
         }
@@ -297,7 +297,8 @@ class S3FileHelper extends Helper
         }
     }
 
-    private function guessMimeType($filename) {
+    private function guessMimeType($filename)
+    {
 
         $mime_types = array(
 
@@ -373,7 +374,8 @@ class S3FileHelper extends Helper
      * @param array $options
      * @return string
      */
-    private function getDefaultImage(array $options = []) {
+    private function getDefaultImage(array $options = [])
+    {
         $html = '';
 
         if (!isset($options['noimagehtml'])) {
@@ -398,7 +400,7 @@ class S3FileHelper extends Helper
      * getBucketName
      * Get the bucket name for Amazon S3
      *
-     * @param string $site.
+     * @param string $site .
      * @return string
      */
     private function getBucketName($site)
