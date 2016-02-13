@@ -169,10 +169,10 @@ class FilesController extends AppController
         $file->folder_id = $_POST['img_folder'];
 
         if ($this->Files->save($file)) {
-            $this->Flash->success(__('The file has been saved.'));
+            //$this->Flash->success(__('The file has been saved.'));
             return $this->redirect(['action' => 'index']);
         } else {
-            $this->Flash->error(__('The file could not be saved. Please, try again.'));
+            //$this->Flash->error(__('The file could not be saved. Please, try again.'));
         }
 
         $folders = $this->Files->Folders->find('list', ['limit' => 200]);
@@ -194,9 +194,9 @@ class FilesController extends AppController
         $this->request->allowMethod(['post', 'delete']);
         $file = $this->Files->get($id);
         if ($this->Files->delete($file)) {
-            $this->Flash->success(__('The file has been deleted.'));
+            //$this->Flash->success(__('The file has been deleted.'));
         } else {
-            $this->Flash->error(__('The file could not be deleted. Please, try again.'));
+            //$this->Flash->error(__('The file could not be deleted. Please, try again.'));
         }
 
         $folders = $this->Files->Folders->find('list', ['limit' => 200]);

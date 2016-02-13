@@ -150,6 +150,44 @@ class S3FileHelper extends Helper
     }
 
 
+    /**
+     * imageWithDefault
+     *
+     * Return an image. If image isn't available return default image or default html placeholder
+     *
+     * ### Example:
+     *
+     * `$this->S3File->imageWithDefault($path, $options);`
+     *
+     * $options are the same as for HTML image, like ['class'=>'img-responsive']
+     * if you want to show an HTML piece of code when no image is retrieved pass, for example, in $options ['noimagehtml'=>'<span>no image</span>']
+     *
+     * $path is the path of the image in the S3 bucket
+     *
+     * @param string $path
+     * @param array $options
+     * @return string
+     */
+    public function imageWithDefault($path, array $options = [])
+    {
+        $html = '';
+
+        if (
+            $path != null && $path != '' &&
+            $this->guessKindOfFile($path) === 'image'
+        )
+        {
+            try {
+                $html .= $this->Html->image($path, $options);
+            } catch(\Exception $e) {
+                $html .= $this->getDefaultImage($options);
+            }
+        } else {
+            $html .= $this->getDefaultImage($options);
+        }
+
+        return $html;
+    }
 
     /**
      * filePreview
