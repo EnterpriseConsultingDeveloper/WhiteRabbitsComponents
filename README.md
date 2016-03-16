@@ -11,6 +11,8 @@ composer require whiterabbit/s3file-manager=dev-master
  
  ## Configuration
  
+ Still in progress...
+ 
  You will need to add the following line to your application's bootstrap.php file:
  
  ```php
