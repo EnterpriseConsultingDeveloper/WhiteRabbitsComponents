@@ -54,6 +54,10 @@ To access Amazon resources, this plugin need the Aws SDK installed. You can down
 
 ## version
 
+1.0.0
+- Refactoring some piece of code
+- Creating an handy plugin
+
 0.2.1
 - S3FileHelper: Set the default image instead of an html code
 - Added a customer site name to the uploadable behavior in order to create, in S3, separate bucket for different customers.  
