@@ -38,6 +38,20 @@ class CreateFiles extends AbstractMigration
             'limit' => 100,
             'null' => true,
         ]);
+        $table->addColumn('extension', 'string', [
+            'default' => null,
+            'limit' => 10,
+            'null' => true,
+        ]);
+        $table->addColumn('public', 'integer', [
+            'default' => 0,
+            'limit' => MysqlAdapter::INT_TINY
+        ]);
+        $table->addColumn('path', 'string', [
+            'default' => null,
+            'limit' => 255,
+            'null' => true,
+        ]);
         $table->addColumn('created', 'datetime', [
             'default' => null,
             'null' => false,

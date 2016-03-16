@@ -85,4 +85,25 @@ class FoldersTable extends Table
         $rules->add($rules->existsIn(['parent_id'], 'ParentFolders'));
         return $rules;
     }
+
+    /**
+     * Returns the root folder for a specified
+     * application integrity.
+     *
+     * @param \Cake\ORM\RulesChecker $rules The rules object to be modified.
+     * @return \Cake\ORM\RulesChecker
+     */
+    public function getRootFolder($site)
+    {
+        $rootFolder = $this->find('all', [
+            'conditions' => ['bucket' => $site, 'parent_id IS' => null],
+            'order' => ['id' => 'ASC']
+        ])->first();
+
+        return $rootFolder;
+    }
 }
+
+
+
+

@@ -68,7 +68,6 @@ class UploadableBehavior extends Behavior
                 'directory' => false,
                 'type' => false,
                 'size' => false,
-                'originalFilename' => false,
                 'fileName' => false,
                 'filePath' => false,
             ],
@@ -450,9 +449,7 @@ class UploadableBehavior extends Behavior
                     //$entity->set($column, $this->_getPath($entity, $field, ['root' => false, 'file' => true]));
                     $entity->set($column, $this->_getS3FolderPath($entity, $field)); // This is the value saved in the main field
                 }
-                if ($key == "originalFilename") {
-                    $entity->set($column, $this->_getOriginalFilename($entity, $field, $options = []));
-                }
+
             }
         }
         return $entity;
@@ -630,10 +627,7 @@ class UploadableBehavior extends Behavior
         return $builtFileName;
     }
 
-    protected function _getOriginalFilename($entity, $field, $options = [])
-    {
 
-    }
 
     /**
      * _moveUploadedFile

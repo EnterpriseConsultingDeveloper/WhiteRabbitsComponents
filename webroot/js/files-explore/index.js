@@ -25,7 +25,7 @@ $(function () {
                 uploadUrl: '<?= $this->Url->build(["controller" => "Files", "action" => "uploadFile", "_ext" => "json"]); ?>',
             }).on('filebatchuploadcomplete', function (event, files, extra) {
                 console.log('File batch upload complete');
-                location.reload();
+                //location.reload();
             });
 
             $("#preview").fileinput({

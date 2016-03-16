@@ -33,4 +33,12 @@ class Folder extends Entity
         '*' => true,
         'id' => false,
     ];
+
+    protected $_virtual = ['text'];
+
+
+    protected function _getText()
+    {
+        return $this->name;
+    }
 }

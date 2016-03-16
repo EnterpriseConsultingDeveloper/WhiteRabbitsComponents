@@ -36,7 +36,6 @@ class FilesTable extends Table
                 'fields' => [
                     'type' => 'mime_type',
                     'size' => 'size',
-                    'originalFilename' => 'original_filename',
                 ],
                 'fileName' => '{GENERATEDKEY}',
                 'field' => 'id',
@@ -90,5 +89,19 @@ class FilesTable extends Table
     {
         $rules->add($rules->existsIn(['folder_id'], 'Folders'));
         return $rules;
+    }
+
+
+    /**
+     * Make a file public or private
+     *
+     * @param $id The file to be modified.
+     * @return \Cake\Datasource\EntityInterface
+     */
+    public function changeStatus($id)
+    {
+        $file = $this->get($id);
+        $file->public = !$file->public;
+        return $this->save($file);
     }
 }

@@ -11,6 +11,12 @@ use S3FileManager\Controller\AppController;
 class FoldersController extends AppController
 {
 
+    public function initialize()
+    {
+        parent::initialize();
+        $this->loadComponent('RequestHandler');
+    }
+
     /**
      * Index method
      *
@@ -109,5 +115,107 @@ class FoldersController extends AppController
             $this->Flash->error(__('The folder could not be deleted. Please, try again.'));
         }
         return $this->redirect(['action' => 'index']);
+    }
+
+    /**
+     * getFolderList method (ajax)
+     *
+     */
+    public function folderList()
+    {
+        $this->viewBuilder()->layout('ajax'); // Vista per ajax
+        $site = $this->request->query('site');
+        $selectedFolder = $this->request->query('sel');
+
+        if ($selectedFolder == null) {
+            $rootFolder = $this->Folders->getRootFolder($site);
+            $selectedFolder = $rootFolder->id;
+        }
+
+        $this->request->session()->write('Auth.User.customer_site', $site);
+
+        $folderList = $this->Folders->find('threaded', [
+            'conditions' => ['bucket' => $site]])->toArray();
+
+        $this->set(compact('folderList', 'selectedFolder'));
+    }
+
+    /**
+     * getFolderList method (ajax)
+     *
+     */
+    public function rename()
+    {
+        $this->viewBuilder()->layout('ajax'); // Vista per ajax
+
+        $id = $this->request->data('id');
+        $name = $this->request->data('text');
+
+        $folder = $this->Folders->get($id);
+        $folder->name = $name;
+
+        if ($this->Folders->save($folder)) {
+            header('Content-Type: application/json');
+            echo json_encode(array('id' => $id));
+        } else {
+            //Error
+        }
+    }
+
+    /**
+     * addFolder method (ajax)
+     *
+     */
+    public function addFolder()
+    {
+        $name = $this->request->data('text');
+        $parentId = $this->request->data('pId');
+
+        $parentFolder = $this->Folders->get($parentId);
+
+        $folder = $this->Folders->newEntity();
+
+        $folder->name = $name;
+        $folder->parent_id = $parentId;
+        $folder->bucket = $parentFolder->bucket;
+
+        if ($this->Folders->save($folder)) {
+            header('Content-Type: application/json');
+            echo json_encode(array('id' => $folder->id));
+
+            //return 'Created folder with id: ' . $folder->id;
+        } else {
+            //Error
+        }
+
+    }
+
+
+    /**
+     * removeFolder method (ajax)
+     *
+     */
+    public function deleteFolder()
+    {
+        $id = $this->request->data('id');
+        $folder = $this->Folders->get($id);
+        if ($this->Folders->delete($folder)) {
+            header('Content-Type: application/json');
+            echo json_encode(array('id' => $folder->id));
+        } else {
+            //Error
+        }
+    }
+
+
+
+    function recursive_array_search($needle, $haystack) {
+        foreach($haystack as $key => $value) {
+            $current_key = $key;
+            if($needle===$value OR (is_array($value) && recursive_array_search($needle,$value) !== false)) {
+                return $current_key;
+            }
+        }
+        return false;
     }
 }
