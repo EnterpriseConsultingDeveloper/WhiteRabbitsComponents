@@ -56,6 +56,9 @@ To access Amazon resources, this plugin need the Aws SDK installed. You can down
 
 ## version
 
+1.0.1
+- Composer refactoring
+
 1.0.0
 - Refactoring some piece of code
 - Creating an handy plugin
