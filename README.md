@@ -63,7 +63,7 @@ In the page where you would to add the file browser:
 
 <a href="#" class="btn" class="btn btn-primary btn-lg" id="openExploreBtn">Browse</a>
 
-<?= $this->Html->script('/s3_file_manager/js/saribe-eModal/dist/eModal.js', ['block'=>'script']) ?>
+<?= $this->Html->script('S3FileManager.saribe-eModal/dist/eModal.js', ['block'=>'script']) ?>
 <?php $this->Html->scriptStart(['block' => 'script']); ?>
 $(function(){
     function exploreCallback(result) {
@@ -71,7 +71,7 @@ $(function(){
     }
 
     var emOptions = {
-        url: "<?= $this->Url->build(["controller" => "../S3FileManager/Files", "action" => "explore", "customer_site_name_used_in_S3_bucket"]); ?>",
+        url: "<?= $this->Url->build(["controller" => "S3FileManager/Files", "action" => "explore", "customer_site_name_used_in_S3_bucket"]); ?>",
         title:'Document and media manager',
         size: eModal.size.xl,
         buttons: [
