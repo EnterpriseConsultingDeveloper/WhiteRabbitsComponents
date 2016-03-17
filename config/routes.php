@@ -6,7 +6,7 @@ Router::plugin(
     ['path' => '/s3_file_manager'],
     function ($routes) {
         $routes->extensions(['json']);
-        $routes->fallbacks('InflectedRoute');
+        $routes->fallbacks();
         $routes->connect(
             '/files/media/**',
             array('controller' => 'files', 'action' => 'media')
