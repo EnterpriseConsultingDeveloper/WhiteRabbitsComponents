@@ -9,9 +9,8 @@ following lines in the root of your application.
 composer require whiterabbit/s3file-manager=dev-master
  ```
  
+ /// Still in progress...
  ## Configuration
- 
- Still in progress...
  
  You will need to add the following line to your application's bootstrap.php file:
  
@@ -53,6 +52,50 @@ To access Amazon resources, this plugin need the Aws SDK installed. You can down
  http://docs.aws.amazon.com/aws-sdk-php/v3/guide/getting-started/installation.html and follow instruction under the section 
  "Installing via Zip".
     
+ /// Still in progress... /// End
+ 
+ 
+In the page where you would to add the file browser:
+
+```php
+
+<a href="#" class="btn" class="btn btn-primary btn-lg" id="openExploreBtn">Browse</a>
+
+<?= $this->Html->script('/s3_file_manager/js/saribe-eModal/dist/eModal.js', ['block'=>'script']) ?>
+<?php $this->Html->scriptStart(['block' => 'script']); ?>
+$(function(){
+    function exploreCallback(result) {
+        document.getElementById('form_field_id_where_to_store_image_path_name').value = result;
+    }
+
+    var emOptions = {
+        url: "<?= $this->Url->build(["controller" => "../S3FileManager/Files", "action" => "explore", "customer_site_name_used_in_S3_bucket"]); ?>",
+        title:'Document and media manager',
+        size: eModal.size.xl,
+        buttons: [
+            {text: 'Use file selected', style: 'info', id: 'myInsertButton', close: true, click:
+                function(result){
+                    filePath = $('#myInsertButton').attr('file-path');
+                    if (filePath == null) {
+                        alert('No file selected!');
+                    }
+                    exploreCallback(filePath);
+                }},
+            {text: 'Close', style: 'danger', close: true}
+        ]
+    };
+
+    $('#openExploreBtn').click(function(){
+        eModal.ajax(emOptions).then(function(){
+            console.log('callback');
+        });
+    });
+
+});
+
+<?php $this->Html->scriptEnd(); ?>
+```
+
 
 ## version
 

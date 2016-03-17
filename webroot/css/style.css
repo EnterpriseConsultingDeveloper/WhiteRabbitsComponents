@@ -1,0 +1,26 @@
+.vakata-context ul {
+    z-index: 99999;
+}
+.access-false {
+    color: green !important;
+}
+.access-true {
+    color: red !important;
+}
+
+.access-false:hover {
+    color: green !important;
+}
+.access-true:hover {
+    color: red !important;
+}
+
+.info-list {
+    list-style-type: none;
+    margin-left: -30px;
+}
+
+.info-list > li {
+    border-bottom: 1px dotted #ddd;
+    margin-bottom: 7px;
+}
