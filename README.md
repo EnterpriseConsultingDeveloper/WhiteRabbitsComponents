@@ -7,7 +7,9 @@ following lines in the root of your application.
 
 ```
 composer require whiterabbit/s3file-manager=dev-master
- ```
+
+bin\cake migrations migrate -p S3FileManager
+```
  
  /// Still in progress...
  ## Configuration
@@ -47,13 +49,13 @@ public function initialize() {
     $this->helpers[] = 'S3FileManager.S3File';
 }
 ```
-
-To access Amazon resources, this plugin need the Aws SDK installed. You can download the v3 versione of the SDK from here
- http://docs.aws.amazon.com/aws-sdk-php/v3/guide/getting-started/installation.html and follow instruction under the section 
- "Installing via Zip".
-    
  /// Still in progress... /// End
  
+
+To access Amazon resources, this plugin need the Aws SDK installed. You can download the v3 version of the SDK from here
+ http://docs.aws.amazon.com/aws-sdk-php/v3/guide/getting-started/installation.html and follow instruction under the section 
+ "Installing via Zip" (in general this mean to copy the aws folder under /src/Lib of your project)
+    
  
 In the page where you would to add the file browser:
 
