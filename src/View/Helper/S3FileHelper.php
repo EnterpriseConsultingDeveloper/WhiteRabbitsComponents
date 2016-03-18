@@ -139,9 +139,10 @@ class S3FileHelper extends Helper
             $path != null && $path != '' &&
             WRUtils::guessKindOfFile($path) === 'image' &&
             @getimagesize($path)
-            )
+        )
         {
             try {
+                $path = '/s3_file_manager/files/media/' . $path;
                 $html .= $this->Html->image($path, $options);
             } catch(\Exception $e) {
                 $html .= $this->getDefaultImage($options);
