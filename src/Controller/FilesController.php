@@ -145,26 +145,30 @@ class FilesController extends AppController
 
         $rootFolder = $this->Files->Folders->getRootFolder($site);
 
-        if($rootFolder == null) {
-            $this->Flash->error(__('Please first add a Folder, then upload images!'));
-        } else {
-            if ($actualFolder == null) {
-                $actualFolder = $rootFolder->id;
-            }
-            $actualFolderEntity = $this->Files->Folders->get($actualFolder);
-            $actualFolderName = $actualFolderEntity->name;
-            $files = $this->Files->findAllByFolderId($actualFolder);
-
-            $initialPreview = $initialPreviewConfig = [];
-            $this->doInitialPreviews($files, $site, $initialPreview, $initialPreviewConfig);
-
-            $this->set(compact('file', 'files', 'folders',
-                                'folderList', 'actualFolder', 'actualFolderName',
-                                'initialPreview', 'initialPreviewConfig'));
-
-            $this->set('_serialize', ['file', 'files']);
-
+        if($rootFolder == null) { //Creating root Folder for this site
+            $folder = $this->Files->Folders->newEntity();
+            $folder->name = '/';
+            $folder->bucket = $site;
+            $this->Files->Folders->save($folder);
+            $rootFolder = $folder;
         }
+
+        if ($actualFolder == null) {
+            $actualFolder = $rootFolder->id;
+        }
+        $actualFolderEntity = $this->Files->Folders->get($actualFolder);
+        $actualFolderName = $actualFolderEntity->name;
+        $files = $this->Files->findAllByFolderId($actualFolder);
+
+        $initialPreview = $initialPreviewConfig = [];
+        $this->doInitialPreviews($files, $site, $initialPreview, $initialPreviewConfig);
+
+        $this->set(compact('file', 'files', 'folders',
+            'folderList', 'actualFolder', 'actualFolderName',
+            'initialPreview', 'initialPreviewConfig'));
+
+        $this->set('_serialize', ['file', 'files']);
+
     }
 
 
