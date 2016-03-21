@@ -128,7 +128,6 @@
 
     $.noConflict();
     jQuery(document).ready(function () {
-
         /**
          * jstree custom context menu
          * Set the context menu with Create, Rename and Remove folder voices
@@ -183,79 +182,83 @@
          *
          */
         jQuery('#folderListContainer').jstree({
-                'core' : {
-                    'data' : {
-                        'url' : '<?= $this->Url->build(["controller" => "Folders", "action" => "folderList", "?" => ["site" => $this->request->session()->read("Auth.User.customer_site")], "_ext" => "json"]); ?>',
-                        'type' : 'POST'
-                    },
-                    'check_callback' : true, // enable all modifications
+            'core' : {
+                'data' : {
+                    'url' : '<?= $this->Url->build(["controller" => "Folders", "action" => "folderList", "?" => ["site" => $this->request->session()->read("Auth.User.customer_site")], "_ext" => "json"]); ?>',
+                    'type' : 'POST'
                 },
-                'plugins' : ["contextmenu"], contextmenu: {items: context_menu}
-            })
-            .on("changed.jstree", function (e, data) {
-                choosenFolder = data.selected[0];
+                'check_callback' : true, // enable all modifications
+            },
+            'plugins' : ["contextmenu"], contextmenu: {items: context_menu}
+        })
+                .on("changed.jstree", function (e, data) {
+                    choosenFolder = data.selected[0];
 
-                var url = '<?= $this->Url->build(["controller" => "Files", "action" => "getActualFolderFiles"]); ?>/' + choosenFolder;
-                jQuery.get(url, function(response){
-                    var data = jQuery.parseJSON(response);
+                    var url = '<?= $this->Url->build(["controller" => "Files", "action" => "getActualFolderFiles"]); ?>/' + choosenFolder;
+                    jQuery.get(url, function(response){
+                        var data = jQuery.parseJSON(response);
 
-                    jQuery('#folder-id').val(choosenFolder);
-                    jQuery('#actual-folder-name').text(jQuery('.jstree-clicked').text());
+                        jQuery('#folder-id').val(choosenFolder);
+                        jQuery('#actual-folder-name').text(jQuery('.jstree-clicked').text());
 
-                    fileInputConfig.initialPreview = data.initialPreview;
-                    fileInputConfig.initialPreviewConfig = data.initialPreviewConfig;
-                    console.log(fileInputConfig);
-                    jQuery("#preview").fileinput('destroy');
-                    jQuery("#preview").fileinput('refresh', fileInputConfig);
-                });
+                        fileInputConfig.initialPreview = data.initialPreview;
+                        fileInputConfig.initialPreviewConfig = data.initialPreviewConfig;
 
-            })
-            .on("create_node.jstree", function (e, data) {
-                var node = data.node;
-                jQuery.ajax({ url: '<?= $this->Url->build(["controller" => "Folders", "action" => "addFolder", "_ext" => "json"]); ?>',
-                    data: {
-                        pId: node.parent,
-                        text: node.text
-                    },
-                    type: 'post',
-                    success: function(output) {
-                        console.log('output: ', output.id);
-                        node.id = output.id;
-                    },
-                    error: function(jqXHR, error, errorThrown) {
-                        console.log('jqXHR: ', jqXHR);
-                    }
+                        $el.fileinput('destroy');
+                        $el.fileinput('refresh', fileInputConfig);
+                        resetInfo();
+
+                        //jQuery("#preview").fileinput('destroy');
+                        //jQuery("#preview").fileinput('refresh', fileInputConfig);
+                    });
+
+                })
+                .on("create_node.jstree", function (e, data) {
+                    var node = data.node;
+                    jQuery.ajax({ url: '<?= $this->Url->build(["controller" => "Folders", "action" => "addFolder", "_ext" => "json"]); ?>',
+                        data: {
+                            pId: node.parent,
+                            text: node.text
+                        },
+                        type: 'post',
+                        success: function(output) {
+                            console.log('output: ', output.id);
+                            node.id = output.id;
+                        },
+                        error: function(jqXHR, error, errorThrown) {
+                            console.log('jqXHR: ', jqXHR);
+                        }
+                    });
+                })
+                .on("rename_node.jstree", function (e, data) {
+                    jQuery.ajax({ url: '<?= $this->Url->build(["controller" => "Folders", "action" => "rename", "_ext" => "json"]); ?>',
+                        data: {
+                            id: data.node.id,
+                            text: data.text
+                        },
+                        type: 'post',
+                        success: function(output) {
+                            console.log('output: ', output);
+                        },
+                        error: function(jqXHR, error, errorThrown) {
+                            console.log('jqXHR: ', jqXHR);
+                        }
+                    });
+                })
+                .on("delete_node.jstree", function (e, data) {
+                    jQuery.ajax({ url: '<?= $this->Url->build(["controller" => "Folders", "action" => "deleteFolder", "_ext" => "json"]); ?>',
+                        data: {
+                            id: data.node.id,
+                        },
+                        type: 'post',
+                        success: function(output) {
+                            console.log('output: ', output);
+                        },
+                        error: function(jqXHR, error, errorThrown) {
+                            console.log('jqXHR: ', jqXHR);
+                        }
+                    });
                 });
-            })
-            .on("rename_node.jstree", function (e, data) {
-                jQuery.ajax({ url: '<?= $this->Url->build(["controller" => "Folders", "action" => "rename", "_ext" => "json"]); ?>',
-                    data: {
-                        id: data.node.id,
-                        text: data.text
-                    },
-                    type: 'post',
-                    success: function(output) {
-                        console.log('output: ', output);
-                    },
-                    error: function(jqXHR, error, errorThrown) {
-                        console.log('jqXHR: ', jqXHR);
-                    }
-                });
-            })
-            .on("delete_node.jstree", function (e, data) {
-                jQuery.ajax({ url: '<?= $this->Url->build(["controller" => "Folders", "action" => "deleteFolder", "_ext" => "json"]); ?>',
-                    data: {
-                        id: data.node.id,
-                    },
-                    type: 'post',
-                    success: function(output) {
-                        console.log('output: ', output);
-                    },
-                    error: function(jqXHR, error, errorThrown) {
-                        console.log('jqXHR: ', jqXHR);
-                    }
-                });
-            });
 
 
         /**
@@ -264,6 +267,7 @@
         jQuery('#exploreTab a').click(function (e) {
             e.preventDefault();
             jQuery(this).tab('show');
+            resetInfo();
         })
 
 
@@ -280,53 +284,59 @@
                 return info;
             }
         })
-        .on("filebatchselected", function(event, files) {
-            jQuery("#myFile").fileinput("upload");
-        })
-        .on('filebatchuploadcomplete', function (event, files, extra) {
-            jQuery.get('<?= $this->Url->build(["controller" => "Files", "action" => "getActualFolderFiles"]); ?>/' + choosenFolder, function(response){
-                var data = jQuery.parseJSON(response);
-                fileInputConfig.initialPreview = data.initialPreview;
-                fileInputConfig.initialPreviewConfig = data.initialPreviewConfig;
-                jQuery("#preview").fileinput('refresh', fileInputConfig);
+                .on("filebatchselected", function(event, files) {
+                    jQuery("#myFile").fileinput("upload");
+                })
+                .on('filebatchuploadcomplete', function (event, files, extra) {
+                    jQuery.get('<?= $this->Url->build(["controller" => "Files", "action" => "getActualFolderFiles"]); ?>/' + choosenFolder, function(response){
+                        var data = jQuery.parseJSON(response);
+                        fileInputConfig.initialPreview = data.initialPreview;
+                        fileInputConfig.initialPreviewConfig = data.initialPreviewConfig;
 
-                jQuery('#exploreTab li:eq(1) a').tab('show') // Select third tab (0-indexed)
-            });
+                        //jQuery("#preview").fileinput('refresh', fileInputConfig);
+                        $el.fileinput('refresh', fileInputConfig);
 
-        });
+                        jQuery('#exploreTab li:eq(1) a').tab('show') // Select third tab (0-indexed)
+                    });
+
+                });
 
 
         /**
          * Create the bootstrap fileinput for file list
          */
-        jQuery("#preview").fileinput(fileInputConfig);
-
+        //jQuery("#preview").fileinput(fileInputConfig);
+        var $el = jQuery('#preview'), initPlugin = function() {
+            $el.fileinput(fileInputConfig)
+                    .off('filepreupload').on('filepreupload', function() {
+                        console.log("Initial pre-upload message!");
+                    });
+        };
+        initPlugin();
 
         /**
          * Function for the public / private button
          */
-        jQuery(function() {
-            jQuery('.kv-file-edit').on('click', function() {
-                var key = jQuery(this).data('key'); // get the file key
-                jQuery.ajax({ url: '<?= $this->Url->build(["controller" => "Files", "action" => "changeStatus", "_ext" => "json"]); ?>',
-                    data: {
-                        id: key,
-                    },
-                    type: 'post',
-                    success: function(output) {
-                        console.log('output: ', output);
-                        jQuery("button.kv-file-edit[ data-key='" + key + "']")
-                                .removeClass(
-                                    function (index, css) {
-                                        return (css.match (/(^|\s)access-\S+/g) || []).join(' ');
-                                    })
-                                .addClass('access-' + output)
-                                .blur();
-                    },
-                    error: function(jqXHR, error, errorThrown) {
-                        console.log('jqXHR: ', jqXHR);
-                    }
-                });
+        jQuery(document).on('click', ".kv-file-edit", function () {
+            var key = jQuery(this).data('key'); // get the file key
+            jQuery.ajax({ url: '<?= $this->Url->build(["controller" => "Files", "action" => "changeStatus", "_ext" => "json"]); ?>',
+                data: {
+                    id: key,
+                },
+                type: 'post',
+                success: function(output) {
+                    console.log('output: ', output);
+                    jQuery("button.kv-file-edit[ data-key='" + key + "']")
+                            .removeClass(
+                            function (index, css) {
+                                return (css.match (/(^|\s)access-\S+/g) || []).join(' ');
+                            })
+                            .addClass('access-' + output)
+                            .blur();
+                },
+                error: function(jqXHR, error, errorThrown) {
+                    console.log('jqXHR: ', jqXHR);
+                }
             });
         });
 
@@ -334,35 +344,39 @@
         /**
          * Function for the select file button
          */
-        jQuery(function() {
-            jQuery('.kv-file-select').on('click', function() {
-                var key = jQuery(this).data('key'); // get the file key
-                var url = '<?= $this->Url->build(["controller" => "Files", "action" => "mediaInfo", "_ext" => "json"]); ?>';
-                jQuery.ajax({ url: url,
-                    data: {
-                        id: key,
-                    },
-                    type: 'post',
-                    success: function(data) {
-                        console.log(data);
-                        jQuery('#myInsertButton').attr('file-path', data.path);
-                        var htmlInfo = '<ul class="info-list">';
-                        htmlInfo += '<li><strong>Name</strong>: ' + data.name + '</li>';
-                        htmlInfo += '<li><strong>Path</strong>: ' + data.path + '</li>';
-                        htmlInfo += '<li><strong>Public</strong>: ' + data.public + '</li>';
-                        htmlInfo += '<li><strong>Type</strong>: ' + data.type + '</li>';
-                        htmlInfo += '<li><strong>Size</strong>: ' + data.size + 'kB </li>';
-                        htmlInfo += '<li><strong>Extension</strong>: ' + data.ext + '</li>';
-                        htmlInfo += '</ul>';
+        jQuery(document).on('click', ".kv-file-select", function () {
+            var key = jQuery(this).data('key'); // get the file key
+            var url = '<?= $this->Url->build(["controller" => "Files", "action" => "mediaInfo", "_ext" => "json"]); ?>';
+            jQuery.ajax({ url: url,
+                data: {
+                    id: key,
+                },
+                type: 'post',
+                success: function(data) {
+                    jQuery('#myInsertButton').attr('file-path', data.path);
+                    var htmlInfo = '<ul class="info-list">';
+                    htmlInfo += '<li><strong>Name</strong>: ' + data.name + '</li>';
+                    htmlInfo += '<li><strong>Path</strong>: ' + data.path + '</li>';
+                    htmlInfo += '<li><strong>Public</strong>: ' + data.public + '</li>';
+                    htmlInfo += '<li><strong>Type</strong>: ' + data.type + '</li>';
+                    htmlInfo += '<li><strong>Size</strong>: ' + data.size + 'kB </li>';
+                    htmlInfo += '<li><strong>Extension</strong>: ' + data.ext + '</li>';
+                    htmlInfo += '</ul>';
 
-                        jQuery('#info-div').html(htmlInfo);
-                    },
-                    error: function(jqXHR, error, errorThrown) {
-                        console.log('jqXHR: ', jqXHR);
-                    }
-                });
-
+                    jQuery('#info-div').html(htmlInfo);
+                },
+                error: function(jqXHR, error, errorThrown) {
+                    console.log('jqXHR: ', jqXHR);
+                }
             });
         });
+
+        /**
+         * Reset info box
+         */
+        function resetInfo() {
+            jQuery('#info-div').html('');
+        }
+
     });
 </script>

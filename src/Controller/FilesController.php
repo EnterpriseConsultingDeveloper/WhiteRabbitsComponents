@@ -4,15 +4,9 @@ namespace S3FileManager\Controller;
 use Cake\Core\Exception\Exception;
 use Cake\Filesystem\File;
 use Cake\Network\Exception\NotFoundException;
-use Cake\Network\Http\Client;
 use Cake\Routing\Router;
-use S3FileManager\Controller\AppController;
-use Aws\S3\S3Client;
-use Aws\Credentials\Credentials;
 use S3FileManager\Utils\WRS3Client;
-use S3FileManager\Utils\WRUtils;
 
-require_once(ROOT .DS. 'src' . DS . 'Lib' . DS . 'aws' . DS .'aws-autoloader.php');
 /**
  * Files Controller
  *
@@ -420,14 +414,14 @@ class FilesController extends AppController
             $key = $file->id;
             $initialPreview[$i] = $s3client->createFilePreview($file->file, $site, [
                     'filename' => $file->file,
-                    'title' => $file->name,
-                    'description' => $file->name,
-                    'originalFilename' => $file->originalFilename,
+                    'title' => $file->original_filename,
+                    'description' => $file->original_filename,
+                    'originalFilename' => $file->original_filename,
                     'id' => $file->id
                 ]
             );
 
-            $initialPreviewConfig[$i] = ['caption' => "{$file->file}", 'width' => '120px', 'url' => $deleteUrl, 'key' => $key];
+            $initialPreviewConfig[$i] = ['caption' => "{$file->original_filename}", 'width' => '120px', 'url' => $deleteUrl, 'key' => $key];
             $i++;
         }
 
