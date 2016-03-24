@@ -11,7 +11,6 @@ composer require whiterabbit/s3file-manager=dev-master
 bin\cake migrations migrate -p S3FileManager
 ```
  
- /// Still in progress...
  ## Configuration
  
  You will need to add the following line to your application's bootstrap.php file:
@@ -49,8 +48,6 @@ public function initialize() {
     $this->helpers[] = 'S3FileManager.S3File';
 }
 ```
- /// Still in progress... /// End
- 
 
 To access Amazon resources, this plugin need the Aws SDK installed. You can download the v3 version of the SDK from here
  http://docs.aws.amazon.com/aws-sdk-php/v3/guide/getting-started/installation.html and follow instruction under the section 
