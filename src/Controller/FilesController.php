@@ -184,17 +184,7 @@ class FilesController extends AppController
         $file->public = 0;
         $file->original_filename = $path;
 
-        $this->Files->Folders->recover(); // Need to recover folders tree
-        $crumbs = $this->Files->Folders->find('path', ['for' => $file->folder_id]);
-        $actualFolderPath = '';
-        foreach ($crumbs as $crumb) {
-            if ($crumb->name == '/')
-                $actualFolderPath .= $crumb->name;
-            else
-                $actualFolderPath .= $crumb->name . '/';
-        }
-
-        $file->path = $actualFolderPath;
+        $file->path = $this->getFolderPath($file);
 
         if ($this->Files->save($file)) {
             header('Content-Type: application/json');
@@ -203,7 +193,6 @@ class FilesController extends AppController
         } else {
             //$this->Flash->error(__('The file could not be saved. Please, try again.'));
         }
-
     }
 
 
@@ -223,6 +212,43 @@ class FilesController extends AppController
         if ($this->Files->delete($file)) {
             header('Content-Type: application/json');
             echo json_encode('File deleted...');
+        } else {
+            //error
+        }
+    }
+
+
+    /**
+     * deleteFile method
+     *
+     * @param string $bucket Bucket name.
+     * @return \Cake\Network\Response|null
+     *
+     */
+    public function changeFolder()
+    {
+        $site = $this->request->session()->read('Auth.User.customer_site');
+
+        $id = $this->request->data['id'];
+        $newFolderId = $this->request->data['folder'];
+
+        if ($newFolderId == '') { // Moved on root folder
+            $rootFolder = $this->Files->Folders->getRootFolder($site);
+            $newFolderId = $rootFolder->id;
+        }
+
+        $file = $this->Files->get($id);
+        $file->folder_id = $newFolderId;
+
+        $file->path = $this->getFolderPath($file);
+
+        if ($this->Files->save($file)) {
+            $files = $this->Files->findAllByFolderId($newFolderId);
+            $initialPreview = $initialPreviewConfig = [];
+            $this->doInitialPreviews($files, $site, $initialPreview, $initialPreviewConfig);
+
+            $this->set(compact('files', 'initialPreview', 'initialPreviewConfig'));
+            $this->set('_serialize', ['file', 'files']);
         } else {
             //error
         }
@@ -302,9 +328,8 @@ class FilesController extends AppController
      * @throws NotFoundException When file not found.
      *
      * expect
-     * files/media/21/sadsadasdas/iutry/image.png
-     * where image path is /21/sadsadasdas/iutry/image.png
-     * 21 = folder id
+     * files/media/sadsadasdas/iutry/image.png
+     * where image path is /sadsadasdas/iutry/image.png
      * sadsadasdas/iutry/ = complete folder path
      * image.png = image name and extension
      */
@@ -312,24 +337,34 @@ class FilesController extends AppController
     {
         $this->viewBuilder()->layout('ajax'); // Vista per ajax
 
-
-
         if ($completePath == null) {
             throw new NotFoundException('File not found.');
         }
 
+        $site = $this->request->session()->read('Auth.User.customer_site');
+
         $lastSlashPos = strrpos($completePath , '/');
         $firstSlashPos = strpos($completePath , '/');
-        $fileName = substr($completePath, $lastSlashPos + 1, strlen($completePath));
-        $path = substr($completePath, 0, $lastSlashPos + 1);
-
-        $folderId = substr($completePath, 0, $firstSlashPos);
+        if (!$lastSlashPos && !$firstSlashPos) { // File saved in root ("/" folder)
+            $fileName = $completePath;
+            $path = '/';
+        } else {
+            $fileName = substr($completePath, $lastSlashPos + 1, strlen($completePath));
+            $path = '/' . substr($completePath, 0, $lastSlashPos + 1);
+        }
 
         try {
             $this->loadModel('Files'); // It's necessary because the name "media" was reserved
-            $file = $this->Files->find('all')
-                ->where(['Files.folder_id' => $folderId])
+            $this->loadModel('Folders');
+
+            $folders = $this->Folders->find('all')
+                ->select(['id'])
+                ->where(['Folders.bucket' => $site]);
+
+            $file = $this->Files->find()
+                ->where(['Files.path' => $path])
                 ->where(['Files.original_filename' => $fileName])
+                ->where(['folder_id IN' => $folders])
                 ->first();
 
             if (!$file) {
@@ -347,27 +382,25 @@ class FilesController extends AppController
 
 
     /**
-     * getMediaLink method
-     * Return correct link for proxy
+     * mediaInfo method
+     * Return file information and the correct link for proxy
      *
      */
     public function mediaInfo()
     {
         // ie return
-        // files/media/21/sadsadasdas/iutry/image.png
+        // files/media/sadsadasdas/iutry/image.png
         $this->viewBuilder()->layout('ajax'); // Vista per ajax
         $fileId = $this->request->data('id');
 
         $this->loadModel('Files');
         $file = $this->Files->get($fileId);
 
-        $proxyPath = $file->folder_id . $file->path . $file->original_filename;
-
         $info = [];
-        $info['path'] = $proxyPath;
+        $info['path'] = $this->getProxyPath($file);
         $info['public'] = $file->public;
         $info['type'] = $file->mime_type;
-        $info['size'] = $file->size;
+        $info['size'] = intval($file->size / 1000);
         $info['ext'] = $file->extension;
         $info['name'] = $file->original_filename;
 
@@ -375,6 +408,22 @@ class FilesController extends AppController
         echo json_encode($info);
     }
 
+
+    /**
+     * @param $file
+     * @return string
+     */
+    private function getProxyPath($file) {
+        return $file->path . $file->original_filename;
+    }
+
+
+    /**
+     * @param $path
+     * @param $fileName
+     * @param $fileId
+     * @return \Cake\Network\Response|null
+     */
     private function sendFile($path, $fileName, $fileId)
     {
         $S3Client = new WRS3Client();
@@ -432,5 +481,22 @@ class FilesController extends AppController
         $this->set('_serialize', ['file', 'files']);
     }
 
+
+    /**
+     * @param $file
+     * @return string
+     */
+
+    private function getFolderPath ($file) {
+        $crumbs = $this->Files->Folders->find('path', ['for' => $file->folder_id]);
+        $actualFolderPath = '';
+        foreach ($crumbs as $crumb) {
+            if ($crumb->name == '/')
+                $actualFolderPath .= $crumb->name;
+            else
+                $actualFolderPath .= $crumb->name . '/';
+        }
+        return $actualFolderPath;
+    }
 }
 

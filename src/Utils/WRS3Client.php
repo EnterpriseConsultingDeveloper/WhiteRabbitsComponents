@@ -125,21 +125,15 @@ class WRS3Client extends S3Client
                 $plainUrl = $this->getObjectUrl($site, $path); //$this->_s3Client->getObjectUrl($bucketName, $path, '+10 minutes');
 
                 $fileName = $options['filename'];
-                if (WRUtils::guessKindOfFile($fileName) === 'text') {
-                    $html .= "<div class=\"file-preview-text file-selectable\" my-data-key=\"" . $options['id'] . "\" title=\"" . $options['title'] . "\">";
-                    $html .= $options['description'];
-                    $html .= "<span class=\"wrap-indicator\"  title=\"" . $options['title'] . "\">" . $options['description'] . "</span>";
-                    $html .= "</div>";
-                } elseif (WRUtils::guessKindOfFile($fileName) === 'image') {
-                    $html .= "<div class=\"file-preview-text file-selectable\" my-data-key=\"" . $options['id'] . "\" title=\"" . $options['title'] . "\">";
-                    $html .= "<img style='height:160px' src='" . $plainUrl ."' class='file-preview-image' alt='" . $options['originalFilename'] . "' title='" . $options['originalFilename'] . "'>";
+                if (WRUtils::guessKindOfFile($fileName) == 'image') {
+                    $html .= "<div class=\"file-selectable\" my-data-key=\"" . $options['id'] . "\" title=\"" . $options['title'] . "\">";
+                    $html .= "<img style='height:120px' src='" . $plainUrl ."' class='file-preview-image' alt='" . $options['originalFilename'] . "' title='" . $options['originalFilename'] . "'>";
                     $html .= "</div>";
                 } else {
-                    $html .= "<div class=\"file-preview-text file-selectable\" my-data-key=\"" . $options['id'] . "\">";
-                    $html .= "<h2><i class=\"glyphicon glyphicon-file\"></i></h2>";
-                    $html .= $options['originalFilename'] . + "</div>";
+                    $html .= "<div class=\"file-selectable\" my-data-key=\"" . $options['id'] . "\" title=\"" . $options['title'] . "\">";
+                    $html .= WRUtils::getPreviewFileIcon($fileName);
+                    $html .= "</div>";
                 }
-
             } catch(\Exception $e) {
                 $html .= "No preview!";
             }

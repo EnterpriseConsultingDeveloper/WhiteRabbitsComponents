@@ -180,6 +180,7 @@ class FoldersController extends AppController
         $folder->bucket = $parentFolder->bucket;
 
         if ($this->Folders->save($folder)) {
+            $this->Folders->recover(); // Need to recover folders tree
             header('Content-Type: application/json');
             echo json_encode(array('id' => $folder->id));
 
@@ -198,13 +199,21 @@ class FoldersController extends AppController
     public function deleteFolder()
     {
         $id = $this->request->data('id');
-        $folder = $this->Folders->get($id);
-        if ($this->Folders->delete($folder)) {
+        if (substr($id, 0, 1) === "j" ) {
+            // New folder on frontend not yet created on DB
             header('Content-Type: application/json');
-            echo json_encode(array('id' => $folder->id));
+            echo json_encode(array('id' => $id));
         } else {
-            //Error
+            $folder = $this->Folders->get($id);
+            if ($this->Folders->delete($folder)) {
+                $this->Folders->recover(); // Need to recover folders tree
+                header('Content-Type: application/json');
+                echo json_encode(array('id' => $folder->id));
+            } else {
+                //Error
+            }
         }
+
     }
 
 

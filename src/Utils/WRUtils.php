@@ -128,4 +128,79 @@ class WRUtils
         }
     }
 
+
+
+
+    public static function getPreviewFileIcon($filename) {
+
+        $icons = array(
+
+
+            'txt' => '<i class="fa fa-file-text text-muted generic-file-icon "></i>',
+            'htm' => '<i class="fa fa-file-code-o text-muted generic-file-icon "></i>',
+            'html' => '<i class="fa fa-file-code-o text-muted generic-file-icon "></i>',
+            'php' => '<i class="fa fa-file-code-o text-muted generic-file-icon "></i>',
+            'css' => '<i class="fa fa-file-code-o text-muted generic-file-icon "></i>',
+            'js' => '<i class="fa fa-file-code-o text-muted generic-file-icon "></i>',
+            'json' => '<i class="fa fa-file-code-o text-muted generic-file-icon "></i>',
+            'xml' => '<i class="fa fa-file-code-o text-muted generic-file-icon "></i>',
+            'swf' => '<i class="fa fa-file-movie-o text-muted generic-file-icon "></i>',
+            'flv' => '<i class="fa fa-file-movie-o text-muted generic-file-icon "></i>',
+
+            // images
+            'png' => '<i class="fa fa-file-picture-o text-muted generic-file-icon "></i>',
+            'jpe' => '<i class="fa fa-file-picture-o text-muted generic-file-icon "></i>',
+            'jpeg' => '<i class="fa fa-file-picture-o text-muted generic-file-icon "></i>',
+            'jpg' => '<i class="fa fa-file-picture-o text-muted generic-file-icon "></i>',
+            'gif' => '<i class="fa fa-file-picture-o text-muted generic-file-icon "></i>',
+            'bmp' => '<i class="fa fa-file-picture-o text-muted generic-file-icon "></i>',
+            'ico' => '<i class="fa fa-file-picture-o text-muted generic-file-icon "></i>',
+            'tiff' => '<i class="fa fa-file-picture-o text-muted generic-file-icon "></i>',
+            'tif' => '<i class="fa fa-file-picture-o text-muted generic-file-icon "></i>',
+            'svg' => '<i class="fa fa-file-picture-o text-muted generic-file-icon "></i>',
+            'svgz' => '<i class="fa fa-file-picture-o text-muted generic-file-icon "></i>',
+
+            // archives
+            'zip' => '<i class="fa fa-file-archive-o text-muted generic-file-icon "></i>',
+            'rar' => '<i class="fa fa-file-archive-o text-muted generic-file-icon "></i>',
+            'exe' => '<i class="fa fa-file text-muted generic-file-icon "></i>',
+            'msi' => '<i class="fa fa-file-archive-o text-muted generic-file-icon "></i>',
+            'cab' => '<i class="fa fa-file-archive-o text-muted generic-file-icon "></i>',
+
+            // audio/video
+            'mp3' => '<i class="fa fa-file-sound-o text-muted generic-file-icon "></i>',
+            'qt' => '<i class="fa fa-file-movie-o text-muted generic-file-icon "></i>',
+            'mov' => '<i class="fa fa-file-movie-o text-muted generic-file-icon "></i>',
+
+            // adobe
+            'pdf' => '<i class="fa fa-file-pdf-o text-danger generic-file-icon "></i>',
+            'psd' => '<i class="fa fa-file-picture-o text-muted generic-file-icon "></i>',
+            'ai' => '<i class="fa fa-file-picture-o text-muted generic-file-icon "></i>',
+            'eps' => '<i class="fa fa-file-picture-o text-muted generic-file-icon "></i>',
+            'ps' => '<i class="fa fa-file-picture-o text-muted generic-file-icon "></i>',
+
+            // ms office
+            'doc' => '<i class="fa fa-file-word-o text-primary generic-file-icon "></i>',
+            'docx' => '<i class="fa fa-file-word-o text-primary generic-file-icon "></i>',
+            'rtf' => '<i class="fa fa-file-text text-muted generic-file-icon "></i>',
+            'xls' => '<i class="fa fa-file-excel-o text-success generic-file-icon "></i>',
+            'xlsx' => '<i class="fa fa-file-excel-o text-success generic-file-icon "></i>',
+            'ppt' => '<i class="fa fa-file-powerpoint-o text-danger generic-file-icon "></i>',
+            'pptx' => '<i class="fa fa-file-powerpoint-o text-danger generic-file-icon "></i>',
+
+            // open office
+            'odt' => '<i class="fa fa-file-word-o text-primary generic-file-icon "></i>',
+            'ods' => '<i class="fa fa-file-excel-o text-success generic-file-icon "></i>',
+        );
+
+        $fileArray = explode('.', $filename);
+        $ext = strtolower(array_pop($fileArray));
+        if (array_key_exists($ext, $icons)) {
+            return $icons[$ext];
+        } else {
+            return '<i class="fa fa-file-text text-muted generic-file-icon "></i>';
+        }
+    }
+
+
 }
