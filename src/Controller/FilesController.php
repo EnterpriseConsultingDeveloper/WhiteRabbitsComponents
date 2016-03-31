@@ -366,7 +366,7 @@ class FilesController extends AppController
                 ->where(['Files.original_filename' => $fileName])
                 ->where(['folder_id IN' => $folders])
                 ->first();
-
+            //debug($path);  debug($fileName); die;
             if (!$file) {
                 throw new NotFoundException('File not found.');
             }
