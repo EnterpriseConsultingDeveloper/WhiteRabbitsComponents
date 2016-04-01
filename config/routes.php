@@ -11,6 +11,10 @@ Router::plugin(
             '/files/media/**',
             array('controller' => 'files', 'action' => 'media')
         );
+        $routes->connect(
+            '/Files/media/**',
+            array('controller' => 'files', 'action' => 'media')
+        );
     }
 
 );

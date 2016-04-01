@@ -61,6 +61,7 @@ class S3FileHelper extends Helper
     ];
 
 
+    private $proxyBasePath = '/s3_file_manager/Files/media';
 
     /**
      * Constructor. Overridden to merge passed args with URL options.
@@ -101,7 +102,7 @@ class S3FileHelper extends Helper
 
         if ($path != null && $path != '') {
             try {
-                $html .= $this->Html->image('/s3_file_manager/files/media/' . $path, $options);
+                $html .= $this->Html->image($this->proxyBasePath . $path, $options);
             } catch(\Exception $e) {
                 $html .= $this->getDefaultImage($options);
             }
@@ -134,7 +135,7 @@ class S3FileHelper extends Helper
     public function imageWithDefault($path, array $options = [])
     {
         $html = '';
-        $path = '/s3_file_manager/files/media' . $path;
+        $path = $this->proxyBasePath . $path;
         if (
             $path != null && $path != ''
             // && WRUtils::guessKindOfFile($path) === 'image'
