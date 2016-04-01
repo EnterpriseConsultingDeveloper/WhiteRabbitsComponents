@@ -2,6 +2,7 @@
 namespace S3FileManager\Controller;
 
 use Cake\Core\Exception\Exception;
+use Cake\Event\Event;
 use Cake\Filesystem\File;
 use Cake\Network\Exception\NotFoundException;
 use Cake\Routing\Router;
@@ -19,6 +20,19 @@ class FilesController extends AppController
         parent::initialize();
         $this->loadComponent('RequestHandler');
     }
+
+    public function beforeFilter(Event $event)
+    {
+        // Allow only the view and index actions.
+        //debug($event->subject()->request->params['action']); die;
+
+        $this->Auth->allow(['media']);
+        if (!($event->subject()->request->params['action'] == 'media')) {
+            parent::beforeFilter($event);
+        }
+
+    }
+
 
     /**
      * Index method
@@ -341,7 +355,10 @@ class FilesController extends AppController
             throw new NotFoundException('File not found.');
         }
 
-        $site = $this->request->session()->read('Auth.User.customer_site');
+        //debug($customer->id); die;
+        //$site = $this->request->session()->read('Auth.User.customer_site');
+        $subdomains = $this->request->subdomains();
+        $site = $subdomains[0];
 
         $lastSlashPos = strrpos($completePath , '/');
         $firstSlashPos = strpos($completePath , '/');
@@ -352,11 +369,9 @@ class FilesController extends AppController
             $fileName = substr($completePath, $lastSlashPos + 1, strlen($completePath));
             $path = '/' . substr($completePath, 0, $lastSlashPos + 1);
         }
-
+        $this->loadModel('Files'); // It's necessary because the name "media" was reserved
+        $this->loadModel('Folders');
         try {
-            $this->loadModel('Files'); // It's necessary because the name "media" was reserved
-            $this->loadModel('Folders');
-
             $folders = $this->Folders->find('all')
                 ->select(['id'])
                 ->where(['Folders.bucket' => $site]);
@@ -366,12 +381,19 @@ class FilesController extends AppController
                 ->where(['Files.original_filename' => $fileName])
                 ->where(['folder_id IN' => $folders])
                 ->first();
-            //debug($path);  debug($fileName); die;
+
             if (!$file) {
                 throw new NotFoundException('File not found.');
             }
 
-            return $this->sendFile($file->file, $fileName, $file->id);
+            $localFile = $this->sendFile($file->file, $fileName, $file->id, $site);
+            //$this->request->trustProxy = true;
+            // Set a single header
+            //$this->response->header('Location', 'http://giangionet.whiterabbit.online/s3_file_manager/Files/media');
+            //$this->response->header('Location', 'http://giangionet.whiterabbit.online/s3_file_manager/Files/media');
+            //debug($localFile->header([])); die;
+
+            return $localFile; //$this->sendFile2($file->file, $fileName, $file->id, $site);
 
         } catch (Exception $e) {
             echo 'Error: ', $e->getMessage();
@@ -424,21 +446,21 @@ class FilesController extends AppController
      * @param $fileId
      * @return \Cake\Network\Response|null
      */
-    private function sendFile($path, $fileName, $fileId)
+    private function sendFile($path, $fileName, $fileId, $bucketName)
     {
         $S3Client = new WRS3Client();
-        $bucketName = $this->request->session()->read('Auth.User.customer_site');
         $plainUrl = $S3Client->getObjectUrl($bucketName, $path);
 
-        //TODO: inserire un metodo di caching qui
-
         $tempPath = ROOT .DS. 'tmp' . DS . 'cache' . DS . $fileId . $fileName;
+
         $file = new File($tempPath, true, 0644);
         $file->write(@file_get_contents($plainUrl));
 
         $this->response->file($tempPath);
+
         return $this->response;
     }
+
 
 
     /**
