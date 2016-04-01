@@ -102,7 +102,7 @@ class S3FileHelper extends Helper
 
         if ($path != null && $path != '') {
             try {
-                $html .= $this->Html->image($this->proxyBasePath . $path, $options);
+                $html .= $this->Html->image($this->preparePath($path), $options);
             } catch(\Exception $e) {
                 $html .= $this->getDefaultImage($options);
             }
@@ -135,15 +135,14 @@ class S3FileHelper extends Helper
     public function imageWithDefault($path, array $options = [])
     {
         $html = '';
-        $path = $this->proxyBasePath . $path;
         if (
             $path != null && $path != ''
-            // && WRUtils::guessKindOfFile($path) === 'image'
+            && WRUtils::guessKindOfFile($path) === 'image'
             // && @getimagesize($path)
         )
         {
             try {
-                $html .= $this->Html->image($path, $options);
+                $html .= $this->Html->image($this->preparePath($path), $options);
             } catch(\Exception $e) {
                 $html .= $this->getDefaultImage($options);
             }
@@ -180,5 +179,12 @@ class S3FileHelper extends Helper
         }
 
         return $html;
+    }
+
+    private function preparePath($path) {
+        if (!WRUtils::startsWith($path, "/"))
+            $path = '/' . $path;
+
+        return $this->proxyBasePath . $path;
     }
 }
