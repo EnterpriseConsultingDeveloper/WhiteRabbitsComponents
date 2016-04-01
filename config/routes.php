@@ -9,11 +9,11 @@ Router::plugin(
         $routes->fallbacks('InflectedRoute');
         $routes->connect(
             '/files/media/**',
-            array('controller' => 'files', 'action' => 'media')
+            array('controller' => 'Files', 'action' => 'media')
         );
         $routes->connect(
             '/Files/media/**',
-            array('controller' => 'files', 'action' => 'media')
+            array('controller' => 'Files', 'action' => 'media')
         );
     }
 
