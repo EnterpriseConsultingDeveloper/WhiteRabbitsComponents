@@ -26,7 +26,9 @@ class FilesController extends AppController
         // Allow only the view and index actions.
         //debug($event->subject()->request->params['action']); die;
 
-        $this->Auth->allow(['media']);
+        if ($this->Auth != null) {
+            $this->Auth->allow(['media']);
+        }
         if (!($event->subject()->request->params['action'] == 'media')) {
             parent::beforeFilter($event);
         }
