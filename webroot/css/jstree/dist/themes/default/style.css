@@ -887,6 +887,9 @@
 .jstree-default-large.jstree-rtl .jstree-last {
   background: transparent;
 }
+.jstree-rename-input {
+color: #666666 !important;
+}
 @media (max-width: 768px) {
   #jstree-dnd.jstree-dnd-responsive {
     line-height: 40px;
@@ -1060,3 +1063,4 @@
     margin-right: 0;
   }
 }
+

@@ -178,114 +178,121 @@
          */
 
         jQuery('#folderListContainer').jstree({
-                'core' : {
-                    'data' : {
-                        'url' : '<?= $this->Url->build(["controller" => "Folders", "action" => "folderList", "?" => ["site" => $this->request->session()->read("Auth.User.customer_site")], "_ext" => "json"]); ?>',
-                        'type' : 'POST'
-                    },
-                    'check_callback' : function (operation, node, node_parent, node_position, more) {
-                        // operation can be 'create_node', 'rename_node', 'delete_node', 'move_node' or 'copy_node'
-                        // in case of 'rename_node' node_position is filled with the new node name
-                        if (operation === 'rename_node') { // Prevent rename on just created nodes
-                            if ((node.id).substring(0, 1) == 'j') {
-                                return false;
-                            } else {
-                                return true;
-                            }
+            'core' : {
+                'data' : {
+                    'url' : '<?= $this->Url->build(["controller" => "Folders", "action" => "folderList", "?" => ["site" => $this->request->session()->read("Auth.User.customer_site")], "_ext" => "json"]); ?>',
+                    'type' : 'POST'
+                },
+                'check_callback' : function (operation, node, node_parent, node_position, more) {
+                    // operation can be 'create_node', 'rename_node', 'delete_node', 'move_node' or 'copy_node'
+                    // in case of 'rename_node' node_position is filled with the new node name
+                    if (operation === 'rename_node') { // Prevent rename on just created nodes
+                        var nodeId = node.id + '';
+                        console.log('nodeId', nodeId);
+                        if (nodeId.substr(0, 1) == 'j') {
+                            return false;
                         } else {
                             return true;
                         }
+                    } else {
+                        return true;
                     }
-                },
-                'plugins' : ["contextmenu", "dnd"],
-                'contextmenu': {
-                    items: context_menu
-                },
-                'dnd' : {
-                    is_draggable: false
+                }
+            },
+            'plugins' : ["contextmenu", "dnd"],
+            'contextmenu': {
+                items: context_menu
+            },
+            'dnd' : {
+                is_draggable: false
             },
         })
-            .on("changed.jstree", function (e, data) {
-                choosenFolder = data.selected[0];
+                .on("changed.jstree", function (e, data) {
+                    choosenFolder = data.selected[0];
 
-                if (choosenFolder != null) {
-                    var url = '<?= $this->Url->build(["controller" => "Files", "action" => "getActualFolderFiles"]); ?>/' + choosenFolder;
-                    jQuery.get(url, function(response){
-                        var data = jQuery.parseJSON(response);
-                        updateFiles(data);
-                        resetInfo();
-                    });
-                }
-
-            })
-            .on("create_node.jstree", function (e, data) {
-                jQuery.ajax({ url: '<?= $this->Url->build(["controller" => "Folders", "action" => "addFolder", "_ext" => "json"]); ?>',
-                    data: {
-                        pId: data.node.parent,
-                        text: data.node.text
-                    },
-                    type: 'post',
-                    success: function(output) {
-                        console.log(data.node.id);
-                        data.node.id = output.id;
-                    },
-                    error: function(jqXHR, error, errorThrown) {
-                        console.log('jqXHR: ', jqXHR);
+                    if (choosenFolder != null) {
+                        var url = '<?= $this->Url->build(["controller" => "Files", "action" => "getActualFolderFiles"]); ?>/' + choosenFolder;
+                        jQuery.get(url, function(response){
+                            var data = jQuery.parseJSON(response);
+                            updateFiles(data);
+                            resetInfo();
+                        });
                     }
-                });
-            })
-            .on("rename_node.jstree", function (e, data) {
-                if (data.node.id != null ) {
-                    console.log(data.node.id);
-                    jQuery.ajax({ url: '<?= $this->Url->build(["controller" => "Folders", "action" => "rename", "_ext" => "json"]); ?>',
+
+                })
+                .on("create_node.jstree", function (e, data) {
+                    var node = $.extend(true, {}, data.node);
+                    node.type = "Folder";
+                    node.name = node.text;
+                    node.parentId = data.node.parent;
+
+                    jQuery.ajax({ url: '<?= $this->Url->build(["controller" => "Folders", "action" => "addFolder", "_ext" => "json"]); ?>',
                         data: {
-                            id: data.node.id,
-                            text: data.text
+                            pId: data.node.parent,
+                            text: data.node.text
                         },
                         type: 'post',
                         success: function(output) {
+                            data.instance.set_id(node, output.id);
+                            data.instance.edit(output.id);
                         },
                         error: function(jqXHR, error, errorThrown) {
                             console.log('jqXHR: ', jqXHR);
                         }
                     });
-                }
-            })
-            .on("delete_node.jstree", function (e, data) {
-                jQuery.ajax({ url: '<?= $this->Url->build(["controller" => "Folders", "action" => "deleteFolder", "_ext" => "json"]); ?>',
-                    data: {
-                        id: data.node.id,
-                    },
-                    type: 'post',
-                    success: function(output) {
-                        console.log('output: ', output);
-                    },
-                    error: function(jqXHR, error, errorThrown) {
-                        console.log('jqXHR: ', jqXHR);
+                })
+                .on("rename_node.jstree", function (e, data) {
+                    if (data.node.id != null ) {
+                        console.log('rename_node', data.node.id);
+                        jQuery.ajax({ url: '<?= $this->Url->build(["controller" => "Folders", "action" => "rename", "_ext" => "json"]); ?>',
+                            data: {
+                                id: data.node.id,
+                                text: data.text
+                            },
+                            type: 'post',
+                            success: function(output) {
+                            },
+                            error: function(jqXHR, error, errorThrown) {
+                                console.log('jqXHR: ', jqXHR);
+                            }
+                        });
                     }
-                });
-            })
-           .on('copy_node.jstree', function (e, data) {
+                })
+                .on("delete_node.jstree", function (e, data) {
+                    jQuery.ajax({ url: '<?= $this->Url->build(["controller" => "Folders", "action" => "deleteFolder", "_ext" => "json"]); ?>',
+                        data: {
+                            id: data.node.id,
+                        },
+                        type: 'post',
+                        success: function(output) {
+                            console.log('output: ', output);
+                        },
+                        error: function(jqXHR, error, errorThrown) {
+                            console.log('jqXHR: ', jqXHR);
+                        }
+                    });
+                })
+                .on('copy_node.jstree', function (e, data) {
                     // Prevent folder creation on file move
                     var myTree = jQuery('#folderListContainer').jstree(true);
                     myTree.delete_node(data.node);
-            });
+                });
 
 
         jQuery(document).on('mousedown', ".file-selectable", function (e) {
-                    return jQuery.vakata.dnd.start(e,
+            return jQuery.vakata.dnd.start(e,
+                    {
+                        'jstree' : true,
+                        'obj' : jQuery(this),
+                        'nodes' : [
                             {
-                                'jstree' : true,
-                                'obj' : jQuery(this),
-                                'nodes' : [
-                                    {
-                                        id : true,
-                                        text: jQuery(this).text()
-                                    }
-                                ]
-                            },
-                            '<div id="jstree-dnd" class="jstree-default"><i class="jstree-icon jstree-er"></i>' + jQuery(this).text() + '</div>');
-                });
+                                id : true,
+                                text: jQuery(this).text()
+                            }
+                        ]
+                    },
+                    '<div id="jstree-dnd" class="jstree-default"><i class="jstree-icon jstree-er"></i>' + jQuery(this).text() + '</div>');
+        });
 
         jQuery(document)
                 .on('dnd_move.vakata', function (e, data) {
@@ -336,6 +343,7 @@
             e.preventDefault();
             jQuery(this).tab('show');
             resetInfo();
+            resetUpload();
         })
 
 
@@ -343,6 +351,7 @@
          * Create the bootstrap fileinput for files upload
          */
         jQuery("#myFile").fileinput({
+            overwriteInitial: true,
             uploadAsync: true,
             //allowedFileTypes: ['image', 'text', 'video', 'object'],
             uploadUrl: '<?= $this->Url->build(["controller" => "Files", "action" => "uploadFile", "_ext" => "json"]); ?>',
@@ -352,21 +361,21 @@
                 return info;
             }
         })
-        .on("filebatchselected", function(event, files) {
-            jQuery("#myFile").fileinput("upload");
-        })
-        .on('filebatchuploadcomplete', function (event, files, extra) {
-            jQuery.get('<?= $this->Url->build(["controller" => "Files", "action" => "getActualFolderFiles"]); ?>/' + choosenFolder, function(response){
-                var data = jQuery.parseJSON(response);
-                fileInputConfig.initialPreview = data.initialPreview;
-                fileInputConfig.initialPreviewConfig = data.initialPreviewConfig;
+                .on("filebatchselected", function(event, files) {
+                    jQuery("#myFile").fileinput("upload");
+                })
+                .on('filebatchuploadcomplete', function (event, files, extra) {
+                    jQuery.get('<?= $this->Url->build(["controller" => "Files", "action" => "getActualFolderFiles"]); ?>/' + choosenFolder, function(response){
+                        var data = jQuery.parseJSON(response);
+                        fileInputConfig.initialPreview = data.initialPreview;
+                        fileInputConfig.initialPreviewConfig = data.initialPreviewConfig;
 
-                $el.fileinput('refresh', fileInputConfig);
+                        $el.fileinput('refresh', fileInputConfig);
 
-                jQuery('#exploreTab li:eq(1) a').tab('show') // Select third tab (0-indexed)
-            });
+                        jQuery('#exploreTab li:eq(1) a').tab('show') // Select third tab (0-indexed)
+                    });
 
-        });
+                });
 
 
         /**
@@ -375,8 +384,8 @@
         var $el = jQuery('#preview'), initPlugin = function() {
             $el.fileinput(fileInputConfig)
                     .off('filepreupload').on('filepreupload', function() {
-                console.log("Initial pre-upload message!");
-            });
+                        console.log("Initial pre-upload message!");
+                    });
         };
         initPlugin();
 
@@ -395,9 +404,9 @@
                     console.log('output: ', output);
                     jQuery("button.kv-file-edit[ data-key='" + key + "']")
                             .removeClass(
-                                function (index, css) {
-                                    return (css.match (/(^|\s)access-\S+/g) || []).join(' ');
-                                })
+                            function (index, css) {
+                                return (css.match (/(^|\s)access-\S+/g) || []).join(' ');
+                            })
                             .addClass('access-' + output)
                             .blur();
                     updateInfo(key);
@@ -443,11 +452,22 @@
                 }
             });
         }
+
         /**
          * Reset info box
          */
         function resetInfo() {
             jQuery('#info-div').html('');
+        }
+
+        /**
+         * Reset upload box
+         */
+        function resetUpload() {
+            console.log(jQuery("#myFile"));
+            jQuery("#myFile").fileinput('reset');
+            jQuery("#myFile").fileinput('refresh');
+
         }
 
         /**

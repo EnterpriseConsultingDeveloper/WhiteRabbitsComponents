@@ -361,7 +361,9 @@ class FilesController extends AppController
         //$site = $this->request->session()->read('Auth.User.customer_site');
         $subdomains = $this->request->subdomains();
         $site = $subdomains[0];
-
+        if ($site == 'content' || $site == 'editorial') {
+            $site = $this->request->session()->read('Auth.User.customer_site');
+        }
         $lastSlashPos = strrpos($completePath , '/');
         $firstSlashPos = strpos($completePath , '/');
         if (!$lastSlashPos && !$firstSlashPos) { // File saved in root ("/" folder)
