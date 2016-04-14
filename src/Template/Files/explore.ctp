@@ -74,6 +74,7 @@
     var ip1 = <?=json_encode($initialPreview) ?>;
     var ip2 = <?=json_encode($initialPreviewConfig) ?>;
 
+    console.log(ip1, ip2);
     var fileInputConfig = {
         initialPreview: ip1,
         initialPreviewConfig: ip2,
@@ -214,6 +215,7 @@
                         var url = '<?= $this->Url->build(["controller" => "Files", "action" => "getActualFolderFiles"]); ?>/' + choosenFolder;
                         jQuery.get(url, function(response){
                             var data = jQuery.parseJSON(response);
+
                             updateFiles(data);
                             resetInfo();
                         });
@@ -316,14 +318,11 @@
                             },
                             type: 'post',
                             success: function(output) {
-                                //
-                                //
-
                                 var myTree = jQuery('#folderListContainer').jstree(true);
                                 var myNode = myTree.get_node( t.context.id );
                                 myTree.deselect_all();
                                 myTree.select_node(myNode, false, false);
-                                //
+
                                 updateFiles(output);
                                 resetInfo();
                                 myTree.open_node(myNode, false, true);
@@ -480,7 +479,9 @@
 
             fileInputConfig.initialPreview = data.initialPreview;
             fileInputConfig.initialPreviewConfig = data.initialPreviewConfig;
-
+            if(data.initialPreview.length == 0) {
+                fileInputConfig.initialPreview = ['<span style="color: #000; font-size: 1.8em"><span class="fa-stack fa-lg"> <i class="fa fa-file-o fa-stack-1x"></i> <i class="fa fa-ban fa-stack-2x text-danger"></i></span><br>No file in this folder!</span>'];
+            }
             $el.fileinput('destroy');
             $el.fileinput('refresh', fileInputConfig);
         }
