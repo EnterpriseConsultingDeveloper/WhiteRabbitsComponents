@@ -55,10 +55,10 @@
 </div>
 
 <?= $this->Html->script([
-'S3FileManager.jquery-2.0.0.min.js',
+//'S3FileManager.jquery-2.0.0.min.js',
 'S3FileManager.plugins/canvas-to-blob.min.js',
 'S3FileManager.fileinput.min.js',
-'S3FileManager.bootstrap.min.js',
+//'S3FileManager.bootstrap.min.js',
 'S3FileManager.fileinput_locale_it.js',
 'S3FileManager.jstree/dist/jstree.min.js'
 ], ['block' => 'script']); ?>
@@ -123,15 +123,14 @@
 
 
 
-    $.noConflict();
-    jQuery(document).ready(function () {
+    $(document).ready(function () {
         /**
          * jstree custom context menu
          * Set the context menu with Create, Rename and Remove folder voices
          * Those voices are available only for non root node. Root node have only Create
          */
         function context_menu(node){
-            var tree = jQuery('#folderListContainer').jstree(true);
+            var tree = $('#folderListContainer').jstree(true);
 
             // The default set of all items
             var items = {
@@ -178,7 +177,7 @@
          *
          */
 
-        jQuery('#folderListContainer').jstree({
+        $('#folderListContainer').jstree({
             'core' : {
                 'data' : {
                     'url' : '<?= $this->Url->build(["controller" => "Folders", "action" => "folderList", "?" => ["site" => $this->request->session()->read("Auth.User.customer_site")], "_ext" => "json"]); ?>',
@@ -213,8 +212,8 @@
 
                     if (choosenFolder != null) {
                         var url = '<?= $this->Url->build(["controller" => "Files", "action" => "getActualFolderFiles"]); ?>/' + choosenFolder;
-                        jQuery.get(url, function(response){
-                            var data = jQuery.parseJSON(response);
+                        $.get(url, function(response){
+                            var data = $.parseJSON(response);
 
                             updateFiles(data);
                             resetInfo();
@@ -228,7 +227,7 @@
                     node.name = node.text;
                     node.parentId = data.node.parent;
 
-                    jQuery.ajax({ url: '<?= $this->Url->build(["controller" => "Folders", "action" => "addFolder", "_ext" => "json"]); ?>',
+                    $.ajax({ url: '<?= $this->Url->build(["controller" => "Folders", "action" => "addFolder", "_ext" => "json"]); ?>',
                         data: {
                             pId: data.node.parent,
                             text: data.node.text
@@ -246,7 +245,7 @@
                 .on("rename_node.jstree", function (e, data) {
                     if (data.node.id != null ) {
                         console.log('rename_node', data.node.id);
-                        jQuery.ajax({ url: '<?= $this->Url->build(["controller" => "Folders", "action" => "rename", "_ext" => "json"]); ?>',
+                        $.ajax({ url: '<?= $this->Url->build(["controller" => "Folders", "action" => "rename", "_ext" => "json"]); ?>',
                             data: {
                                 id: data.node.id,
                                 text: data.text
@@ -261,7 +260,7 @@
                     }
                 })
                 .on("delete_node.jstree", function (e, data) {
-                    jQuery.ajax({ url: '<?= $this->Url->build(["controller" => "Folders", "action" => "deleteFolder", "_ext" => "json"]); ?>',
+                    $.ajax({ url: '<?= $this->Url->build(["controller" => "Folders", "action" => "deleteFolder", "_ext" => "json"]); ?>',
                         data: {
                             id: data.node.id,
                         },
@@ -276,29 +275,29 @@
                 })
                 .on('copy_node.jstree', function (e, data) {
                     // Prevent folder creation on file move
-                    var myTree = jQuery('#folderListContainer').jstree(true);
+                    var myTree = $('#folderListContainer').jstree(true);
                     myTree.delete_node(data.node);
                 });
 
 
-        jQuery(document).on('mousedown', ".file-selectable", function (e) {
-            return jQuery.vakata.dnd.start(e,
+        $(document).on('mousedown', ".file-selectable", function (e) {
+            return $.vakata.dnd.start(e,
                     {
                         'jstree' : true,
-                        'obj' : jQuery(this),
+                        'obj' : $(this),
                         'nodes' : [
                             {
                                 id : true,
-                                text: jQuery(this).text()
+                                text: $(this).text()
                             }
                         ]
                     },
-                    '<div id="jstree-dnd" class="jstree-default"><i class="jstree-icon jstree-er"></i>' + jQuery(this).text() + '</div>');
+                    '<div id="jstree-dnd" class="jstree-default"><i class="jstree-icon jstree-er"></i>' + $(this).text() + '</div>');
         });
 
-        jQuery(document)
+        $(document)
                 .on('dnd_move.vakata', function (e, data) {
-                    var t = jQuery(data.event.target);
+                    var t = $(data.event.target);
                     if(t.closest('.jstree-node').length) {
                         data.helper.find('.jstree-icon').removeClass('jstree-er').addClass('jstree-ok');
                     } else {
@@ -306,19 +305,19 @@
                     }
                 })
                 .on('dnd_stop.vakata', function (e, data) {
-                    var t = jQuery(data.event.target);
+                    var t = $(data.event.target);
                     if(t.closest('.jstree-node').length) {
                         choosenFolder =  (t.context.id).substring(0, (t.context.id).indexOf('_'));  // remove '_anchor'
                         var fileid = data.element.attributes['my-data-key'].value;
 
-                        jQuery.ajax({ url: '<?= $this->Url->build(["controller" => "Files", "action" => "changeFolder", "_ext" => "json"]); ?>',
+                        $.ajax({ url: '<?= $this->Url->build(["controller" => "Files", "action" => "changeFolder", "_ext" => "json"]); ?>',
                             data: {
                                 id: fileid,
                                 folder: choosenFolder
                             },
                             type: 'post',
                             success: function(output) {
-                                var myTree = jQuery('#folderListContainer').jstree(true);
+                                var myTree = $('#folderListContainer').jstree(true);
                                 var myNode = myTree.get_node( t.context.id );
                                 myTree.deselect_all();
                                 myTree.select_node(myNode, false, false);
@@ -338,9 +337,9 @@
         /**
          * Create the tabs for upload / list files
          */
-        jQuery('#exploreTab a').click(function (e) {
+        $('#exploreTab a').click(function (e) {
             e.preventDefault();
-            jQuery(this).tab('show');
+            $(this).tab('show');
             resetInfo();
             resetUpload();
         })
@@ -349,29 +348,29 @@
         /**
          * Create the bootstrap fileinput for files upload
          */
-        jQuery("#myFile").fileinput({
+        $("#myFile").fileinput({
             overwriteInitial: true,
             uploadAsync: true,
             //allowedFileTypes: ['image', 'text', 'video', 'object'],
             uploadUrl: '<?= $this->Url->build(["controller" => "Files", "action" => "uploadFile", "_ext" => "json"]); ?>',
             uploadExtraData: function() {
-                var id = jQuery('#folder-id').val();
+                var id = $('#folder-id').val();
                 var info = {'img_folder': id};
                 return info;
             }
         })
                 .on("filebatchselected", function(event, files) {
-                    jQuery("#myFile").fileinput("upload");
+                    $("#myFile").fileinput("upload");
                 })
                 .on('filebatchuploadcomplete', function (event, files, extra) {
-                    jQuery.get('<?= $this->Url->build(["controller" => "Files", "action" => "getActualFolderFiles"]); ?>/' + choosenFolder, function(response){
-                        var data = jQuery.parseJSON(response);
+                    $.get('<?= $this->Url->build(["controller" => "Files", "action" => "getActualFolderFiles"]); ?>/' + choosenFolder, function(response){
+                        var data = $.parseJSON(response);
                         fileInputConfig.initialPreview = data.initialPreview;
                         fileInputConfig.initialPreviewConfig = data.initialPreviewConfig;
 
                         $el.fileinput('refresh', fileInputConfig);
 
-                        jQuery('#exploreTab li:eq(1) a').tab('show') // Select third tab (0-indexed)
+                        $('#exploreTab li:eq(1) a').tab('show') // Select third tab (0-indexed)
                     });
 
                 });
@@ -380,7 +379,7 @@
         /**
          * Create the bootstrap fileinput for file list
          */
-        var $el = jQuery('#preview'), initPlugin = function() {
+        var $el = $('#preview'), initPlugin = function() {
             $el.fileinput(fileInputConfig)
                     .off('filepreupload').on('filepreupload', function() {
                         console.log("Initial pre-upload message!");
@@ -391,17 +390,17 @@
         /**
          * Function for the public / private button
          */
-        jQuery(document).on('click', ".kv-file-edit", function () {
-            var key = jQuery(this).data('key'); // get the file key
+        $(document).on('click', ".kv-file-edit", function () {
+            var key = $(this).data('key'); // get the file key
 
-            jQuery.ajax({ url: '<?= $this->Url->build(["controller" => "Files", "action" => "changeStatus", "_ext" => "json"]); ?>',
+            $.ajax({ url: '<?= $this->Url->build(["controller" => "Files", "action" => "changeStatus", "_ext" => "json"]); ?>',
                 data: {
                     id: key,
                 },
                 type: 'post',
                 success: function(output) {
                     console.log('output: ', output);
-                    jQuery("button.kv-file-edit[ data-key='" + key + "']")
+                    $("button.kv-file-edit[ data-key='" + key + "']")
                             .removeClass(
                             function (index, css) {
                                 return (css.match (/(^|\s)access-\S+/g) || []).join(' ');
@@ -420,21 +419,21 @@
         /**
          * Function for the select file button
          */
-        jQuery(document).on('click', ".kv-file-select", function () {
-            var key = jQuery(this).data('key'); // get the file key
+        $(document).on('click', ".kv-file-select", function () {
+            var key = $(this).data('key'); // get the file key
             updateInfo(key);
         });
 
 
         function updateInfo(key) {
             var url = '<?= $this->Url->build(["controller" => "Files", "action" => "mediaInfo", "_ext" => "json"]); ?>';
-            jQuery.ajax({ url: url,
+            $.ajax({ url: url,
                 data: {
                     id: key,
                 },
                 type: 'post',
                 success: function(data) {
-                    jQuery('#myInsertButton').attr('file-path', data.path);
+                    $('#myInsertButton').attr('file-path', data.path);
                     var htmlInfo = '<ul class="info-list">';
                     htmlInfo += '<li><strong>Name</strong>: ' + data.name + '</li>';
                     htmlInfo += '<li><strong>Path</strong>: ' + data.path + '</li>';
@@ -444,7 +443,7 @@
                     htmlInfo += '<li><strong>Extension</strong>: ' + data.ext + '</li>';
                     htmlInfo += '</ul>';
 
-                    jQuery('#info-div').html(htmlInfo);
+                    $('#info-div').html(htmlInfo);
                 },
                 error: function(jqXHR, error, errorThrown) {
                     console.log('jqXHR: ', jqXHR);
@@ -456,16 +455,16 @@
          * Reset info box
          */
         function resetInfo() {
-            jQuery('#info-div').html('');
+            $('#info-div').html('');
         }
 
         /**
          * Reset upload box
          */
         function resetUpload() {
-            console.log(jQuery("#myFile"));
-            jQuery("#myFile").fileinput('reset');
-            jQuery("#myFile").fileinput('refresh');
+            console.log($("#myFile"));
+            $("#myFile").fileinput('reset');
+            $("#myFile").fileinput('refresh');
 
         }
 
@@ -474,8 +473,8 @@
          * @param data
          */
         function updateFiles(data) {
-            jQuery('#folder-id').val(choosenFolder);
-            jQuery('#actual-folder-name').text(jQuery('.jstree-clicked').text());
+            $('#folder-id').val(choosenFolder);
+            $('#actual-folder-name').text($('.jstree-clicked').text());
 
             fileInputConfig.initialPreview = data.initialPreview;
             fileInputConfig.initialPreviewConfig = data.initialPreviewConfig;
