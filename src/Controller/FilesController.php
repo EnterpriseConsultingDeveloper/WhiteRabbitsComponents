@@ -147,6 +147,7 @@ class FilesController extends AppController
     {
         $this->viewBuilder()->layout('ajax'); // Vista per ajax
         $this->request->session()->write('Auth.User.customer_site', $site);
+        $completeUrl = '//' . $site . '.' . $this->request->domain();
 
         $file = $this->Files->newEntity();
 
@@ -175,7 +176,7 @@ class FilesController extends AppController
 
         $this->set(compact('file', 'files', 'folders',
             'folderList', 'actualFolder', 'actualFolderName',
-            'initialPreview', 'initialPreviewConfig'));
+            'initialPreview', 'initialPreviewConfig', 'completeUrl'));
 
         $this->set('_serialize', ['file', 'files']);
 
