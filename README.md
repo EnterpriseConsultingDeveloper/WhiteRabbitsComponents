@@ -101,6 +101,9 @@ $(function(){
 
 ## version
 
+1.0.2
+- Solved some bug
+
 1.0.1
 - Composer refactoring
 

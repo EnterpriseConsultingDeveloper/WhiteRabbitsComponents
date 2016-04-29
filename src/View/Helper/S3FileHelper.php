@@ -182,6 +182,10 @@ class S3FileHelper extends Helper
     }
 
     private function preparePath($path) {
+        // if complete path, it's ok!
+        if (WRUtils::startsWith($path, "//") || WRUtils::startsWith($path, "http"))
+            return $path;
+
         if (!WRUtils::startsWith($path, "/"))
             $path = '/' . $path;
 

@@ -147,7 +147,7 @@ class FilesController extends AppController
     {
         $this->viewBuilder()->layout('ajax'); // Vista per ajax
         $this->request->session()->write('Auth.User.customer_site', $site);
-        $completeUrl = '//' . $site . '.' . $this->request->domain();
+        $completeUrl = 'http://' . $site . SUITE_DOMAIN_THIRD_LEVELS . $this->request->domain();
 
         $file = $this->Files->newEntity();
 
@@ -353,6 +353,12 @@ class FilesController extends AppController
     public function media($completePath = null)
     {
         $this->viewBuilder()->layout('ajax'); // Vista per ajax
+
+        if (isset($_GET['ref_id'])) {
+            $ref_id= $_GET['ref_id'];
+            $MtNewsletters= $this->loadModel("MarketingTools.MtNewsletters");
+            $MtNewsletters->readImg($ref_id);
+        }
 
         if ($completePath == null) {
             throw new NotFoundException('File not found.');
