@@ -436,6 +436,7 @@
                     var completeUrl = '<?= $completeUrl ?>/s3_file_manager/Files/media' + data.path;
                     $('#myInsertButton').attr('file-path', completeUrl); //data.path);
                     $('#myInsertButton').attr('file-id', data.id); //data.id);
+                    $('#myInsertButton').attr('file-name', data.name); //data.id);
                     var htmlInfo = '<ul class="info-list">';
                     htmlInfo += '<li><strong>Name</strong>: ' + data.name + '</li>';
                     htmlInfo += '<li><strong>Path</strong>: ' + data.path + '</li>';

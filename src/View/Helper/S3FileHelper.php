@@ -152,15 +152,14 @@ class S3FileHelper extends Helper
         return $html;
     }
 
-
     /**
-     * imageWithDefault
+     * fileInfo
      *
      * Return an image. If image isn't available return default image or default html placeholder
      *
      * ### Example:
      *
-     * `$this->S3File->imageWithDefault($path, $options);`
+     * `$this->S3File->fileInfo($path, $options);`
      *
      * $options are the same as for HTML image, like ['class'=>'img-responsive']
      * if you want to show an HTML piece of code when no image is retrieved pass, for example, in $options ['noimagehtml'=>'<span>no image</span>']
@@ -176,7 +175,7 @@ class S3FileHelper extends Helper
       $html = '';
 
       $html = $this->Html->link(
-        $path,
+        null,
         $this->preparePath($path),
         $options
       );
@@ -211,6 +210,7 @@ class S3FileHelper extends Helper
 
         return $html;
     }
+
 
     private function preparePath($path) {
         if (!WRUtils::startsWith($path, "/"))
