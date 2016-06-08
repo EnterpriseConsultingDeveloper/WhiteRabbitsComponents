@@ -159,7 +159,7 @@ class S3FileHelper extends Helper
      *
      * ### Example:
      *
-     * `$this->S3File->fileInfo($path, $options);`
+     * `$this->S3File->fileInfo($name, $path, $options);`
      *
      * $options are the same as for HTML image, like ['class'=>'img-responsive']
      * if you want to show an HTML piece of code when no image is retrieved pass, for example, in $options ['noimagehtml'=>'<span>no image</span>']
@@ -170,12 +170,12 @@ class S3FileHelper extends Helper
      * @param array $options
      * @return string
      */
-    public function fileInfo($path, array $options = [])
+    public function fileInfo($name, $path, array $options = [])
     {
       $html = '';
 
       $html = $this->Html->link(
-        null,
+        $name,
         $this->preparePath($path),
         $options
       );
