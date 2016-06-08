@@ -439,6 +439,7 @@
                     $('#myInsertButton').attr('file-name', data.name); //data.id);
                     var htmlInfo = '<ul class="info-list">';
                     htmlInfo += '<li><strong>Name</strong>: ' + data.name + '</li>';
+                    htmlInfo += '<li><strong>Download</strong>: <a href="http://' + completeUrl.slice(2) + '" target="_black">' + data.name + '</a></li>';
                     htmlInfo += '<li><strong>Path</strong>: ' + data.path + '</li>';
                     htmlInfo += '<li><strong>Public</strong>: ' + data.public + '</li>';
                     htmlInfo += '<li><strong>Type</strong>: ' + data.type + '</li>';
