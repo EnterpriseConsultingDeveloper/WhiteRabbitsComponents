@@ -437,6 +437,7 @@
                     $('#myInsertButton').attr('file-path', completeUrl); //data.path);
                     $('#myInsertButton').attr('file-id', data.id); //data.id);
                     $('#myInsertButton').attr('file-name', data.name); //data.id);
+                    $('#myInsertButton').attr('file-path-partial', data.path); //data.path);
                     var htmlInfo = '<ul class="info-list">';
                     htmlInfo += '<li><strong>Name</strong>: ' + data.name + '</li>';
                     htmlInfo += '<li><strong>Download</strong>: <a href="http://' + completeUrl.slice(2) + '" target="_black">' + data.name + '</a></li>';
