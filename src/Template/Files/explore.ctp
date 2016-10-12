@@ -435,8 +435,12 @@
                 success: function(data) {
                     var completeUrl = '<?= $completeUrl ?>/s3_file_manager/Files/media' + data.path;
                     $('#myInsertButton').attr('file-path', completeUrl); //data.path);
+                    $('#myInsertButton').attr('file-id', data.id); //data.id);
+                    $('#myInsertButton').attr('file-name', data.name); //data.id);
+                    $('#myInsertButton').attr('file-path-partial', data.path); //data.path);
                     var htmlInfo = '<ul class="info-list">';
                     htmlInfo += '<li><strong>Name</strong>: ' + data.name + '</li>';
+                    htmlInfo += '<li><strong>Download</strong>: <a href="http://' + completeUrl.slice(2) + '" target="_black">' + data.name + '</a></li>';
                     htmlInfo += '<li><strong>Path</strong>: ' + data.path + '</li>';
                     htmlInfo += '<li><strong>Public</strong>: ' + data.public + '</li>';
                     htmlInfo += '<li><strong>Type</strong>: ' + data.type + '</li>';

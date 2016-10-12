@@ -430,6 +430,7 @@ class FilesController extends AppController
         $file = $this->Files->get($fileId);
 
         $info = [];
+        $info['id'] = $file->id;
         $info['path'] = $this->getProxyPath($file);
         $info['public'] = $file->public;
         $info['type'] = $file->mime_type;
