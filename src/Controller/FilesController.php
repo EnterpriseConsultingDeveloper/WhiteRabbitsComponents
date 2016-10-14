@@ -147,7 +147,7 @@ class FilesController extends AppController
     {
         $this->viewBuilder()->layout('ajax'); // Vista per ajax
         $this->request->session()->write('Auth.User.customer_site', $site);
-        $completeUrl = 'http://' . $site . SUITE_DOMAIN_THIRD_LEVELS . $this->request->domain();
+        $completeUrl = '//' . $site . '.' . SUITE_DOMAIN_THIRD_LEVELS . $this->request->domain();
 
         $file = $this->Files->newEntity();
 
