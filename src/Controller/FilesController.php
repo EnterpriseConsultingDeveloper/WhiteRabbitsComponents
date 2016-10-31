@@ -213,6 +213,43 @@ class FilesController extends AppController
     }
 
 
+    /**
+     * uploadFileToResizeFolder function
+     */
+    public function uploadFileToResizeFolder()
+    {
+        $this->viewBuilder()->layout('ajax'); // Vista per ajax
+
+        $file = $this->Files->newEntity();
+        $file->file = $_FILES['file'];
+
+        $site = $this->extractSite();
+        $folderId = $this->getFolderResized($site);
+
+        $this->loadModel('Files'); // It's necessary because the name "media" was reserved
+        try {
+            $file->folder_id = $folderId;
+
+            $path = $_FILES['file']['name'];
+            $file->extension = pathinfo($path, PATHINFO_EXTENSION);
+            $file->public = 1;
+            $file->original_filename = $path;
+
+            $file->path = $this->getFolderPath($file);
+
+            if ($this->Files->save($file)) {
+                header('Content-Type: application/json');
+                echo json_encode(__('Saved!'));
+            } else {
+                header('Content-Type: application/json');
+                echo json_encode(__('The file could not be saved. Please, try again.'));
+            }
+
+        } catch (Exception $e) {
+            echo 'Error: ', $e->getMessage();
+        }
+    }
+
 
     /**
      * deleteFile method
@@ -365,13 +402,8 @@ class FilesController extends AppController
             throw new NotFoundException('File not found.');
         }
 
-        //debug($customer->id); die;
-        //$site = $this->request->session()->read('Auth.User.customer_site');
-        $subdomains = $this->request->subdomains();
-        $site = $subdomains[0];
-        if ($site == 'content' || $site == 'editorial') {
-            $site = $this->request->session()->read('Auth.User.customer_site');
-        }
+        $site = $this->extractSite();
+
         $lastSlashPos = strrpos($completePath , '/');
         $firstSlashPos = strpos($completePath , '/');
         if (!$lastSlashPos && !$firstSlashPos) { // File saved in root ("/" folder)
@@ -413,6 +445,61 @@ class FilesController extends AppController
 
     }
 
+
+    /**
+     * @return mixed
+     */
+    private function getFolderResized($site) {
+        $this->loadModel('Folders');
+        try {
+            $rootFolder = $this->Folders->find('all')
+                ->select(['id'])
+                ->where(['Folders.bucket' => $site])
+                ->where(['Folders.parent_id' => null])
+                ->first();
+
+            $rootFolderId = $rootFolder->id;
+
+            $folder = $this->Folders->find('all')
+                ->select(['id'])
+                ->where(['Folders.bucket' => $site])
+                ->where(['Folders.name' => 'Resized'])
+                ->where(['Folders.parent_id' => $rootFolderId])
+                ->first();
+
+            if($folder != null) {
+                return $folder->id;
+            } else {
+                // Create folder 'Resized'
+                $folder = $this->Folders->newEntity();
+
+                $folder->name = 'Resized';
+                $folder->parent_id = $rootFolderId;
+                $folder->bucket = $site;
+
+                if ($this->Folders->save($folder)) {
+                    $this->Folders->recover(); // Need to recover folders tree
+                    return $folder->id;
+                }
+            }
+
+        } catch (Exception $e) {
+            echo 'Error: ', $e->getMessage();
+        }
+        return null;
+    }
+
+    /**
+     * @return mixed
+     */
+    private function extractSite() {
+        $subdomains = $this->request->subdomains();
+        $site = $subdomains[0];
+        if ($site == 'content' || $site == 'editorial') {
+            $site = $this->request->session()->read('Auth.User.customer_site');
+        }
+        return $site;
+    }
 
 
     /**

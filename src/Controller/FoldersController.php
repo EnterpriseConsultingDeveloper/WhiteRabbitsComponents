@@ -217,7 +217,11 @@ class FoldersController extends AppController
     }
 
 
-
+    /**
+     * @param $needle
+     * @param $haystack
+     * @return bool|int|string
+     */
     function recursive_array_search($needle, $haystack) {
         foreach($haystack as $key => $value) {
             $current_key = $key;
