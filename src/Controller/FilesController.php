@@ -215,12 +215,13 @@ class FilesController extends AppController
 
     /**
      * uploadFileToResizeFolder function
-     * @param $base64ImageData
-     * @param $imgName
      */
-    public function uploadFileToResizeFolder($base64ImageData, $imgName)
+    public function uploadFileToResizeFolder()
     {
         $this->viewBuilder()->layout('ajax'); // Vista per ajax
+
+        $base64ImageData = $this->request->data('imgData');
+        $imgName = $this->request->data('imgName');
 
         $site = $this->extractSite();
         $folderId = $this->getFolderResized($site);
