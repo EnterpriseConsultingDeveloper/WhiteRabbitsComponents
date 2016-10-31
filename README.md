@@ -101,6 +101,10 @@ $(function(){
 
 ## version
 
+1.1.0
+- Added Files -> uploadFileToResizeFolder($base64ImageData, $imgName)
+- Optimized code
+
 1.0.2
 - Solved some bug
 
