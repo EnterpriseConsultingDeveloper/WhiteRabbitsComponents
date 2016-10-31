@@ -118,7 +118,7 @@ class FoldersController extends AppController
     }
 
     /**
-     * getFolderList method (ajax)
+     * folderList method (ajax)
      *
      */
     public function folderList()
@@ -141,8 +141,7 @@ class FoldersController extends AppController
     }
 
     /**
-     * getFolderList method (ajax)
-     *
+     * rename method (ajax)
      */
     public function rename()
     {
@@ -164,7 +163,6 @@ class FoldersController extends AppController
 
     /**
      * addFolder method (ajax)
-     *
      */
     public function addFolder()
     {
@@ -188,13 +186,11 @@ class FoldersController extends AppController
         } else {
             //Error
         }
-
     }
 
 
     /**
-     * removeFolder method (ajax)
-     *
+     * deleteFolder method (ajax)
      */
     public function deleteFolder()
     {

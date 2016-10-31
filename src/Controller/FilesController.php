@@ -215,38 +215,54 @@ class FilesController extends AppController
 
     /**
      * uploadFileToResizeFolder function
+     * @param $base64ImageData
+     * @param $imgName
      */
-    public function uploadFileToResizeFolder()
+    public function uploadFileToResizeFolder($base64ImageData, $imgName)
     {
         $this->viewBuilder()->layout('ajax'); // Vista per ajax
-
-        $file = $this->Files->newEntity();
-        $file->file = $_FILES['file'];
 
         $site = $this->extractSite();
         $folderId = $this->getFolderResized($site);
 
-        $this->loadModel('Files'); // It's necessary because the name "media" was reserved
-        try {
-            $file->folder_id = $folderId;
+        // Image
+        $imageData = base64_decode($base64ImageData);
+        $im = imagecreatefromstring($imageData);
 
-            $path = $_FILES['file']['name'];
-            $file->extension = pathinfo($path, PATHINFO_EXTENSION);
-            $file->public = 1;
-            $file->original_filename = $path;
+        if ($im !== false) {
+            ob_start();
+                imagejpeg($im, $imgName, 100);
+                $imageContent = ob_get_contents();
+            ob_end_clean();
+            imagedestroy($im);
 
-            $file->path = $this->getFolderPath($file);
+            $file = $this->Files->newEntity();
+            $file->file = $imageContent;
+            $this->loadModel('Files'); // It's necessary because the name "media" was reserved
+            try {
+                $file->folder_id = $folderId;
 
-            if ($this->Files->save($file)) {
-                header('Content-Type: application/json');
-                echo json_encode(__('Saved!'));
-            } else {
-                header('Content-Type: application/json');
-                echo json_encode(__('The file could not be saved. Please, try again.'));
+                $path = $imgName;
+                $file->extension = pathinfo($path, PATHINFO_EXTENSION);
+                $file->public = 1;
+                $file->original_filename = $path;
+
+                $file->path = $this->getFolderPath($file);
+
+                if ($this->Files->save($file)) {
+                    header('Content-Type: application/json');
+                    echo json_encode(__('Saved!'));
+                } else {
+                    header('Content-Type: application/json');
+                    echo json_encode(__('The file could not be saved. Please, try again.'));
+                }
+
+            } catch (Exception $e) {
+                echo 'Error: ', $e->getMessage();
             }
 
-        } catch (Exception $e) {
-            echo 'Error: ', $e->getMessage();
+        }  else {
+            echo 'An error occurred.';
         }
     }
 
