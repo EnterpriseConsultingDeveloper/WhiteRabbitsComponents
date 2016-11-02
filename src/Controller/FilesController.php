@@ -219,24 +219,11 @@ class FilesController extends AppController
     public function uploadFileToResizeFolder()
     {
         $this->viewBuilder()->layout('ajax'); // Vista per ajax
-
-        //$base64ImageData = $this->request->data('imgData');
         $imgName = $this->request->data('imgName');
 
         $site = $this->extractSite();
         $folderId = $this->getFolderResized($site);
-
-        // Image
-        //$imageData = base64_decode($base64ImageData);
-        //$im = imagecreatefromstring($imageData);
-
         if (true) {
-//            ob_start();
-//                imagejpeg($im, $imgName, 100);
-//                $imageContent = ob_get_contents();
-//            ob_end_clean();
-//            imagedestroy($im);
-
             $file = $this->Files->newEntity();
             $file->file = $this->request->data('imgData');
             $this->loadModel('Files'); // It's necessary because the name "media" was reserved
@@ -246,9 +233,9 @@ class FilesController extends AppController
                 $path = $imgName;
                 $file->extension = pathinfo($path, PATHINFO_EXTENSION);
                 $file->public = 1;
-                $file->original_filename = '/Resized/';
+                $file->original_filename = $path;
 
-                $file->path = $this->getFolderPath($file);
+                $file->path = '/Resized/';
 
                 if ($this->Files->save($file)) {
                     header('Content-Type: application/json');

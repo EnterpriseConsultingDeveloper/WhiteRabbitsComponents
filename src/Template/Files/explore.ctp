@@ -176,7 +176,7 @@
          * Create the jstree for folder tree
          *
          */
-
+        var myTree = $('#folderListContainer');
         $('#folderListContainer').jstree({
             'core' : {
                 'data' : {
@@ -207,6 +207,9 @@
                 is_draggable: false
             },
         })
+                .on("loaded.jstree", function() {
+                    myTree.jstree('open_all');
+                })
                 .on("changed.jstree", function (e, data) {
                     choosenFolder = data.selected[0];
 
