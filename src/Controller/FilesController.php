@@ -246,7 +246,7 @@ class FilesController extends AppController
                 $path = $imgName;
                 $file->extension = pathinfo($path, PATHINFO_EXTENSION);
                 $file->public = 1;
-                $file->original_filename = $path;
+                $file->original_filename = '/Resized/';
 
                 $file->path = $this->getFolderPath($file);
 
@@ -472,7 +472,9 @@ class FilesController extends AppController
             $rootFolder = $this->Folders->find('all')
                 ->select(['id'])
                 ->where(['Folders.bucket' => $site])
-                ->where(['Folders.parent_id' => null])
+                ->where(function ($exp, $q) {
+                    return $exp->isNull('Folders.parent_id');
+                })
                 ->first();
 
             $rootFolderId = $rootFolder->id;
