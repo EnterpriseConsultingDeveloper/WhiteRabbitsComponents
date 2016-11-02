@@ -495,7 +495,7 @@ class FilesController extends AppController
                 $folder->bucket = $site;
 
                 if ($this->Folders->save($folder)) {
-                    $this->Folders->recover(); // Need to recover folders tree
+                    //$this->Folders->recover(); // Need to recover folders tree
                     return $folder->id;
                 }
             }
