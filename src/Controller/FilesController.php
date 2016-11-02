@@ -220,25 +220,25 @@ class FilesController extends AppController
     {
         $this->viewBuilder()->layout('ajax'); // Vista per ajax
 
-        $base64ImageData = $this->request->data('imgData');
+        //$base64ImageData = $this->request->data('imgData');
         $imgName = $this->request->data('imgName');
 
         $site = $this->extractSite();
         $folderId = $this->getFolderResized($site);
 
         // Image
-        $imageData = base64_decode($base64ImageData);
-        $im = imagecreatefromstring($imageData);
+        //$imageData = base64_decode($base64ImageData);
+        //$im = imagecreatefromstring($imageData);
 
-        if ($im !== false) {
-            ob_start();
-                imagejpeg($im, $imgName, 100);
-                $imageContent = ob_get_contents();
-            ob_end_clean();
-            imagedestroy($im);
+        if (true) {
+//            ob_start();
+//                imagejpeg($im, $imgName, 100);
+//                $imageContent = ob_get_contents();
+//            ob_end_clean();
+//            imagedestroy($im);
 
             $file = $this->Files->newEntity();
-            $file->file = $imageContent;
+            $file->file = $this->request->data('imgData');
             $this->loadModel('Files'); // It's necessary because the name "media" was reserved
             try {
                 $file->folder_id = $folderId;
