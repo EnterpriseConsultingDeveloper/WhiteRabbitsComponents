@@ -198,7 +198,7 @@ class FilesController extends AppController
 
         $path = $_FILES['file']['name'];
         $file->extension = pathinfo($path, PATHINFO_EXTENSION);
-        $file->public = 0;
+        $file->public = 1;
         $file->original_filename = $path;
 
         $file->path = $this->getFolderPath($file);

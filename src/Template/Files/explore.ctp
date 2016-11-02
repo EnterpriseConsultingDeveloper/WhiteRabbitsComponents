@@ -109,19 +109,19 @@
             '   {footer}\n' +
             '</div>\n',
         },
-        otherActionButtons: '<button type="button" ' +
-        'class="kv-file-edit btn btn-xs btn-default" ' +
-        'title="Change status" {dataKey}>\n' + // the {dataKey} tag will be auto replaced
-        '<i class="glyphicon glyphicon-edit"></i>\n' +
-        '</button>\n' +
-        '<button type="button" ' +
-        'class="kv-file-select btn btn-xs btn-default" ' +
-        'title="Select this file" {dataKey}>\n' + // the {dataKey} tag will be auto replaced
-        '<i class="glyphicon glyphicon-check"></i>\n' +
-        '</button>\n'
+        otherActionButtons:
+            '<button type="button" ' +
+            'class="kv-file-select btn btn-xs btn-default" ' +
+            'title="Select this file" {dataKey}>\n' + // the {dataKey} tag will be auto replaced
+            '<i class="glyphicon glyphicon-check"></i>\n' +
+            '</button>\n'
     }
 
-
+    //'<button type="button" ' +
+    //'class="kv-file-edit btn btn-xs btn-default" ' +
+    //'title="Change status" {dataKey}>\n' + // the {dataKey} tag will be auto replaced
+    //'<i class="glyphicon glyphicon-edit"></i>\n' +
+    //'</button>\n' +
 
     $(document).ready(function () {
         /**

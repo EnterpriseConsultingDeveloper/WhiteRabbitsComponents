@@ -46,11 +46,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="FilesController.php" pinned="false" current-in-tab="false">
+      <file leaf-file-name="FilesController.php" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/Controller/FilesController.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-5.0439563">
-              <caret line="226" column="0" selection-start-line="226" selection-start-column="0" selection-end-line="226" selection-end-column="0" />
+            <state vertical-scroll-proportion="0.27050182">
+              <caret line="200" column="25" selection-start-line="200" selection-start-column="25" selection-end-line="200" selection-end-column="25" />
               <folding />
             </state>
           </provider>
@@ -82,13 +82,13 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="explore.ctp" pinned="false" current-in-tab="true">
+      <file leaf-file-name="explore.ctp" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/Template/Files/explore.ctp">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.6732673">
-              <caret line="214" column="0" selection-start-line="214" selection-start-column="0" selection-end-line="214" selection-end-column="0" />
+            <state vertical-scroll-proportion="-9.5274725">
+              <caret line="111" column="14" selection-start-line="111" selection-start-column="14" selection-end-line="111" selection-end-column="14" />
               <folding>
-                <marker date="1478097918389" expanded="true" signature="20421:20450" placeholder="..." />
+                <marker date="1478099426375" expanded="true" signature="20438:20467" placeholder="..." />
               </folding>
             </state>
           </provider>
@@ -146,8 +146,8 @@
         <option value="$PROJECT_DIR$/src/Controller/FoldersController.php" />
         <option value="$PROJECT_DIR$/README.md" />
         <option value="$PROJECT_DIR$/src/Template/Files/upload_file_to_resize_folder.ctp" />
-        <option value="$PROJECT_DIR$/src/Controller/FilesController.php" />
         <option value="$PROJECT_DIR$/src/Template/Files/explore.ctp" />
+        <option value="$PROJECT_DIR$/src/Controller/FilesController.php" />
       </list>
     </option>
   </component>
@@ -163,9 +163,10 @@
   </component>
   <component name="PhpWorkspaceProjectConfiguration" backward_compatibility_performed="true" />
   <component name="ProjectFrameBounds">
-    <option name="x" value="953" />
-    <option name="width" value="974" />
-    <option name="height" value="1047" />
+    <option name="x" value="-8" />
+    <option name="y" value="-8" />
+    <option name="width" value="1936" />
+    <option name="height" value="1056" />
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="false">
     <OptionsSetting value="true" id="Add" />
@@ -409,14 +410,20 @@
       <option name="project" value="LOCAL" />
       <updated>1478096217660</updated>
     </task>
-    <option name="localTasksCounter" value="11" />
+    <task id="LOCAL-00011" summary="commit&#10;">
+      <created>1478097957313</created>
+      <option name="number" value="00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1478097957313</updated>
+    </task>
+    <option name="localTasksCounter" value="12" />
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="953" y="0" width="974" height="1047" extended-state="0" />
+    <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.5" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.1234375" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="8" side_tool="true" content_ui="tabs" />
@@ -508,7 +515,7 @@
         <state vertical-scroll-proportion="0.0">
           <caret line="258" column="27" selection-start-line="247" selection-start-column="24" selection-end-line="258" selection-end-column="27" />
           <folding>
-            <marker date="1478097918389" expanded="true" signature="20421:20450" placeholder="..." />
+            <marker date="1478099426375" expanded="true" signature="20438:20467" placeholder="..." />
           </folding>
         </state>
       </provider>
@@ -566,7 +573,7 @@
         <state vertical-scroll-proportion="0.0">
           <caret line="439" column="55" selection-start-line="435" selection-start-column="43" selection-end-line="435" selection-end-column="55" />
           <folding>
-            <marker date="1478097918389" expanded="true" signature="20421:20450" placeholder="..." />
+            <marker date="1478099426375" expanded="true" signature="20438:20467" placeholder="..." />
           </folding>
         </state>
       </provider>
@@ -616,7 +623,7 @@
         <state vertical-scroll-proportion="0.0">
           <caret line="439" column="55" selection-start-line="435" selection-start-column="43" selection-end-line="435" selection-end-column="55" />
           <folding>
-            <marker date="1478097918389" expanded="true" signature="20421:20450" placeholder="..." />
+            <marker date="1478099426375" expanded="true" signature="20438:20467" placeholder="..." />
           </folding>
         </state>
       </provider>
@@ -658,7 +665,7 @@
         <state vertical-scroll-proportion="0.0">
           <caret line="439" column="55" selection-start-line="435" selection-start-column="43" selection-end-line="435" selection-end-column="55" />
           <folding>
-            <marker date="1478097918389" expanded="true" signature="20421:20450" placeholder="..." />
+            <marker date="1478099426375" expanded="true" signature="20438:20467" placeholder="..." />
           </folding>
         </state>
       </provider>
@@ -708,7 +715,7 @@
         <state vertical-scroll-proportion="0.0">
           <caret line="439" column="55" selection-start-line="435" selection-start-column="43" selection-end-line="435" selection-end-column="55" />
           <folding>
-            <marker date="1478097918389" expanded="true" signature="20421:20450" placeholder="..." />
+            <marker date="1478099426375" expanded="true" signature="20438:20467" placeholder="..." />
           </folding>
         </state>
       </provider>
@@ -758,7 +765,7 @@
         <state vertical-scroll-proportion="0.0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
-            <marker date="1478097918389" expanded="true" signature="20421:20450" placeholder="..." />
+            <marker date="1478099426375" expanded="true" signature="20438:20467" placeholder="..." />
           </folding>
         </state>
       </provider>
@@ -857,14 +864,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/Controller/FilesController.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-5.0439563">
-          <caret line="226" column="0" selection-start-line="226" selection-start-column="0" selection-end-line="226" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/Template/Files/media.ctp">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
@@ -875,11 +874,19 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/Template/Files/explore.ctp">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.6732673">
-          <caret line="214" column="0" selection-start-line="214" selection-start-column="0" selection-end-line="214" selection-end-column="0" />
+        <state vertical-scroll-proportion="-9.5274725">
+          <caret line="111" column="14" selection-start-line="111" selection-start-column="14" selection-end-line="111" selection-end-column="14" />
           <folding>
-            <marker date="1478097918389" expanded="true" signature="20421:20450" placeholder="..." />
+            <marker date="1478099426375" expanded="true" signature="20438:20467" placeholder="..." />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Controller/FilesController.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.27050182">
+          <caret line="200" column="25" selection-start-line="200" selection-start-column="25" selection-end-line="200" selection-end-column="25" />
+          <folding />
         </state>
       </provider>
     </entry>
