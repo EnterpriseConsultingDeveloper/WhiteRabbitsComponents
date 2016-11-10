@@ -223,6 +223,18 @@ class FilesController extends AppController
 
         $site = $this->extractSite();
         $folderId = $this->getFolderResized($site);
+
+        // Check duplicate name
+        $fileNameExists = $this->Files->find('all')
+            ->select(['id'])
+            ->where(['Files.folder_id' => $folderId])
+            ->where(['Files.original_filename' => $imgName]);
+
+        if ($fileNameExists) {
+
+        }
+
+
         if (true) {
             $file = $this->Files->newEntity();
             $file->file = $this->request->data('imgData');
@@ -239,6 +251,7 @@ class FilesController extends AppController
 
                 if ($this->Files->save($file)) {
                     header('Content-Type: application/json');
+                    // Return path + name
                     echo json_encode(__('Saved!'));
                 } else {
                     header('Content-Type: application/json');

@@ -6,7 +6,7 @@
 
 <div class="row">
     <div class="col-lg-2">
-        <strong>Document and media manager</strong>
+        <strong>Folders</strong>
 
         <div id="folderListContainer"></div>
 
@@ -74,7 +74,6 @@
     var ip1 = <?=json_encode($initialPreview) ?>;
     var ip2 = <?=json_encode($initialPreviewConfig) ?>;
 
-    console.log(ip1, ip2);
     var fileInputConfig = {
         initialPreview: ip1,
         initialPreviewConfig: ip2,
@@ -386,6 +385,13 @@
             $el.fileinput(fileInputConfig)
                     .off('filepreupload').on('filepreupload', function() {
                         console.log("Initial pre-upload message!");
+                    })
+                    .on("filepredelete", function(jqXHR) {
+                        var abort = true;
+                        if (confirm("Are you sure you want to delete this image?")) {
+                            abort = false;
+                        }
+                        return abort;
                     });
         };
         initPlugin();
