@@ -28,7 +28,7 @@ class FilesController extends AppController
 
         if ($this->Auth != null) {
             $this->Auth->allow(['media']);
-            $this->Auth->allow(['explore']);
+           // $this->Auth->allow(['explore']);
         }
         if (!($event->subject()->request->params['action'] == 'media')) {
             parent::beforeFilter($event);
