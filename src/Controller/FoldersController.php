@@ -125,7 +125,6 @@ class FoldersController extends AppController
   public function folderSize($site)
   {
     $this->viewBuilder()->layout('ajax'); // Vista per ajax
-    $site = 'enterprise';
 
     $resultFolders = $this->Folders->find()
       ->select(['id'])
