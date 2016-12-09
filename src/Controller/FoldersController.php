@@ -121,6 +121,19 @@ class FoldersController extends AppController
      * folderList method (ajax)
      *
      */
+    public function folderSize()
+    {
+      $this->viewBuilder()->layout('ajax'); // Vista per ajax
+      $site = $this->request->query('site');
+      $sizeFolder = $this->countSizeFolders();
+
+      $this->set(compact('sizeList'));
+    }
+
+    /**
+     * folderList method (ajax)
+     *
+     */
     public function folderList()
     {
         $this->viewBuilder()->layout('ajax'); // Vista per ajax

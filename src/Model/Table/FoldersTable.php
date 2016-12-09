@@ -86,6 +86,10 @@ class FoldersTable extends Table
         return $rules;
     }
 
+    public function countSizeFolders($site) {
+      return 1418;
+    }
+
     /**
      * Returns the root folder for a specified
      * application integrity.
@@ -102,6 +106,7 @@ class FoldersTable extends Table
 
         return $rootFolder;
     }
+
 }
 
 
