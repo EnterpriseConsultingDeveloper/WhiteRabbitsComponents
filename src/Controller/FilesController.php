@@ -669,3 +669,4 @@ class FilesController extends AppController
     return $actualFolderPath;
   }
 }
+
