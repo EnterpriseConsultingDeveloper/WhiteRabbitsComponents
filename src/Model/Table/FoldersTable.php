@@ -1,259 +1,114 @@
 <?php
-namespace S3FileManager\Controller;
+namespace S3FileManager\Model\Table;
 
-use S3FileManager\Controller\AppController;
-use Cake\ORM\TableRegistry;
+use Cake\ORM\Query;
+use Cake\ORM\RulesChecker;
+use Cake\ORM\Table;
+use Cake\Validation\Validator;
+use S3FileManager\Model\Entity\Folder;
 
 /**
- * Folders Controller
+ * Folders Model
  *
- * @property \S3FileManager\Model\Table\FoldersTable $Folders
+ * @property \Cake\ORM\Association\BelongsTo $ParentFolders
+ * @property \Cake\ORM\Association\HasMany $Files
+ * @property \Cake\ORM\Association\HasMany $ChildFolders
  */
-class FoldersController extends AppController
+class FoldersTable extends Table
 {
 
-  public function initialize()
-  {
-    parent::initialize();
-    $this->loadComponent('RequestHandler');
-  }
+    /**
+     * Initialize method
+     *
+     * @param array $config The configuration for the Table.
+     * @return void
+     */
+    public function initialize(array $config)
+    {
+        parent::initialize($config);
 
-  /**
-   * Index method
-   *
-   * @return \Cake\Network\Response|null
-   */
-  public function index()
-  {
-    $this->paginate = [
-      'contain' => ['ParentFolders']
-    ];
-    $folders = $this->paginate($this->Folders);
+        $this->table('folders');
+        $this->displayField('name');
+        $this->primaryKey('id');
 
-    $this->set(compact('folders'));
-    $this->set('_serialize', ['folders']);
-  }
+        $this->addBehavior('Timestamp');
+        $this->addBehavior('Tree');
 
-  /**
-   * View method
-   *
-   * @param string|null $id Folder id.
-   * @return \Cake\Network\Response|null
-   * @throws \Cake\Datasource\Exception\RecordNotFoundException When record not found.
-   */
-  public function view($id = null)
-  {
-    $folder = $this->Folders->get($id, [
-      'contain' => ['ParentFolders', 'Files', 'ChildFolders']
-    ]);
-
-    $this->set('folder', $folder);
-    $this->set('_serialize', ['folder']);
-  }
-
-  /**
-   * Add method
-   *
-   * @return \Cake\Network\Response|void Redirects on successful add, renders view otherwise.
-   */
-  public function add()
-  {
-    $folder = $this->Folders->newEntity();
-    if ($this->request->is('post')) {
-      $folder = $this->Folders->patchEntity($folder, $this->request->data);
-      if ($this->Folders->save($folder)) {
-        $this->Flash->success(__('The folder has been saved.'));
-        return $this->redirect(['action' => 'index']);
-      } else {
-        $this->Flash->error(__('The folder could not be saved. Please, try again.'));
-      }
-    }
-    $parentFolders = $this->Folders->ParentFolders->find('list', ['limit' => 200]);
-    $this->set(compact('folder', 'parentFolders'));
-    $this->set('_serialize', ['folder']);
-  }
-
-  /**
-   * Edit method
-   *
-   * @param string|null $id Folder id.
-   * @return \Cake\Network\Response|void Redirects on successful edit, renders view otherwise.
-   * @throws \Cake\Network\Exception\NotFoundException When record not found.
-   */
-  public function edit($id = null)
-  {
-    $folder = $this->Folders->get($id, [
-      'contain' => []
-    ]);
-    if ($this->request->is(['patch', 'post', 'put'])) {
-      $folder = $this->Folders->patchEntity($folder, $this->request->data);
-      if ($this->Folders->save($folder)) {
-        $this->Flash->success(__('The folder has been saved.'));
-        return $this->redirect(['action' => 'index']);
-      } else {
-        $this->Flash->error(__('The folder could not be saved. Please, try again.'));
-      }
-    }
-    $parentFolders = $this->Folders->ParentFolders->find('list', ['limit' => 200]);
-    $this->set(compact('folder', 'parentFolders'));
-    $this->set('_serialize', ['folder']);
-  }
-
-  /**
-   * Delete method
-   *
-   * @param string|null $id Folder id.
-   * @return \Cake\Network\Response|null Redirects to index.
-   * @throws \Cake\Datasource\Exception\RecordNotFoundException When record not found.
-   */
-  public function delete($id = null)
-  {
-    $this->request->allowMethod(['post', 'delete']);
-    $folder = $this->Folders->get($id);
-    if ($this->Folders->delete($folder)) {
-      $this->Flash->success(__('The folder has been deleted.'));
-    } else {
-      $this->Flash->error(__('The folder could not be deleted. Please, try again.'));
-    }
-    return $this->redirect(['action' => 'index']);
-  }
-
-  /**
-   * folderList method (ajax)
-   *
-   */
-  public function folderSize($site)
-  {
-    $this->viewBuilder()->layout('ajax'); // Vista per ajax
-
-    $resultFolders = $this->Folders->find()
-      ->select(['id'])
-      ->where(['bucket' => $site]);
-
-    $folderIDS = null;
-    foreach ($resultFolders as $folder) {
-      $folderIDS[] = $folder->id;
+        $this->belongsTo('ParentFolders', [
+            'className' => 'S3FileManager.Folders',
+            'foreignKey' => 'parent_id'
+        ]);
+        $this->hasMany('Files', [
+            'foreignKey' => 'folder_id',
+            'className' => 'S3FileManager.Files'
+        ]);
+        $this->hasMany('ChildFolders', [
+            'className' => 'S3FileManager.Folders',
+            'foreignKey' => 'parent_id'
+        ]);
     }
 
-    $this->loadModel('Files');
+    /**
+     * Default validation rules.
+     *
+     * @param \Cake\Validation\Validator $validator Validator instance.
+     * @return \Cake\Validation\Validator
+     */
+    public function validationDefault(Validator $validator)
+    {
+        $validator
+            ->add('id', 'valid', ['rule' => 'numeric'])
+            ->allowEmpty('id', 'create');
 
-    $result = $this->Files->find()->where(['folder_id IN ' => $folderIDS]);
-    $result->select(['sum' => $result->func()->sum('size')]);
+        $validator
+            ->requirePresence('name', 'create')
+            ->notEmpty('name');
 
-    $sumSize = $result->toArray();
+        $validator
+            ->allowEmpty('lft');
 
-    return $sumSize[0]->sum;
+        $validator
+            ->allowEmpty('rght');
 
-  }
-
-  /**
-   * folderList method (ajax)
-   *
-   */
-  public function folderList()
-  {
-    $this->viewBuilder()->layout('ajax'); // Vista per ajax
-    $site = $this->request->query('site');
-    $selectedFolder = $this->request->query('sel');
-
-    if ($selectedFolder == null) {
-      $rootFolder = $this->Folders->getRootFolder($site);
-      $selectedFolder = $rootFolder->id;
+        return $validator;
     }
 
-    $this->request->session()->write('Auth.User.customer_site', $site);
-
-    $folderList = $this->Folders->find('threaded', [
-      'conditions' => ['bucket' => $site]])->toArray();
-
-    $this->set(compact('folderList', 'selectedFolder'));
-  }
-
-  /**
-   * rename method (ajax)
-   */
-  public function rename()
-  {
-    $this->viewBuilder()->layout('ajax'); // Vista per ajax
-
-    $id = $this->request->data('id');
-    $name = $this->request->data('text');
-
-    $folder = $this->Folders->get($id);
-    $folder->name = $name;
-
-    if ($this->Folders->save($folder)) {
-      header('Content-Type: application/json');
-      echo json_encode(array('id' => $id));
-    } else {
-      //Error
-    }
-  }
-
-  /**
-   * addFolder method (ajax)
-   */
-  public function addFolder()
-  {
-    $name = $this->request->data('text');
-    $parentId = $this->request->data('pId');
-
-    $parentFolder = $this->Folders->get($parentId);
-
-    $folder = $this->Folders->newEntity();
-
-    $folder->name = $name;
-    $folder->parent_id = $parentId;
-    $folder->bucket = $parentFolder->bucket;
-
-    if ($this->Folders->save($folder)) {
-      $this->Folders->recover(); // Need to recover folders tree
-      header('Content-Type: application/json');
-      echo json_encode(array('id' => $folder->id));
-
-      //return 'Created folder with id: ' . $folder->id;
-    } else {
-      //Error
-    }
-  }
-
-
-  /**
-   * deleteFolder method (ajax)
-   */
-  public function deleteFolder()
-  {
-    $id = $this->request->data('id');
-    if (substr($id, 0, 1) === "j" ) {
-      // New folder on frontend not yet created on DB
-      header('Content-Type: application/json');
-      echo json_encode(array('id' => $id));
-    } else {
-      $folder = $this->Folders->get($id);
-      if ($this->Folders->delete($folder)) {
-        $this->Folders->recover(); // Need to recover folders tree
-        header('Content-Type: application/json');
-        echo json_encode(array('id' => $folder->id));
-      } else {
-        //Error
-      }
+    /**
+     * Returns a rules checker object that will be used for validating
+     * application integrity.
+     *
+     * @param \Cake\ORM\RulesChecker $rules The rules object to be modified.
+     * @return \Cake\ORM\RulesChecker
+     */
+    public function buildRules(RulesChecker $rules)
+    {
+        $rules->add($rules->existsIn(['parent_id'], 'ParentFolders'));
+        return $rules;
     }
 
-  }
-
-
-  /**
-   * @param $needle
-   * @param $haystack
-   * @return bool|int|string
-   */
-  function recursive_array_search($needle, $haystack) {
-    foreach($haystack as $key => $value) {
-      $current_key = $key;
-      if($needle===$value OR (is_array($value) && recursive_array_search($needle,$value) !== false)) {
-        return $current_key;
-      }
+    public function countSizeFolders($site) {
+      return 1418;
     }
-    return false;
-  }
+
+    /**
+     * Returns the root folder for a specified
+     * application integrity.
+     *
+     * @param \Cake\ORM\RulesChecker $rules The rules object to be modified.
+     * @return \Cake\ORM\RulesChecker
+     */
+    public function getRootFolder($site)
+    {
+        $rootFolder = $this->find('all', [
+            'conditions' => ['bucket' => $site, 'parent_id IS' => null],
+            'order' => ['id' => 'ASC']
+        ])->first();
+
+        return $rootFolder;
+    }
+
 }
+
+
+
+
