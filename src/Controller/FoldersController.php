@@ -137,7 +137,6 @@ class FoldersController extends AppController
 
     $this->loadModel('Files');
 
-
     $result = $this->Files->find()->where(['folder_id IN ' => $folderIDS]);
     $result->select(['sum' => $result->func()->sum('size')]);
 
