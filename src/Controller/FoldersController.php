@@ -130,6 +130,10 @@ class FoldersController extends AppController
       ->select(['id'])
       ->where(['bucket' => $site]);
 
+    if ($resultFolders == null) {
+      return 0;
+    }
+
     $folderIDS = null;
     foreach ($resultFolders as $folder) {
       $folderIDS[] = $folder->id;
