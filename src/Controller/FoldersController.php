@@ -173,6 +173,7 @@ class FoldersController extends AppController
     $this->set(compact('folderList', 'selectedFolder'));
   }
 
+
   /**
    * rename method (ajax)
    */
