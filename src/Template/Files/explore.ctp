@@ -1,13 +1,16 @@
-<?= $this->Html->css('S3FileManager.fileinput.min.css') ?>
-<?= $this->Html->css('S3FileManager.jstree/dist/themes/default/style.min.css') ?>
-<?= $this->Html->css('S3FileManager.style.css') ?>
+<?= $this->Html->css('S3FileManager.fileinput.min.css', ['fullBase' => true]) ?>
+<?= $this->Html->css('S3FileManager.jstree/dist/themes/default/style.min.css', ['fullBase' => true]) ?>
+<?= $this->Html->css('S3FileManager.style.css', ['fullBase' => true]) ?>
 
 <?= $this->fetch('css') ?>
 
 <div class="row">
     <div class="col-lg-2">
         <strong>Folders</strong>
-
+        <div id="folder-bar" class="m-t-xs" style="display: none;">
+            <a href="#" class="btn btn-xs btn-primary" title="Add folder" id="add-subfolder"><i class="fa fa-plus" aria-hidden="true"></i> Add folder</a>
+            <a href="#" class="btn btn-xs btn-danger" title="Delete folder" id="delete-subfolder"><i class="fa fa-minus" aria-hidden="true"></i> Delete folder</a>
+        </div>
         <div id="folderListContainer"></div>
 
     </div>
@@ -61,14 +64,14 @@
 //'S3FileManager.bootstrap.min.js',
 'S3FileManager.fileinput_locale_it.js',
 'S3FileManager.jstree/dist/jstree.min.js'
-], ['block' => 'script']); ?>
+], ['block' => 'script', 'fullBase' => true]); ?>
 
 
 
 <?= $this->fetch('script') ?>
 
 <script>
-
+    //var actualFolder = '#';
     var choosenFolder;
 
     var ip1 = <?=json_encode($initialPreview) ?>;
@@ -110,9 +113,14 @@
         },
         otherActionButtons:
             '<button type="button" ' +
+            'class="kv-file-edit btn btn-xs btn-default" ' +
+            'title="Change status" {dataKey}>\n' + // the {dataKey} tag will be auto replaced
+            '<i class="glyphicon glyphicon-edit" style="color: #e90000"></i>\n' +
+            '</button>\n' +
+            '<button type="button" ' +
             'class="kv-file-select btn btn-xs btn-default" ' +
             'title="Select this file" {dataKey}>\n' + // the {dataKey} tag will be auto replaced
-            '<i class="glyphicon glyphicon-check"></i>\n' +
+            '<i class="glyphicon glyphicon-unchecked"></i>\n' +
             '</button>\n'
     }
 
@@ -170,6 +178,18 @@
             return items;
         }
 
+        $("#add-subfolder").on("click",function() {
+            $('#folderListContainer').jstree().create_node(choosenFolder ,  { "text" : "New Folder" }, "last", function(){
+                console.log("done on " + choosenFolder);
+            });
+        });
+
+        $("#delete-subfolder").on("click",function() {
+            $('#folderListContainer').jstree().delete_node(choosenFolder, function(){
+                console.log("done on " + choosenFolder);
+            });
+        });
+
 
         /**
          * Create the jstree for folder tree
@@ -179,7 +199,7 @@
         $('#folderListContainer').jstree({
             'core' : {
                 'data' : {
-                    'url' : '<?= $this->Url->build(["controller" => "Folders", "action" => "folderList", "?" => ["site" => $this->request->session()->read("Auth.User.customer_site")], "_ext" => "json"]); ?>',
+                    'url' : '<?= $this->Url->build(["controller" => "Folders", "action" => "folderList", "?" => ["site" => $this->request->session()->read("Auth.User.customer_site")], "_ext" => "json"], true); ?>',
                     'type' : 'POST'
                 },
                 'check_callback' : function (operation, node, node_parent, node_position, more) {
@@ -220,6 +240,10 @@
                             updateFiles(data);
                             resetInfo();
                         });
+
+                        // Open bar for rename, delete and add subfolder
+                        $('#folder-bar').val = choosenFolder;
+                        $('#folder-bar').show();
                     }
 
                 })
@@ -280,6 +304,12 @@
                     var myTree = $('#folderListContainer').jstree(true);
                     myTree.delete_node(data.node);
                 });
+
+
+
+
+
+
 
 
         $(document).on('mousedown', ".file-selectable", function (e) {
@@ -458,6 +488,13 @@
                     htmlInfo += '</ul>';
 
                     $('#info-div').html(htmlInfo);
+
+                    $(".kv-file-select").html('<i class="glyphicon glyphicon-unchecked"></i>');
+                    $(".file-selectable").css('border', '0');
+
+                    $(".kv-file-select[data-key='"+key+"']").html('<i class="glyphicon glyphicon-check" style="color: #62cb31;"></i>');
+                    $(".file-selectable[my-data-key='"+key+"']").css('border', '1px solid #3498db');
+
                 },
                 error: function(jqXHR, error, errorThrown) {
                     console.log('jqXHR: ', jqXHR);
