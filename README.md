@@ -36,7 +36,7 @@ In order to pass a customer name / site to the UploadableBehavior you have to pu
 ```php
  public function beforeFilter(Event $event)
  {
-   $this->request->session()->write('Auth.User.customer_site', 'my.customer.site');
+   $this->request->session()->write('Auth.User.fc_customer_site', 'my.customer.site');
 
  } 
 ```

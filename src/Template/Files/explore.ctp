@@ -199,7 +199,7 @@
         $('#folderListContainer').jstree({
             'core' : {
                 'data' : {
-                    'url' : '<?= $this->Url->build(["controller" => "Folders", "action" => "folderList", "?" => ["site" => $this->request->session()->read("Auth.User.customer_site")], "_ext" => "json"], true); ?>',
+                    'url' : '<?= $this->Url->build(["controller" => "Folders", "action" => "folderList", "?" => ["site" => $this->request->session()->read("Auth.User.fc_customer_site")], "_ext" => "json"], true); ?>',
                     'type' : 'POST'
                 },
                 'check_callback' : function (operation, node, node_parent, node_position, more) {

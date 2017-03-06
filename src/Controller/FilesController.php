@@ -148,8 +148,8 @@ class FilesController extends AppController
   public function explore($site, $actualFolder = null)
   {
     $this->viewBuilder()->layout('ajax'); // Vista per ajax
-    $this->request->session()->write('Auth.User.customer_site', $site);
-    $completeUrl = '//' . $site . '.' . SUITE_DOMAIN_THIRD_LEVELS . $this->request->domain();
+    $this->request->session()->write('Auth.User.fc_customer_site', $site);
+    $completeUrl = '//' . $site . SUITE_DOMAIN_THIRD_LEVELS . $this->request->domain();
 
     $file = $this->Files->newEntity();
 
@@ -208,7 +208,7 @@ class FilesController extends AppController
     if ($this->Files->save($file)) {
 
       $crmManager = new FoldersController();
-      $site = $this->request->session()->read('Auth.User.customer_site');
+      $site = $this->request->session()->read('Auth.User.fc_customer_site');
       $limit = $crmManager->folderSize($site);
 
       $http = new WRClient();
@@ -302,7 +302,7 @@ class FilesController extends AppController
     if ($this->Files->delete($file)) {
 
       $crmManager = new FoldersController();
-      $site = $this->request->session()->read('Auth.User.customer_site');
+      $site = $this->request->session()->read('Auth.User.fc_customer_site');
       $limit = $crmManager->folderSize($site);
 
       $http = new WRClient();
@@ -333,7 +333,7 @@ class FilesController extends AppController
    */
   public function changeFolder()
   {
-    $site = $this->request->session()->read('Auth.User.customer_site');
+    $site = $this->request->session()->read('Auth.User.fc_customer_site');
 
     $id = $this->request->data['id'];
     $newFolderId = $this->request->data['folder'];
@@ -384,7 +384,7 @@ class FilesController extends AppController
 
   public function getFiles()
   {
-    $site = $this->request->session()->read('Auth.User.customer_site');
+    $site = $this->request->session()->read('Auth.User.fc_customer_site');
 
     $actualFolder = $this->Files->Folders->find('all', [
       'conditions' => ['bucket' => $site],
@@ -407,7 +407,7 @@ class FilesController extends AppController
   public function getActualFolderFiles($actualFolder = null)
   {
     $this->viewBuilder()->layout('ajax'); // Vista per ajax
-    $site = $this->request->session()->read('Auth.User.customer_site');
+    $site = $this->request->session()->read('Auth.User.fc_customer_site');
 
     if ($actualFolder == null || $actualFolder == 'undefined') {
       $actualFolder = $this->Files->Folders->find('all', [
@@ -465,6 +465,7 @@ class FilesController extends AppController
       $fileName = substr($completePath, $lastSlashPos + 1, strlen($completePath));
       $path = '/' . substr($completePath, 0, $lastSlashPos + 1);
     }
+    debug($path);
     $this->loadModel('Files'); // It's necessary because the name "media" was reserved
     $this->loadModel('Folders');
     try {
@@ -550,7 +551,7 @@ class FilesController extends AppController
     $subdomains = $this->request->subdomains();
     $site = $subdomains[0];
     if ($site == 'content' || $site == 'editorial') {
-      $site = $this->request->session()->read('Auth.User.customer_site');
+      $site = $this->request->session()->read('Auth.User.fc_customer_site');
     }
     return $site;
   }

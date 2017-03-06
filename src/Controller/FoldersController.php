@@ -165,7 +165,7 @@ class FoldersController extends AppController
       $selectedFolder = $rootFolder->id;
     }
 
-    $this->request->session()->write('Auth.User.customer_site', $site);
+    $this->request->session()->write('Auth.User.fc_customer_site', $site);
 
     $folderList = $this->Folders->find('threaded', [
       'conditions' => ['bucket' => $site]])->toArray();

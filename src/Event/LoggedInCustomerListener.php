@@ -49,7 +49,7 @@ class LoggedInCustomerListener implements EventListenerInterface
      */
     public function beforeSave(Event $event, EntityInterface $entity, ArrayObject $options) {
         if (empty($options['loggedInCustomer'])) {
-            $customerSite = $this->_Request->session()->read('Auth.User.customer_site');
+            $customerSite = $this->_Request->session()->read('Auth.User.fc_customer_site');
             if($customerSite == null) {
                 $customerSite = '';
             }
