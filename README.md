@@ -101,6 +101,9 @@ $(function(){
 
 ## version
 
+1.2.0
+- AAA
+
 1.1.0
 - Added Files -> uploadFileToResizeFolder($base64ImageData, $imgName)
 - Optimized code
