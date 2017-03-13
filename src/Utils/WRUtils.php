@@ -135,7 +135,6 @@ class WRUtils
 
         $icons = array(
 
-
             'txt' => '<i class="fa fa-file-text text-muted generic-file-icon "></i>',
             'htm' => '<i class="fa fa-file-code-o text-muted generic-file-icon "></i>',
             'html' => '<i class="fa fa-file-code-o text-muted generic-file-icon "></i>',

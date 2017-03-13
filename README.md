@@ -31,7 +31,7 @@ bin\cake migrations migrate -p S3FileManager
  
 ```    
     
-In order to pass a customer name / site to the UploadableBehavior you have to put it in the parameter session Auth.User.customer_site (ie in AppController, beforeFilter method):
+In order to pass a customer name / site to the UploadableBehavior you have to put it in the parameter session Auth.User.fc_customer_site (ie in AppController, beforeFilter method):
 
 ```php
  public function beforeFilter(Event $event)
@@ -118,7 +118,7 @@ $(function(){
 0.2.1
 - S3FileHelper: Set the default image instead of an html code
 - Added a customer site name to the uploadable behavior in order to create, in S3, separate bucket for different customers.  
-if you want use this feature add the parameter Auth.User.customer_site in your session
+if you want use this feature add the parameter Auth.User.fc_customer_site in your session
 
 
 0.1.3.1

@@ -46,7 +46,7 @@ class FilesController extends AppController
   public function index()
   {
     $this->paginate = [
-      'contain' => ['Folders']
+        'contain' => ['Folders']
     ];
     $files = $this->paginate($this->Files);
 
@@ -64,7 +64,7 @@ class FilesController extends AppController
   public function view($id = null)
   {
     $file = $this->Files->get($id, [
-      'contain' => ['Folders']
+        'contain' => ['Folders']
     ]);
 
     $this->set('file', $file);
@@ -103,7 +103,7 @@ class FilesController extends AppController
   public function edit($id = null)
   {
     $file = $this->Files->get($id, [
-      'contain' => []
+        'contain' => []
     ]);
     if ($this->request->is(['patch', 'post', 'put'])) {
       $file = $this->Files->patchEntity($file, $this->request->data);
@@ -154,17 +154,9 @@ class FilesController extends AppController
     $file = $this->Files->newEntity();
 
     $folderList = $this->Files->Folders->find('treeList', [
-      'conditions' => ['bucket' => $site]]);
+        'conditions' => ['bucket' => $site]]);
 
     $rootFolder = $this->Files->Folders->getRootFolder($site);
-
-    if($rootFolder == null) { //Creating root Folder for this site
-      $folder = $this->Files->Folders->newEntity();
-      $folder->name = '/';
-      $folder->bucket = $site;
-      $this->Files->Folders->save($folder);
-      $rootFolder = $folder;
-    }
 
     if ($actualFolder == null) {
       $actualFolder = $rootFolder->id;
@@ -177,8 +169,8 @@ class FilesController extends AppController
     $this->doInitialPreviews($files, $site, $initialPreview, $initialPreviewConfig);
 
     $this->set(compact('file', 'files', 'folders',
-      'folderList', 'actualFolder', 'actualFolderName',
-      'initialPreview', 'initialPreviewConfig', 'completeUrl'));
+        'folderList', 'actualFolder', 'actualFolderName',
+        'initialPreview', 'initialPreviewConfig', 'completeUrl'));
 
     $this->set('_serialize', ['file', 'files']);
 
@@ -213,14 +205,14 @@ class FilesController extends AppController
 
       $http = new WRClient();
       $response = $http->post(API_PATH . API_METHOD_SET_LIMITS, [
-        'customerID' => $this->request->session()->read('Auth.User.customer_id'),
-        'limit' => 'repository_space',
-        'value' => $limit + $_FILES['file']['size'],
-        'globalValue' => true
+          'customerID' => $this->request->session()->read('Auth.User.customer_id'),
+          'limit' => 'repository_space',
+          'value' => $limit + $_FILES['file']['size'],
+          'globalValue' => true
       ],
-        [
-          'headers' => ['Authorization' => 'Bearer '.$this->request->session()->read('Auth.User.token'), 'Accept' => 'application/json']
-        ]);
+          [
+              'headers' => ['Authorization' => 'Bearer '.$this->request->session()->read('Auth.User.token'), 'Accept' => 'application/json']
+          ]);
 
       header('Content-Type: application/json');
       echo json_encode('Loaded...');
@@ -244,16 +236,11 @@ class FilesController extends AppController
 
     // Check duplicate name
     $fileNameExists = $this->Files->find('all')
-      ->select(['id'])
-      ->where(['Files.folder_id' => $folderId])
-      ->where(['Files.original_filename' => $imgName]);
+        ->select(['id'])
+        ->where(['Files.folder_id' => $folderId])
+        ->where(['Files.original_filename' => $imgName]);
 
     if ($fileNameExists) {
-
-    }
-
-
-    if (true) {
       $file = $this->Files->newEntity();
       $file->file = $this->request->data('imgData');
       $this->loadModel('Files'); // It's necessary because the name "media" was reserved
@@ -307,14 +294,14 @@ class FilesController extends AppController
 
       $http = new WRClient();
       $response = $http->post(API_PATH . API_METHOD_SET_LIMITS, [
-        'customerID' => $this->request->session()->read('Auth.User.customer_id'),
-        'limit' => 'repository_space',
-        'value' => $limit - $size,
-        'globalValue' => true
+          'customerID' => $this->request->session()->read('Auth.User.customer_id'),
+          'limit' => 'repository_space',
+          'value' => $limit - $size,
+          'globalValue' => true
       ],
-        [
-          'headers' => ['Authorization' => 'Bearer '.$this->request->session()->read('Auth.User.token'), 'Accept' => 'application/json']
-        ]);
+          [
+              'headers' => ['Authorization' => 'Bearer '.$this->request->session()->read('Auth.User.token'), 'Accept' => 'application/json']
+          ]);
 
       header('Content-Type: application/json');
       echo json_encode('File deleted...');
@@ -387,8 +374,8 @@ class FilesController extends AppController
     $site = $this->request->session()->read('Auth.User.fc_customer_site');
 
     $actualFolder = $this->Files->Folders->find('all', [
-      'conditions' => ['bucket' => $site],
-      'order' => ['id' => 'ASC']
+        'conditions' => ['bucket' => $site],
+        'order' => ['id' => 'ASC']
     ])->first();
 
     $files = $this->Files->findAllByFolderId($actualFolder->id);
@@ -411,8 +398,8 @@ class FilesController extends AppController
 
     if ($actualFolder == null || $actualFolder == 'undefined') {
       $actualFolder = $this->Files->Folders->find('all', [
-        'conditions' => ['bucket' => $site],
-        'order' => ['id' => 'ASC']
+          'conditions' => ['bucket' => $site],
+          'order' => ['id' => 'ASC']
       ])->first()->id;
     }
 
@@ -465,19 +452,19 @@ class FilesController extends AppController
       $fileName = substr($completePath, $lastSlashPos + 1, strlen($completePath));
       $path = '/' . substr($completePath, 0, $lastSlashPos + 1);
     }
-    debug($path);
+
     $this->loadModel('Files'); // It's necessary because the name "media" was reserved
     $this->loadModel('Folders');
     try {
       $folders = $this->Folders->find('all')
-        ->select(['id'])
-        ->where(['Folders.bucket' => $site]);
+          ->select(['id'])
+          ->where(['Folders.bucket' => $site]);
 
       $file = $this->Files->find()
-        ->where(['Files.path' => $path])
-        ->where(['Files.original_filename' => $fileName])
-        ->where(['folder_id IN' => $folders])
-        ->first();
+          ->where(['Files.path' => $path])
+          ->where(['Files.original_filename' => $fileName])
+          ->where(['folder_id IN' => $folders])
+          ->first();
 
       if (!$file) {
         throw new NotFoundException('File not found.');
@@ -505,22 +492,15 @@ class FilesController extends AppController
   private function getFolderResized($site) {
     $this->loadModel('Folders');
     try {
-      $rootFolder = $this->Folders->find('all')
-        ->select(['id'])
-        ->where(['Folders.bucket' => $site])
-        ->where(function ($exp, $q) {
-          return $exp->isNull('Folders.parent_id');
-        })
-        ->first();
-
+      $rootFolder = $this->Files->Folders->getRootFolder($site);
       $rootFolderId = $rootFolder->id;
 
       $folder = $this->Folders->find('all')
-        ->select(['id'])
-        ->where(['Folders.bucket' => $site])
-        ->where(['Folders.name' => 'Resized'])
-        ->where(['Folders.parent_id' => $rootFolderId])
-        ->first();
+          ->select(['id'])
+          ->where(['Folders.bucket' => $site])
+          ->where(['Folders.name' => 'Resized'])
+          ->where(['Folders.parent_id' => $rootFolderId])
+          ->first();
 
       if($folder != null) {
         return $folder->id;
@@ -535,6 +515,70 @@ class FilesController extends AppController
         if ($this->Folders->save($folder)) {
           //$this->Folders->recover(); // Need to recover folders tree
           return $folder->id;
+        }
+      }
+
+    } catch (Exception $e) {
+      echo 'Error: ', $e->getMessage();
+    }
+    return null;
+  }
+
+
+  /**
+   * @return mixed
+   */
+  public function getFolderProject() {
+    $site = $this->request->query('s');
+    $projectName = $this->request->query('p');
+    debug($site);debug($projectName); die;
+    $this->loadModel('Folders');
+    try {
+      $rootFolder = $this->Files->Folders->getRootFolder($site);
+      $rootFolderId = $rootFolder->id;
+
+      $projectFolder = $this->Folders->find('all')
+          ->select(['id'])
+          ->where(['Folders.bucket' => $site])
+          ->where(['Folders.name' => 'Projects folder'])
+          ->where(['Folders.parent_id' => $rootFolderId])
+          ->first();
+
+      if(empty($projectFolder)) {
+        // Create folder 'Projects folder'
+        $projectFolder = $this->Folders->newEntity();
+
+        $projectFolder->name = 'Projects folder';
+        $projectFolder->parent_id = $rootFolderId;
+        $projectFolder->bucket = $site;
+
+        if (!$this->Folders->save($projectFolder)) {
+          throw new Exception('Cannot create Projects folder.');
+        }
+      }
+
+      $folder = $this->Folders->find('all')
+          ->select(['id'])
+          ->where(['Folders.bucket' => $site])
+          ->where(['Folders.name' => $projectName])
+          ->where(['Folders.parent_id' => $projectFolder->id])
+          ->first();
+
+      if($folder != null) {
+        return $folder->id;
+      } else {
+        // Create folder 'Project'
+        $folder = $this->Folders->newEntity();
+
+        $folder->name = $projectName;
+        $folder->parent_id = $projectFolder->id;
+        $folder->bucket = $site;
+
+        if ($this->Folders->save($folder)) {
+          header('Content-Type: application/json');
+          echo json_encode($folder->id);
+        } else {
+          throw new Exception('Cannot create folder ' . $projectName . '.');
         }
       }
 
@@ -628,9 +672,9 @@ class FilesController extends AppController
    */
   private function doInitialPreviews($files, $site, &$initialPreview, &$initialPreviewConfig) {
     $deleteUrl = Router::url([
-      'controller' => 'Files',
-      'action' => 'deleteFile',
-      '_ext' => 'json'
+        'controller' => 'Files',
+        'action' => 'deleteFile',
+        '_ext' => 'json'
     ]);
 
     $s3client = new WRS3Client();
@@ -639,12 +683,12 @@ class FilesController extends AppController
     foreach ($files as $file) {
       $key = $file->id;
       $initialPreview[$i] = $s3client->createFilePreview($file->file, $site, [
-          'filename' => $file->file,
-          'title' => $file->original_filename,
-          'description' => $file->original_filename,
-          'originalFilename' => $file->original_filename,
-          'id' => $file->id
-        ]
+              'filename' => $file->file,
+              'title' => $file->original_filename,
+              'description' => $file->original_filename,
+              'originalFilename' => $file->original_filename,
+              'id' => $file->id
+          ]
       );
 
       $initialPreviewConfig[$i] = ['caption' => "{$file->original_filename}", 'width' => '120px', 'url' => $deleteUrl, 'key' => $key];
@@ -652,8 +696,8 @@ class FilesController extends AppController
     }
 
     $this->set(compact('file', 'files', 'folders', 'folderList',
-      'callbackFunction', 'actualFolder', 'actualFolderName',
-      'initialPreview', 'initialPreviewConfig'));
+        'callbackFunction', 'actualFolder', 'actualFolderName',
+        'initialPreview', 'initialPreviewConfig'));
 
     $this->set('_serialize', ['file', 'files']);
   }

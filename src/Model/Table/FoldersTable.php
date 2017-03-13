@@ -86,13 +86,8 @@ class FoldersTable extends Table
         return $rules;
     }
 
-    public function countSizeFolders($site) {
-      return 1418;
-    }
-
     /**
-     * Returns the root folder for a specified
-     * application integrity.
+     * Returns the root folder for a specified site
      *
      * @param \Cake\ORM\RulesChecker $rules The rules object to be modified.
      * @return \Cake\ORM\RulesChecker
@@ -103,6 +98,14 @@ class FoldersTable extends Table
             'conditions' => ['bucket' => $site, 'parent_id IS' => null],
             'order' => ['id' => 'ASC']
         ])->first();
+
+        if($rootFolder == null) { //Creating root Folder for this site
+            $folder = $this->newEntity();
+            $folder->name = '/';
+            $folder->bucket = $site;
+            $this->save($folder);
+            $rootFolder = $folder;
+        }
 
         return $rootFolder;
     }

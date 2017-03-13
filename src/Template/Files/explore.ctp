@@ -83,8 +83,10 @@
         overwriteInitial: true,
         initialCaption: "Files in your folder",
         previewFileIcon: '<i class="fa fa-file"></i>',
+        //La preview e' stata fatta cambiare in icona
+        //Tornare indietro. Adesso si vuole la preview al posto dell'icona (06.03.2017)
         //allowedPreviewTypes: ['image', 'text'], // allow only preview of image & text files
-        previewFileIconSettings: {
+        /*previewFileIconSettings: {
             'docx': '<i class="fa fa-file-word-o text-primary"></i>',
             'doc': '<i class="fa fa-file-word-o text-primary"></i>',
             'xlsx': '<i class="fa fa-file-excel-o text-success"></i>',
@@ -95,7 +97,7 @@
             'zip': '<i class="fa fa-file-archive-o text-muted"></i>',
             'rar': '<i class="fa fa-file-archive-o text-muted"></i>',
             '7z': '<i class="fa fa-file-archive-o text-muted"></i>',
-        },
+        },*/
         //allowedFileTypes: ['image', 'text', 'video', 'object'],
         previewClass: "bg-warning",
         browseClass: "hidden",
@@ -193,7 +195,6 @@
 
         /**
          * Create the jstree for folder tree
-         *
          */
         var myTree = $('#folderListContainer');
         $('#folderListContainer').jstree({
@@ -304,13 +305,6 @@
                     var myTree = $('#folderListContainer').jstree(true);
                     myTree.delete_node(data.node);
                 });
-
-
-
-
-
-
-
 
         $(document).on('mousedown', ".file-selectable", function (e) {
             return $.vakata.dnd.start(e,

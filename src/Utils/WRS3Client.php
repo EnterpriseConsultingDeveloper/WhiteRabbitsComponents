@@ -121,7 +121,6 @@ class WRS3Client extends S3Client
 
         if ($path != null && $path != '') {
             try {
-
                 $plainUrl = $this->getObjectUrl($site, $path); //$this->_s3Client->getObjectUrl($bucketName, $path, '+10 minutes');
 
                 $fileName = $options['filename'];
