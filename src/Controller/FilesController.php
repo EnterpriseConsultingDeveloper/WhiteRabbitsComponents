@@ -26,9 +26,9 @@ class FilesController extends AppController
   {
     // Allow only the view and index actions.
     //debug($event->subject()->request->params['action']); die;
-
+    $this->Auth->allow(['createProjectFolder']);
     if ($this->Auth != null) {
-      $this->Auth->allow(['media']);
+      $this->Auth->allow(['media', 'createProjectFolder']);
       // $this->Auth->allow(['explore']);
     }
     if (!($event->subject()->request->params['action'] == 'media')) {
@@ -526,12 +526,32 @@ class FilesController extends AppController
 
 
   /**
+   * createProjectFolder function
+   * Create a folder under the Project Folders
+   */
+  public function createProjectFolder()
+  {
+    $this->viewBuilder()->layout('ajax'); // Vista per ajax
+
+    try {
+      $site = $this->request->query('s');
+      $projectName = $this->request->query('p');
+      $folderId = $this->getFolderProject($site, $projectName);
+
+      $this->set(compact('folderId'));
+      header('Content-Type: application/json');
+      echo json_encode($folderId);
+    } catch (Exception $e) {
+      header('Content-Type: application/json');
+      echo json_encode('Error');
+    }
+  }
+
+  /**
    * @return mixed
    */
-  public function getFolderProject() {
-    $site = $this->request->query('s');
-    $projectName = $this->request->query('p');
-    debug($site);debug($projectName); die;
+  private function getFolderProject($site, $projectName) {
+    //debug($site);debug($projectName); die;
     $this->loadModel('Folders');
     try {
       $rootFolder = $this->Files->Folders->getRootFolder($site);
@@ -575,15 +595,15 @@ class FilesController extends AppController
         $folder->bucket = $site;
 
         if ($this->Folders->save($folder)) {
-          header('Content-Type: application/json');
-          echo json_encode($folder->id);
+          return $folder->id;
         } else {
           throw new Exception('Cannot create folder ' . $projectName . '.');
         }
       }
 
     } catch (Exception $e) {
-      echo 'Error: ', $e->getMessage();
+      //echo 'Error: ', $e->getMessage();
+      return null;
     }
     return null;
   }
