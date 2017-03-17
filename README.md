@@ -75,9 +75,10 @@ $(function(){
         title:'Document and media manager',
         size: eModal.size.xl,
         buttons: [
-            {text: 'Use file selected', style: 'info', id: 'myInsertButton', close: true, click:
+            {text: 'Use file(s) selected', style: 'info', id: 'myInsertButton', close: true, click:
                 function(result){
-                    filePath = $('#myInsertButton').attr('file-path');
+                    filePath = $('#myInsertButton').attr('file-path'); // Single file - To remove in future, only for retrocompatibility
+                    files = $('#myInsertButton').attr('files'); // contains id and path of the selected files for multiple select
                     if (filePath == null) {
                         alert('No file selected!');
                     }

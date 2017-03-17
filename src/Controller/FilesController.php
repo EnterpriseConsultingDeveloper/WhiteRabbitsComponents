@@ -286,11 +286,13 @@ class FilesController extends AppController
     $this->request->allowMethod(['post', 'delete']);
     $file = $this->Files->get($id);
     $size = $file->size;
+    $folderId = $file->folder_id;
+
     if ($this->Files->delete($file)) {
 
-      $crmManager = new FoldersController();
+      $fc = new FoldersController();
       $site = $this->request->session()->read('Auth.User.fc_customer_site');
-      $limit = $crmManager->folderSize($site);
+      $limit = $fc->folderSize($site);
 
       $http = new WRClient();
       $response = $http->post(API_PATH . API_METHOD_SET_LIMITS, [
@@ -302,6 +304,13 @@ class FilesController extends AppController
           [
               'headers' => ['Authorization' => 'Bearer '.$this->request->session()->read('Auth.User.token'), 'Accept' => 'application/json']
           ]);
+
+//      $files = $this->Files->findAllByFolderId($folderId);
+//      $initialPreview = $initialPreviewConfig = [];
+//      $this->doInitialPreviews($files, $site, $initialPreview, $initialPreviewConfig);
+//
+//      $this->set(compact('files', 'initialPreview', 'initialPreviewConfig'));
+//      $this->set('_serialize', ['file', 'files']);
 
       header('Content-Type: application/json');
       echo json_encode('File deleted...');

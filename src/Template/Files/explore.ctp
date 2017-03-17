@@ -1,6 +1,6 @@
 <?= $this->Html->css('S3FileManager.fileinput.min.css', ['fullBase' => true]) ?>
 <?= $this->Html->css('S3FileManager.jstree/dist/themes/default/style.min.css', ['fullBase' => true]) ?>
-<?= $this->Html->css('S3FileManager.style.css', ['fullBase' => true]) ?>
+<?= $this->Html->css('S3FileManager.fmstyle.css', ['fullBase' => true]) ?>
 
 <?= $this->fetch('css') ?>
 
@@ -43,6 +43,10 @@
                 </div>
             </div>
             <div role="tabpanel" class="tab-pane fade in active" id="fileListTab">
+                <div id="file-bar" class="m-t-xs" style="display: none;">
+                    <!-- <a href="#" class="btn btn-xs btn-primary" title="Move selected files" id="move-files"><i class="fa fa-plus" aria-hidden="true"></i> Move selected files</a> -->
+                    <a href="#" class="btn btn-xs btn-danger" title="Delete selected files" id="delete-files"><i class="fa fa-minus" aria-hidden="true"></i> Delete selected files</a>
+                </div>
                 <div class="large-8 medium-8 columns content">
                     <input id="preview" name="preview[]" type="file" multiple class="file-loading">
                 </div>
@@ -115,14 +119,14 @@
         },
         otherActionButtons:
             '<button type="button" ' +
-            'class="kv-file-edit btn btn-xs btn-default" ' +
-            'title="Change status" {dataKey}>\n' + // the {dataKey} tag will be auto replaced
-            '<i class="glyphicon glyphicon-edit" style="color: #e90000"></i>\n' +
-            '</button>\n' +
-            '<button type="button" ' +
             'class="kv-file-select btn btn-xs btn-default" ' +
             'title="Select this file" {dataKey}>\n' + // the {dataKey} tag will be auto replaced
             '<i class="glyphicon glyphicon-unchecked"></i>\n' +
+            '</button>\n'+
+            '<button type="button" ' +
+            'class="kv-file-edit btn btn-xs btn-default" ' +
+            'title="Change status" {dataKey}>\n' + // the {dataKey} tag will be auto replaced
+            '<i class="glyphicon glyphicon-edit" style="color: #e90000"></i>\n' +
             '</button>\n'
     }
 
@@ -208,7 +212,7 @@
                     // in case of 'rename_node' node_position is filled with the new node name
                     if (operation === 'rename_node') { // Prevent rename on just created nodes
                         var nodeId = node.id + '';
-                        console.log('nodeId', nodeId);
+                        //console.log('nodeId', nodeId);
                         if (nodeId.substr(0, 1) == 'j') {
                             return false;
                         } else {
@@ -458,6 +462,7 @@
         });
 
 
+        var selectedFiles = new Array();
         function updateInfo(key) {
             var url = '<?= $this->Url->build(["controller" => "Files", "action" => "mediaInfo", "_ext" => "json"]); ?>';
             $.ajax({ url: url,
@@ -471,6 +476,7 @@
                     $('#myInsertButton').attr('file-id', data.id); //data.id);
                     $('#myInsertButton').attr('file-name', data.name); //data.id);
                     $('#myInsertButton').attr('file-path-partial', data.path); //data.path);
+                    $('#myInsertButton').attr('files', selectedFiles); // contains id and path of the selected files
                     var htmlInfo = '<ul class="info-list">';
                     htmlInfo += '<li><strong>Name</strong>: ' + data.name + '</li>';
                     htmlInfo += '<li><strong>Download</strong>: <a href="http://' + completeUrl.slice(2) + '" target="_black">' + data.name + '</a></li>';
@@ -483,18 +489,74 @@
 
                     $('#info-div').html(htmlInfo);
 
-                    $(".kv-file-select").html('<i class="glyphicon glyphicon-unchecked"></i>');
-                    $(".file-selectable").css('border', '0');
+                    //$(".kv-file-select").html('<i class="glyphicon glyphicon-unchecked"></i>');
+                    //$(".file-selectable").css('border', '0');
+                    var cssStyles = ["<i class='glyphicon glyphicon-unchecked'></i>", "<i class='glyphicon glyphicon-check' style='color: #62cb31;'></i>"];
+                    var newState = $(".kv-file-select[data-key='"+key+"']").html() == '<i class="glyphicon glyphicon-check" style="color: #62cb31;"></i>' ? 0 : 1;
 
-                    $(".kv-file-select[data-key='"+key+"']").html('<i class="glyphicon glyphicon-check" style="color: #62cb31;"></i>');
+                    $(".kv-file-select[data-key='"+key+"']").html(cssStyles[newState]);
                     $(".file-selectable[my-data-key='"+key+"']").css('border', '1px solid #3498db');
+                    if(newState === 0) {
+                        delete selectedFiles[data.id];
+                       // var indexToRemove = selectedFiles.indexOf(completeUrl);
+                        //if (indexToRemove > -1) {
+                        //    selectedFiles.splice(indexToRemove, 1);
+                        //}
+                    } else {
+                        //var indexToAdd = selectedFiles.indexOf(completeUrl);
+                        //if (indexToAdd == -1) { // Only if does not exists
+                            //selectedFiles.push(completeUrl);
+                            selectedFiles[data.id] = completeUrl;
+                        //}
+                    }
 
+                    if(selectedFiles.length > 0) {
+                        $("#file-bar").show();
+                    } else {
+                        $("#file-bar").hide();
+                    }
+
+                    console.log("selectedFiles: ", selectedFiles);
                 },
                 error: function(jqXHR, error, errorThrown) {
                     console.log('jqXHR: ', jqXHR);
                 }
             });
         }
+
+        /**
+         * Delete a single file
+         */
+        function deleteFile(item, index) {
+            $.ajax({ url: '<?= $this->Url->build(["controller" => "Files", "action" => "deleteFile", "_ext" => "json"]); ?>',
+                data: {
+                    key: index,
+                },
+                type: 'post',
+                async: false,
+                success: function(output) {
+                    console.log('output: ', output);
+                    $("#file-bar").hide();
+                },
+                error: function(jqXHR, error, errorThrown) {
+                    console.log('jqXHR: ', jqXHR);
+                }
+            });
+            //demoP.innerHTML = demoP.innerHTML + "index[" + index + "]: " + item + "<br>";
+        }
+
+        /**
+         * Function for the select file button
+         */
+        $(document).on('click', "#delete-files", function () {
+            alert('Are you sure you want to delete selected files?');
+            selectedFiles.forEach(deleteFile);
+            selectedFiles = []; // Empty selected array files
+            $.get('<?= $this->Url->build(["controller" => "Files", "action" => "getActualFolderFiles"]); ?>/' + choosenFolder, function(response){
+                var data = $.parseJSON(response);
+                updateFiles(data);
+            });
+        });
 
         /**
          * Reset info box
@@ -523,13 +585,13 @@
 
             fileInputConfig.initialPreview = data.initialPreview;
             fileInputConfig.initialPreviewConfig = data.initialPreviewConfig;
+            console.log(data);
             if(data.initialPreview.length == 0) {
                 fileInputConfig.initialPreview = ['<span style="color: #000; font-size: 1.8em"><span class="fa-stack fa-lg"> <i class="fa fa-file-o fa-stack-1x"></i> <i class="fa fa-ban fa-stack-2x text-danger"></i></span><br>No file in this folder!</span>'];
             }
             $el.fileinput('destroy');
             $el.fileinput('refresh', fileInputConfig);
         }
-
 
     });
 </script>

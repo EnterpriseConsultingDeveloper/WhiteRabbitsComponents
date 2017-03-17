@@ -37,3 +37,12 @@
 #actual-folder-name {
     font-weight: 600;
 }
+
+.file-footer-buttons {
+    margin: 0 auto;
+    width: 100%;
+}
+
+.btn.kv-file-remove {
+    float: right;
+}
