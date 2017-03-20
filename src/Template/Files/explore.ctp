@@ -462,6 +462,30 @@
         });
 
 
+        /**
+         * Delete a single file
+         */
+        function deleteFile(item, index) {
+            $.ajax({ url: '<?= $this->Url->build(["controller" => "Files", "action" => "deleteFile", "_ext" => "json"]); ?>',
+                data: {
+                    key: index,
+                },
+                type: 'post',
+                async: false,
+                success: function(output) {
+                    console.log('output: ', output);
+                    $("#file-bar").hide();
+                },
+                error: function(jqXHR, error, errorThrown) {
+                    console.log('jqXHR: ', jqXHR);
+                }
+            });
+            //demoP.innerHTML = demoP.innerHTML + "index[" + index + "]: " + item + "<br>";
+        }
+
+
+
+
         var selectedFiles = new Array();
         function updateInfo(key) {
             var url = '<?= $this->Url->build(["controller" => "Files", "action" => "mediaInfo", "_ext" => "json"]); ?>';
@@ -471,12 +495,13 @@
                 },
                 type: 'post',
                 success: function(data) {
+                    selectedFiles[data.id] = completeUrl;
                     var completeUrl = '<?= $completeUrl ?>/s3_file_manager/Files/media' + data.path;
                     $('#myInsertButton').attr('file-path', completeUrl); //data.path);
                     $('#myInsertButton').attr('file-id', data.id); //data.id);
                     $('#myInsertButton').attr('file-name', data.name); //data.id);
                     $('#myInsertButton').attr('file-path-partial', data.path); //data.path);
-                    $('#myInsertButton').attr('files', selectedFiles); // contains id and path of the selected files
+                    $('#myInsertButton').attr('files', fileUrlList); // contains id and path of the selected files
                     var htmlInfo = '<ul class="info-list">';
                     htmlInfo += '<li><strong>Name</strong>: ' + data.name + '</li>';
                     htmlInfo += '<li><strong>Download</strong>: <a href="http://' + completeUrl.slice(2) + '" target="_black">' + data.name + '</a></li>';
@@ -515,6 +540,10 @@
                     } else {
                         $("#file-bar").hide();
                     }
+
+                    var fileUrlList = selectedFiles.slice(0, selectedFiles.length);
+                    console.log('fileUrlList: ', fileUrlList);
+                    $('#myInsertButton').attr('files', fileUrlList); // contains id and path of the selected files
 
                     console.log("selectedFiles: ", selectedFiles);
                 },
