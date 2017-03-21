@@ -77,7 +77,6 @@
 <script>
     //var actualFolder = '#';
     var choosenFolder;
-
     var ip1 = <?=json_encode($initialPreview) ?>;
     var ip2 = <?=json_encode($initialPreviewConfig) ?>;
 
@@ -483,10 +482,8 @@
             //demoP.innerHTML = demoP.innerHTML + "index[" + index + "]: " + item + "<br>";
         }
 
-
-
-
-        var selectedFiles = new Array();
+        var selectedFiles = new Array(0);
+        var jsonFiles = {};
         function updateInfo(key) {
             var url = '<?= $this->Url->build(["controller" => "Files", "action" => "mediaInfo", "_ext" => "json"]); ?>';
             $.ajax({ url: url,
@@ -495,13 +492,15 @@
                 },
                 type: 'post',
                 success: function(data) {
-                    selectedFiles[data.id] = completeUrl;
                     var completeUrl = '<?= $completeUrl ?>/s3_file_manager/Files/media' + data.path;
+                    console.log('Sto qui!!!');
+                    //selectedFiles[data.id] = completeUrl;
+                    console.log('fileUrlList: ', JSON.stringify(jsonFiles));
                     $('#myInsertButton').attr('file-path', completeUrl); //data.path);
                     $('#myInsertButton').attr('file-id', data.id); //data.id);
                     $('#myInsertButton').attr('file-name', data.name); //data.id);
                     $('#myInsertButton').attr('file-path-partial', data.path); //data.path);
-                    $('#myInsertButton').attr('files', fileUrlList); // contains id and path of the selected files
+                    //$('#myInsertButton').attr('files', "sdsadsdasdas");// JSON.stringify(jsonFiles)); // contains id and path of the selected files
                     var htmlInfo = '<ul class="info-list">';
                     htmlInfo += '<li><strong>Name</strong>: ' + data.name + '</li>';
                     htmlInfo += '<li><strong>Download</strong>: <a href="http://' + completeUrl.slice(2) + '" target="_black">' + data.name + '</a></li>';
@@ -523,6 +522,7 @@
                     $(".file-selectable[my-data-key='"+key+"']").css('border', '1px solid #3498db');
                     if(newState === 0) {
                         delete selectedFiles[data.id];
+                        delete jsonFiles[data.id];
                        // var indexToRemove = selectedFiles.indexOf(completeUrl);
                         //if (indexToRemove > -1) {
                         //    selectedFiles.splice(indexToRemove, 1);
@@ -531,7 +531,8 @@
                         //var indexToAdd = selectedFiles.indexOf(completeUrl);
                         //if (indexToAdd == -1) { // Only if does not exists
                             //selectedFiles.push(completeUrl);
-                            selectedFiles[data.id] = completeUrl;
+                            selectedFiles[data.id] = [data.name, completeUrl];
+                            jsonFiles[data.id] = {'name':data.name, 'url':completeUrl};
                         //}
                     }
 
@@ -541,16 +542,18 @@
                         $("#file-bar").hide();
                     }
 
-                    var fileUrlList = selectedFiles.slice(0, selectedFiles.length);
-                    console.log('fileUrlList: ', fileUrlList);
-                    $('#myInsertButton').attr('files', fileUrlList); // contains id and path of the selected files
+                    // Create the JSON object to pass within an attribute on the button
+                    //var fileUrlList = selectedFiles.slice(0, selectedFiles.length);
+                    //var fileUrlList = JSON.parse(JSON.stringify(selectedFiles));
+
+                    $('#myInsertButton').attr('files', JSON.stringify(jsonFiles)); // contains id and path of the selected files
 
                     console.log("selectedFiles: ", selectedFiles);
                 },
                 error: function(jqXHR, error, errorThrown) {
                     console.log('jqXHR: ', jqXHR);
                 }
-            });
+            });;
         }
 
         /**
@@ -562,7 +565,7 @@
                     key: index,
                 },
                 type: 'post',
-                async: false,
+                async: false, // Useful to update the viewer component
                 success: function(output) {
                     console.log('output: ', output);
                     $("#file-bar").hide();
@@ -581,6 +584,7 @@
             alert('Are you sure you want to delete selected files?');
             selectedFiles.forEach(deleteFile);
             selectedFiles = []; // Empty selected array files
+            jsonFiles = {};
             $.get('<?= $this->Url->build(["controller" => "Files", "action" => "getActualFolderFiles"]); ?>/' + choosenFolder, function(response){
                 var data = $.parseJSON(response);
                 updateFiles(data);
@@ -620,6 +624,8 @@
             }
             $el.fileinput('destroy');
             $el.fileinput('refresh', fileInputConfig);
+            selectedFiles = []; // Empty selected array files
+            jsonFiles = {};
         }
 
     });
