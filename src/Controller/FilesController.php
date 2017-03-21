@@ -26,9 +26,8 @@ class FilesController extends AppController
   {
     // Allow only the view and index actions.
     //debug($event->subject()->request->params['action']); die;
-    $this->Auth->allow(['createProjectFolder']);
     if ($this->Auth != null) {
-      $this->Auth->allow(['media', 'createProjectFolder']);
+      $this->Auth->allow(['media', 'createProjectFolder', 'createProjectFolder']);
       // $this->Auth->allow(['explore']);
     }
     if (!($event->subject()->request->params['action'] == 'media')) {
