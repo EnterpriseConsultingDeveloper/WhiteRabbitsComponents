@@ -75,7 +75,7 @@
 <?= $this->fetch('script') ?>
 
 <script>
-    //var actualFolder = '#';
+
     var choosenFolder;
     var ip1 = <?=json_encode($initialPreview) ?>;
     var ip2 = <?=json_encode($initialPreviewConfig) ?>;
@@ -136,6 +136,15 @@
     //'</button>\n' +
 
     $(document).ready(function () {
+
+        $(document).off('mousedown', '.file-selectable');
+        $(document).off('click', '.kv-file-edit');
+        $(document).off('click', '.kv-file-select');
+        $(document).off('click', '#delete-files');
+
+        var selectedFiles = new Array(0);
+        var jsonFiles = {};
+
         /**
          * jstree custom context menu
          * Set the context menu with Create, Rename and Remove folder voices
@@ -426,6 +435,7 @@
         /**
          * Function for the public / private button
          */
+        //$('.kv-file-edit').on('click', function () {
         $(document).on('click', ".kv-file-edit", function () {
             var key = $(this).data('key'); // get the file key
 
@@ -435,7 +445,6 @@
                 },
                 type: 'post',
                 success: function(output) {
-                    console.log('output: ', output);
                     $("button.kv-file-edit[ data-key='" + key + "']")
                             .removeClass(
                             function (index, css) {
@@ -449,15 +458,54 @@
                     console.log('jqXHR: ', jqXHR);
                 }
             });
+
         });
 
 
         /**
          * Function for the select file button
          */
+        //$(".kv-file-select").on('click', function () {
         $(document).on('click', ".kv-file-select", function () {
             var key = $(this).data('key'); // get the file key
-            updateInfo(key);
+            var objData = updateInfo(key);
+
+            var cssStyles = ["<i class='glyphicon glyphicon-unchecked'></i>", "<i class='glyphicon glyphicon-check' style='color: #62cb31;'></i>"];
+            var newState = $(".kv-file-select[data-key='"+key+"']").html() == '<i class="glyphicon glyphicon-check" style="color: #62cb31;"></i>' ? 0 : 1;
+
+            $(".kv-file-select[data-key='"+key+"']").html(cssStyles[newState]);
+            $(".file-selectable[my-data-key='"+key+"']").css('border', '1px solid #3498db');
+
+            if(newState === 0) { // It was already selected, so it's time to remove it!!!
+                delete selectedFiles[key];
+                delete jsonFiles[key];
+
+                $('#myInsertButton').attr('file-path', ''); //data.path);
+                $('#myInsertButton').attr('file-id', ''); //data.id);
+                $('#myInsertButton').attr('file-name', ''); //data.id);
+                $('#myInsertButton').attr('file-path-partial', ''); //data.path);
+
+            } else {
+                selectedFiles[key] = [objData.name, objData.url];
+                jsonFiles[key] = objData;
+
+                $('#myInsertButton').attr('file-path', objData.url); //data.path);
+                $('#myInsertButton').attr('file-id', key); //data.id);
+                $('#myInsertButton').attr('file-name', objData.name); //data.id);
+                $('#myInsertButton').attr('file-path-partial', objData.partialUrl); //data.path);
+            }
+
+            if(selectedFiles.length > 0) {
+                $("#file-bar").show();
+            } else {
+                $("#file-bar").hide();
+            }
+
+            // Create the JSON object to pass within an attribute on the button
+            $('#myInsertButton').attr('files', JSON.stringify(jsonFiles)); // contains id and path of the selected files
+
+            console.log("selectedFiles: ", selectedFiles);
+
         });
 
 
@@ -482,25 +530,17 @@
             //demoP.innerHTML = demoP.innerHTML + "index[" + index + "]: " + item + "<br>";
         }
 
-        var selectedFiles = new Array(0);
-        var jsonFiles = {};
         function updateInfo(key) {
+            var objData = {};
             var url = '<?= $this->Url->build(["controller" => "Files", "action" => "mediaInfo", "_ext" => "json"]); ?>';
             $.ajax({ url: url,
                 data: {
                     id: key,
                 },
                 type: 'post',
+                async: false,
                 success: function(data) {
                     var completeUrl = '<?= $completeUrl ?>/s3_file_manager/Files/media' + data.path;
-                    console.log('Sto qui!!!');
-                    //selectedFiles[data.id] = completeUrl;
-                    console.log('fileUrlList: ', JSON.stringify(jsonFiles));
-                    $('#myInsertButton').attr('file-path', completeUrl); //data.path);
-                    $('#myInsertButton').attr('file-id', data.id); //data.id);
-                    $('#myInsertButton').attr('file-name', data.name); //data.id);
-                    $('#myInsertButton').attr('file-path-partial', data.path); //data.path);
-                    //$('#myInsertButton').attr('files', "sdsadsdasdas");// JSON.stringify(jsonFiles)); // contains id and path of the selected files
                     var htmlInfo = '<ul class="info-list">';
                     htmlInfo += '<li><strong>Name</strong>: ' + data.name + '</li>';
                     htmlInfo += '<li><strong>Download</strong>: <a href="http://' + completeUrl.slice(2) + '" target="_black">' + data.name + '</a></li>';
@@ -513,47 +553,14 @@
 
                     $('#info-div').html(htmlInfo);
 
-                    //$(".kv-file-select").html('<i class="glyphicon glyphicon-unchecked"></i>');
-                    //$(".file-selectable").css('border', '0');
-                    var cssStyles = ["<i class='glyphicon glyphicon-unchecked'></i>", "<i class='glyphicon glyphicon-check' style='color: #62cb31;'></i>"];
-                    var newState = $(".kv-file-select[data-key='"+key+"']").html() == '<i class="glyphicon glyphicon-check" style="color: #62cb31;"></i>' ? 0 : 1;
+                    objData = {'name':data.name, 'url':completeUrl, 'partialUrl':data.path};
 
-                    $(".kv-file-select[data-key='"+key+"']").html(cssStyles[newState]);
-                    $(".file-selectable[my-data-key='"+key+"']").css('border', '1px solid #3498db');
-                    if(newState === 0) {
-                        delete selectedFiles[data.id];
-                        delete jsonFiles[data.id];
-                       // var indexToRemove = selectedFiles.indexOf(completeUrl);
-                        //if (indexToRemove > -1) {
-                        //    selectedFiles.splice(indexToRemove, 1);
-                        //}
-                    } else {
-                        //var indexToAdd = selectedFiles.indexOf(completeUrl);
-                        //if (indexToAdd == -1) { // Only if does not exists
-                            //selectedFiles.push(completeUrl);
-                            selectedFiles[data.id] = [data.name, completeUrl];
-                            jsonFiles[data.id] = {'name':data.name, 'url':completeUrl};
-                        //}
-                    }
-
-                    if(selectedFiles.length > 0) {
-                        $("#file-bar").show();
-                    } else {
-                        $("#file-bar").hide();
-                    }
-
-                    // Create the JSON object to pass within an attribute on the button
-                    //var fileUrlList = selectedFiles.slice(0, selectedFiles.length);
-                    //var fileUrlList = JSON.parse(JSON.stringify(selectedFiles));
-
-                    $('#myInsertButton').attr('files', JSON.stringify(jsonFiles)); // contains id and path of the selected files
-
-                    console.log("selectedFiles: ", selectedFiles);
                 },
                 error: function(jqXHR, error, errorThrown) {
                     console.log('jqXHR: ', jqXHR);
                 }
-            });;
+            });
+            return objData;
         }
 
         /**
@@ -574,11 +581,10 @@
                     console.log('jqXHR: ', jqXHR);
                 }
             });
-            //demoP.innerHTML = demoP.innerHTML + "index[" + index + "]: " + item + "<br>";
         }
 
         /**
-         * Function for the select file button
+         * Function for the delete file button
          */
         $(document).on('click', "#delete-files", function () {
             alert('Are you sure you want to delete selected files?');
@@ -618,7 +624,7 @@
 
             fileInputConfig.initialPreview = data.initialPreview;
             fileInputConfig.initialPreviewConfig = data.initialPreviewConfig;
-            console.log(data);
+            //console.log(data);
             if(data.initialPreview.length == 0) {
                 fileInputConfig.initialPreview = ['<span style="color: #000; font-size: 1.8em"><span class="fa-stack fa-lg"> <i class="fa fa-file-o fa-stack-1x"></i> <i class="fa fa-ban fa-stack-2x text-danger"></i></span><br>No file in this folder!</span>'];
             }
