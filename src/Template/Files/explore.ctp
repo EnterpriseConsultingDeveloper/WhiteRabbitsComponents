@@ -401,6 +401,7 @@
                     $("#myFile").fileinput("upload");
                 })
                 .on('filebatchuploadcomplete', function (event, files, extra) {
+
                     $.get('<?= $this->Url->build(["controller" => "Files", "action" => "getActualFolderFiles"]); ?>/' + choosenFolder, function(response){
                         var data = $.parseJSON(response);
                         fileInputConfig.initialPreview = data.initialPreview;
@@ -410,8 +411,15 @@
 
                         $('#exploreTab li:eq(1) a').tab('show') // Select third tab (0-indexed)
                     });
-
+                })
+                .on('filebatchuploaderror', function (event, data, msg) {
+                    var form = data.form, files = data.files, extra = data.extra,
+                            response = data.response, reader = data.reader;
+                    console.log('File batch upload error');
+                    // get message
+                    alert(msg);
                 });
+
 
 
         /**
