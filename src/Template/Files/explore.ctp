@@ -26,7 +26,7 @@
             <div role="tabpanel" class="tab-pane fade" id="uploadTab">
                 <div class="kv-main">
                     <div class="tab-title">
-                        Uploading files to "<span id="actual-folder-name"><?=$actualFolderName ?></span>"
+                        Uploading files to "<span id="actual-folder-name"><?=$actualFolderName ?></span>". You can upload files with a <strong>maximum size of 10MB</strong>.
                     </div>
                     <?= $this->Form->create($file, ['type' => 'file']) ?>
                     <?= $this->Form->hidden('folder_id', ['id' => 'folder-id', 'value' => $actualFolder]); ?>
