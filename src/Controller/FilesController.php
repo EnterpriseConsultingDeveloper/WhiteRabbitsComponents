@@ -238,13 +238,13 @@ class FilesController extends AppController
     $file->original_filename = $path;
 
     $file->path = $this->getFolderPath($file);
+    $file->name = $path;
 
     if ($this->Files->save($file)) {
 
       $crmManager = new FoldersController();
       $site = $this->request->session()->read('Auth.User.fc_customer_site');
       $limit = $crmManager->folderSize($site);
-
       $http = new WRClient();
       $response = $http->post(API_PATH . API_METHOD_SET_LIMITS, [
           'customerID' => $this->request->session()->read('Auth.User.customer_id'),
@@ -494,7 +494,6 @@ class FilesController extends AppController
     }
 
     $site = $this->extractSite();
-
     $lastSlashPos = strrpos($completePath , '/');
     $firstSlashPos = strpos($completePath , '/');
     if (!$lastSlashPos && !$firstSlashPos) { // File saved in root ("/" folder)
@@ -516,8 +515,9 @@ class FilesController extends AppController
           ->where(['Files.path' => $path])
           ->where(['Files.original_filename' => $fileName])
           ->where(['folder_id IN' => $folders])
-          ->first();
-
+          ->first()
+          ;
+      //debug($path);debug($fileName);debug($folders->toArray());debug($file->toArray()); die;
       if (!$file) {
         throw new NotFoundException('File not found.');
       }

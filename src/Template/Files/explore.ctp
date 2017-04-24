@@ -409,7 +409,7 @@
 
                         $el.fileinput('refresh', fileInputConfig);
 
-                        $('#exploreTab li:eq(1) a').tab('show') // Select third tab (0-indexed)
+                        //$('#exploreTab li:eq(1) a').tab('show') // Select third tab (0-indexed)
                     });
                 })
                 .on('filebatchuploaderror', function (event, data, msg) {
