@@ -294,7 +294,8 @@ class FilesController extends AppController
         $file->extension = pathinfo($path, PATHINFO_EXTENSION);
         $file->public = 1;
         $file->original_filename = $path;
-
+        $file->name = $path;
+        
         $file->path = '/Resized/';
 
         if ($this->Files->save($file)) {
