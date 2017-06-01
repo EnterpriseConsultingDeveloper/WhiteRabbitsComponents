@@ -409,7 +409,8 @@
 
                         $el.fileinput('refresh', fileInputConfig);
 
-                        //$('#exploreTab li:eq(1) a').tab('show') // Select third tab (0-indexed)
+                        //Probably a chenge request would not to switch immediately
+                        $('#exploreTab li:eq(1) a').tab('show') // Select third tab (0-indexed)
                     });
                 })
                 .on('filebatchuploaderror', function (event, data, msg) {
