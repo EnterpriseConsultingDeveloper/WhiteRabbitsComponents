@@ -138,7 +138,8 @@ class FoldersController extends AppController
 
     $folderIDS = null;
     foreach ($resultFolders as $folder) {
-      $folderIDS[] = $folder->id;
+      if (isset($folder->id))
+        $folderIDS[] = $folder->id;
     }
 
     $this->loadModel('Files');
