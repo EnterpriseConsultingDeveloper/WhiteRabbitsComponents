@@ -186,6 +186,49 @@ class FilesController extends AppController
   public function uploadFile()
   {
     $file = $this->Files->newEntity();
+
+    // Undefined | Multiple Files | $_FILES Corruption Attack
+    // If this request falls under any of them, treat it invalid.
+    if (
+        !isset($_FILES['file']['error']) ||
+        is_array($_FILES['file']['error'])
+    ) {
+      header('HTTP/1.0 400 Bad error');
+      echo json_encode('Error loading file...');
+      throw new \RuntimeException('Invalid parameters.');
+    }
+
+    /*
+    try {
+      throw new Exception("Some error message", 30);
+    } catch(Exception $e) {
+      echo "The exception code is: " . $e->getCode();
+    }
+*/
+    // Check $_FILES['upfile']['error'] value.
+    switch ($_FILES['file']['error']) {
+      case UPLOAD_ERR_OK:
+        break;
+      case UPLOAD_ERR_NO_FILE:
+        header('HTTP/1.0 400 Bad error');
+        echo json_encode('Error loading file...');
+        throw new \RuntimeException('No file sent.');
+      case UPLOAD_ERR_INI_SIZE:
+      case UPLOAD_ERR_FORM_SIZE:
+      header('HTTP/1.0 400 Bad error');
+      echo json_encode('Error loading file...');
+      throw new \RuntimeException('Exceeded filesize limit.');
+      default:
+        header('HTTP/1.0 400 Bad error');
+        echo json_encode('Error loading file...');
+        throw new \RuntimeException('Unknown errors.');
+    }
+
+    // You should also check filesize here. 10MB?
+    if ($_FILES['file']['size'] > 10000000) {
+      throw new \RuntimeException('Exceeded filesize limit.');
+    }
+
     $file->file = $_FILES['file'];
     $file->folder_id = $_POST['img_folder'];
 
@@ -195,13 +238,13 @@ class FilesController extends AppController
     $file->original_filename = $path;
 
     $file->path = $this->getFolderPath($file);
+    $file->name = $path;
 
     if ($this->Files->save($file)) {
 
       $crmManager = new FoldersController();
       $site = $this->request->session()->read('Auth.User.fc_customer_site');
       $limit = $crmManager->folderSize($site);
-
       $http = new WRClient();
       $response = $http->post(API_PATH . API_METHOD_SET_LIMITS, [
           'customerID' => $this->request->session()->read('Auth.User.customer_id'),
@@ -217,7 +260,8 @@ class FilesController extends AppController
       echo json_encode('Loaded...');
 
     } else {
-      //$this->Flash->error(__('The file could not be saved. Please, try again.'));
+      header('HTTP/1.0 400 Bad error');
+      echo json_encode('Error loading file...');
     }
   }
 
@@ -250,7 +294,8 @@ class FilesController extends AppController
         $file->extension = pathinfo($path, PATHINFO_EXTENSION);
         $file->public = 1;
         $file->original_filename = $path;
-
+        $file->name = $path;
+        
         $file->path = '/Resized/';
 
         if ($this->Files->save($file)) {
@@ -450,7 +495,6 @@ class FilesController extends AppController
     }
 
     $site = $this->extractSite();
-
     $lastSlashPos = strrpos($completePath , '/');
     $firstSlashPos = strpos($completePath , '/');
     if (!$lastSlashPos && !$firstSlashPos) { // File saved in root ("/" folder)
@@ -472,8 +516,9 @@ class FilesController extends AppController
           ->where(['Files.path' => $path])
           ->where(['Files.original_filename' => $fileName])
           ->where(['folder_id IN' => $folders])
-          ->first();
-
+          ->first()
+          ;
+      //debug($path);debug($fileName);debug($folders->toArray());debug($file->toArray()); die;
       if (!$file) {
         throw new NotFoundException('File not found.');
       }

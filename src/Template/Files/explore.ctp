@@ -26,7 +26,7 @@
             <div role="tabpanel" class="tab-pane fade" id="uploadTab">
                 <div class="kv-main">
                     <div class="tab-title">
-                        Uploading files to "<span id="actual-folder-name"><?=$actualFolderName ?></span>"
+                        Uploading files to "<span id="actual-folder-name"><?=$actualFolderName ?></span>". You can upload files with a <strong>maximum size of 10MB</strong>.
                     </div>
                     <?= $this->Form->create($file, ['type' => 'file']) ?>
                     <?= $this->Form->hidden('folder_id', ['id' => 'folder-id', 'value' => $actualFolder]); ?>
@@ -401,6 +401,7 @@
                     $("#myFile").fileinput("upload");
                 })
                 .on('filebatchuploadcomplete', function (event, files, extra) {
+
                     $.get('<?= $this->Url->build(["controller" => "Files", "action" => "getActualFolderFiles"]); ?>/' + choosenFolder, function(response){
                         var data = $.parseJSON(response);
                         fileInputConfig.initialPreview = data.initialPreview;
@@ -408,10 +409,18 @@
 
                         $el.fileinput('refresh', fileInputConfig);
 
+                        //Probably a chenge request would not to switch immediately
                         $('#exploreTab li:eq(1) a').tab('show') // Select third tab (0-indexed)
                     });
-
+                })
+                .on('filebatchuploaderror', function (event, data, msg) {
+                    var form = data.form, files = data.files, extra = data.extra,
+                            response = data.response, reader = data.reader;
+                    console.log('File batch upload error');
+                    // get message
+                    alert(msg);
                 });
+
 
 
         /**
