@@ -118,7 +118,6 @@ class FoldersController extends AppController
     return $this->redirect(['action' => 'index']);
   }
 
-
   /**
    * folderSize method: return the folder size in bytes occupied by files in it
    * @param $site
