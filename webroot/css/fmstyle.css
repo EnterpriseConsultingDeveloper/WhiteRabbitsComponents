@@ -50,4 +50,5 @@
 
 .btn.kv-file-select, .btn.kv-file-download {
     float: right;
+    margin: 0 1px;
 }

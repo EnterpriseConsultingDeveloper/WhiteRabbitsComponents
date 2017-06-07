@@ -124,21 +124,15 @@
             '</button>\n'+
             '<button type="button" ' +
             'class="kv-file-download btn btn-xs btn-default" ' +
-            'title="Download this file" {dataKey}>\n' + // the {dataKey} tag will be auto replaced
+            'title="Download this file" {dataKey}>\n' +
             '<i class="fa fa-download" aria-hidden="true"></i>\n' +
             '</button>\n'+
             '<button type="button" ' +
             'class="kv-file-edit btn btn-xs btn-default" ' +
-            'title="Change status" {dataKey}>\n' + // the {dataKey} tag will be auto replaced
-            '<i class="fa fa-lock" aria-hidden="true" style="color: #e90000"></i>\n' +
+            'title="Change status" {dataKey}>\n' +
+            '<i class="fa fa-unlock" aria-hidden="true" style="color: #e90000"></i>\n' +
             '</button>\n'
     }
-
-    //'<button type="button" ' +
-    //'class="kv-file-edit btn btn-xs btn-default" ' +
-    //'title="Change status" {dataKey}>\n' + // the {dataKey} tag will be auto replaced
-    //'<i class="glyphicon glyphicon-edit"></i>\n' +
-    //'</button>\n' +
 
     $(document).ready(function () {
 
@@ -447,6 +441,7 @@
         };
         initPlugin();
 
+
         /**
          * Function for the public / private button
          */
@@ -467,6 +462,13 @@
                             })
                             .addClass('access-' + output)
                             .blur();
+
+                    console.log();
+                    if(output == true) {
+                        $(".kv-file-edit[data-key='"+key+"']").html('<i class="fa fa-unlock" aria-hidden="true" style="color: #e90000"></i>');
+                    } else {
+                        $(".kv-file-edit[data-key='"+key+"']").html('<i class="fa fa-lock" aria-hidden="true" style="color: #62cb31"></i>');
+                    }
                     updateInfo(key);
                 },
                 error: function(jqXHR, error, errorThrown) {
@@ -583,18 +585,18 @@
                 success: function(data) {
                     var public = '';
                     if(data.public == '1') {
-                        public = '<i class="fa fa-unlock" aria-hidden="true"></i> Public';
+                        public = '<i class="fa fa-unlock" aria-hidden="true" style="color: #e90000;"></i> Public';
                     } else {
-                        public = '<i class="fa fa-lock" aria-hidden="true"></i> Private';
+                        public = '<i class="fa fa-lock" aria-hidden="true" style="color: #62cb31;"></i> Private';
                     }
                     var completeUrl = '<?= $completeUrl ?>/s3_file_manager/Files/media' + data.path;
                     var htmlInfo = '<ul class="info-list">';
                     htmlInfo += '<li><strong>Name</strong>: ' + data.name + '</li>';
-                    htmlInfo += '<li><strong>Download</strong>: <a href="//' + completeUrl.slice(2) + '" target="_blank"><i class="fa fa-download" aria-hidden="true"></i> </a></li>';
                     htmlInfo += '<li><strong>Path</strong>: ' + data.path + '</li>';
                     htmlInfo += '<li><strong>Status</strong>: ' + public + '</li>';
                     htmlInfo += '<li><strong>Type</strong>: ' + data.type + '</li>';
                     htmlInfo += '<li><strong>Size</strong>: ' + data.size + 'kB </li>';
+                    htmlInfo += '<li><a class="btn btn-primary btn-xs" href="//' + completeUrl.slice(2) + '" target="_blank"><i class="fa fa-download" aria-hidden="true"></i> Download</a></li>';
                     htmlInfo += '</ul>';
 
                     $('#info-div').html(htmlInfo);
@@ -678,6 +680,10 @@
             $el.fileinput('refresh', fileInputConfig);
             selectedFiles = []; // Empty selected array files
             jsonFiles = {};
+        }
+
+        function getFileStatus() {
+            return 'lock';
         }
 
     });
