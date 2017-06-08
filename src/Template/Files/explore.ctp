@@ -130,7 +130,7 @@
             '<button type="button" ' +
             'class="kv-file-edit btn btn-xs btn-default" ' +
             'title="Change status" {dataKey}>\n' +
-            '<i class="fa fa-unlock" aria-hidden="true" style="color: #e90000"></i>\n' +
+            '<i class="fa fa-unlock" style="color: #999999"></i>\n' +
             '</button>\n'
     }
 
@@ -436,7 +436,22 @@
                         if (confirm("Are you sure you want to delete this image?")) {
                             abort = false;
                         }
-                        return abort;
+                        return abort; // you can also send any data/object that you can receive on `filecustomerror` event
+
+
+//                        swal({
+//                            title: "Are you sure?",
+//                            text: "You are deleting selected files",
+//                            type: "warning",
+//                            showCancelButton: true,
+//                            confirmButtonColor: "#DD6B55",
+//                            confirmButtonText: "Yes!",
+//                            closeOnConfirm: true
+//                        },
+//                        function(){
+//                            return true;
+//                        });
+
                     });
         };
         initPlugin();
@@ -463,12 +478,12 @@
                             .addClass('access-' + output)
                             .blur();
 
-                    console.log();
+                    /* icon live change
                     if(output == true) {
                         $(".kv-file-edit[data-key='"+key+"']").html('<i class="fa fa-unlock" aria-hidden="true" style="color: #e90000"></i>');
                     } else {
                         $(".kv-file-edit[data-key='"+key+"']").html('<i class="fa fa-lock" aria-hidden="true" style="color: #62cb31"></i>');
-                    }
+                    }*/
                     updateInfo(key);
                 },
                 error: function(jqXHR, error, errorThrown) {
@@ -636,6 +651,8 @@
          */
         $(document).on('click', "#delete-files", function () {
             alert('Are you sure you want to delete selected files?');
+
+
             selectedFiles.forEach(deleteFile);
             selectedFiles = []; // Empty selected array files
             jsonFiles = {};
