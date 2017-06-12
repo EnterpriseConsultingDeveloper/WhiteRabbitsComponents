@@ -130,7 +130,7 @@ class FoldersController extends AppController
       ->select(['id'])
       ->where(['bucket' => $site]);
 
-    if ($resultFolders == null) {
+    if (!$resultFolders) {
       return 0;
     }
 
