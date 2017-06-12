@@ -44,5 +44,11 @@
 }
 
 .btn.kv-file-remove {
+    float: left;
+    margin: 1px 3px 1px 0;
+}
+
+.btn.kv-file-select, .btn.kv-file-download {
     float: right;
+    margin: 0 1px;
 }
