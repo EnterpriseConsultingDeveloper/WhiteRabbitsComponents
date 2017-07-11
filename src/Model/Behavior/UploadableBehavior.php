@@ -76,8 +76,8 @@ class UploadableBehavior extends Behavior
             'path' => '{model}{DS}{field}{DS}',
             'bucket' => 'whiterabbitsuite.com',
             'fileName' => '{GENERATEDKEY}',
-            'S3Key' => 'AKIAJMF5RMYVJVFEBOLQ',
-            'S3Secret' => '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',
+            'S3Key' => AWS_S3_KEY,
+            'S3Secret' => AWS_S3_SECRET,
             'S3Region' => 'eu-west-1',
             'S3Version' => 'latest',
             'S3SignatureVersion' => 'v4'
