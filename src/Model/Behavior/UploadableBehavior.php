@@ -187,7 +187,11 @@ class UploadableBehavior extends Behavior
     {
         //TODO: migliorare con un ritorno di qualcosa...
         if(!$this->_s3Client->doesBucketExist($bucketName)) {
-            $this->_s3Client->createBucket(array('Bucket' => $bucketName));
+            $this->_s3Client->createBucket(array('Bucket' => $bucketName,
+		'CreateBucketConfiguration' => [
+        	'LocationConstraint' => $config['S3Region'],
+    		],
+	  ));
         }
 
         // Poll the bucket until it is accessible
