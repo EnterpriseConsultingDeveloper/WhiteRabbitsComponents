@@ -34,7 +34,6 @@
                         <?= $this->Form->input('file', [
                         'type' => 'file',
                         'multiple' => 'true',
-
                         'id' => 'myFile'
                         ]) ?>
                     </div>
@@ -42,7 +41,7 @@
                     <?= $this->Form->end() ?>
                 </div>
             </div>
-            <div role="tabpanel" class="tab-pane fade in active" id="fileListTab">
+            <div role="tabpanel" class="tab-pane fade in active pane-fixed" id="fileListTab">
                 <div id="file-bar" class="m-t-xs" style="display: none;">
                     <!-- <a href="#" class="btn btn-xs btn-primary" title="Move selected files" id="move-files"><i class="fa fa-plus" aria-hidden="true"></i> Move selected files</a> -->
                     <a href="#" class="btn btn-xs btn-danger" title="Delete selected files" id="delete-files"><i class="fa fa-minus" aria-hidden="true"></i> Delete selected files</a>
