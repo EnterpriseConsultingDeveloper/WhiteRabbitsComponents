@@ -177,9 +177,28 @@
                     "separator_after": false,
                     "label": "Remove",
                     "action": function (obj) {
-                        if(confirm('Are you sure to remove this category?')){
-                            tree.delete_node(node);
-                        }
+
+                        event.preventDefault();
+
+                        swal({
+                                    title: "Are you sure?",
+                                    text: "If you delete a folder, you will lose ALL files in it!",
+                                    type: "warning",
+                                    showCancelButton: true,
+                                    confirmButtonColor: "#DD6B55",
+                                    confirmButtonText: "Yes",
+                                    cancelButtonText: "No",
+                                    closeOnConfirm: true,
+                                    closeOnCancel: true
+                                },
+                                function(isConfirm){
+                                    if (isConfirm) {
+                                        tree.delete_node(node);
+                                    }
+                                });
+
+
+
                     }
                 }
             };
@@ -199,8 +218,26 @@
         });
 
         $("#delete-subfolder").on("click",function() {
-            $('#folderListContainer').jstree().delete_node(choosenFolder, function(){
-                console.log("done on " + choosenFolder);
+
+            event.preventDefault();
+
+            swal({
+                title: "Are you sure?",
+                text: "If you delete a folder, you will lose ALL files in it!",
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#DD6B55",
+                confirmButtonText: "Yes",
+                cancelButtonText: "No",
+                closeOnConfirm: true,
+                closeOnCancel: true
+            },
+            function(isConfirm){
+                if (isConfirm) {
+                    $('#folderListContainer').jstree().delete_node(choosenFolder, function(){
+                        console.log("done on " + choosenFolder);
+                    });
+                }
             });
         });
 
