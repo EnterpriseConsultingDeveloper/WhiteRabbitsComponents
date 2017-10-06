@@ -592,7 +592,7 @@
                 async: false,
                 success: function(data) {
                     var completeUrl = '<?= $completeUrl ?>/s3_file_manager/Files/media' + data.path;
-                    var url = '//' + completeUrl.slice(2);
+                    var url = completeUrl;
                     window.open(url,'_blank');
 
                 },
@@ -648,7 +648,7 @@
                     htmlInfo += '<li><strong>Status</strong>: ' + public + '</li>';
                     htmlInfo += '<li><strong>Type</strong>: ' + data.type + '</li>';
                     htmlInfo += '<li><strong>Size</strong>: ' + data.size + 'kB </li>';
-                    htmlInfo += '<li><a class="btn btn-primary btn-xs" href="//' + completeUrl.slice(2) + '" target="_blank"><i class="fa fa-download" aria-hidden="true"></i> Download</a></li>';
+                    htmlInfo += '<li><a class="btn btn-primary btn-xs" href="' + completeUrl + '" target="_blank"><i class="fa fa-download" aria-hidden="true"></i> Download</a></li>';
                     htmlInfo += '</ul>';
 
                     $('#info-div').html(htmlInfo);
