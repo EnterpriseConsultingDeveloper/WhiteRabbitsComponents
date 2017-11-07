@@ -258,24 +258,25 @@ class FilesController extends AppController
       $crmManager = new FoldersController();
       $site = $this->request->session()->read('Auth.User.fc_customer_site');
       $limit = $crmManager->folderSize($site);
-      $http = new WRClient();
-      $response = $http->post(API_PATH . API_METHOD_SET_LIMITS, [
-          'customerID' => $this->request->session()->read('Auth.User.customer_id'),
-          'limit' => 'repository_space',
-          'value' => $limit + $_FILES['file']['size'],
-          'globalValue' => true
-      ],
-          [
-              'headers' => ['Authorization' => 'Bearer '.$this->request->session()->read('Auth.User.token'), 'Accept' => 'application/json']
-          ]);
+//      $http = new WRClient();
+//      $response = $http->post(API_PATH . API_METHOD_SET_LIMITS, [
+//          'customerID' => $this->request->session()->read('Auth.User.customer_id'),
+//          'limit' => 'repository_space',
+//          'value' => $limit + $_FILES['file']['size'],
+//          'globalValue' => true
+//      ],
+//          [
+//              'headers' => ['Authorization' => 'Bearer '.$this->request->session()->read('Auth.User.token'), 'Accept' => 'application/json']
+//          ]);
 
       // distruggo le sessioni create e evito il render del CTP
+      if (isset($this->request->data['render'])) {
         if ($this->request->data['render'] == false) {
-            $this->request->session()->destroy();
             $this->autoRender = false;
             echo json_encode($saved);
             exit;
         }
+      }
       
       header('Content-Type: application/json');
       echo json_encode('Loaded...');
@@ -839,6 +840,7 @@ class FilesController extends AppController
       $extension = $matches[0][1];
       
     $img = $base64;
+    debug($base64);
     $img = str_replace("data:image/".$extension.";base64,", '', $img);
     $img = str_replace(' ', '+', $img);
     $data = base64_decode($img);
