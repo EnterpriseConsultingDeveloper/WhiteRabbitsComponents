@@ -27,7 +27,7 @@ class FilesController extends AppController
     // Allow only the view and index actions.
     //debug($event->subject()->request->params['action']); die;
     if ($this->Auth != null) {
-      $this->Auth->allow(['media', 'createProjectFolder', 'createProjectFolder']);
+      $this->Auth->allow(['media', 'createProjectFolder', 'createProjectFolder', 'uploadFileToResizeFolder', 'uploadFile']);
       // $this->Auth->allow(['explore']);
     }
     if (!($event->subject()->request->params['action'] == 'media')) {
@@ -186,7 +186,18 @@ class FilesController extends AppController
   public function uploadFile()
   {
     $file = $this->Files->newEntity();
-
+    
+     $this->viewBuilder()->layout('ajax'); // Vista per ajax
+    
+     if ($this->request->data['session']) {
+         
+         foreach ($this->request->data['session'] as $key => $value) {
+            $this->request->session()->write('Auth.User.'.$key, $value);
+         }
+   
+     }
+    
+   
     // Undefined | Multiple Files | $_FILES Corruption Attack
     // If this request falls under any of them, treat it invalid.
     if (
@@ -228,20 +239,22 @@ class FilesController extends AppController
     if ($_FILES['file']['size'] > 10000000) {
       throw new \RuntimeException('Exceeded filesize limit.');
     }
-
+     
     $file->file = $_FILES['file'];
-    $file->folder_id = $_POST['img_folder'];
+    $site = $this->extractSite();
+    $file->folder_id = ($_POST['img_folder'] == 'resized') ? $this->getFolderResized($site): $_POST['img_folder'];
 
     $path = $_FILES['file']['name'];
     $file->extension = pathinfo($path, PATHINFO_EXTENSION);
     $file->public = 1;
     $file->original_filename = $path;
 
-    $file->path = $this->getFolderPath($file);
+    $file->path = '/Resized/'; //$this->getFolderPath($file);
     $file->name = $path;
-
-    if ($this->Files->save($file)) {
-
+    
+    $saved = $this->Files->save($file);
+    if ($saved) {
+        
       $crmManager = new FoldersController();
       $site = $this->request->session()->read('Auth.User.fc_customer_site');
       $limit = $crmManager->folderSize($site);
@@ -256,6 +269,14 @@ class FilesController extends AppController
               'headers' => ['Authorization' => 'Bearer '.$this->request->session()->read('Auth.User.token'), 'Accept' => 'application/json']
           ]);
 
+      // distruggo le sessioni create e evito il render del CTP
+        if ($this->request->data['render'] == false) {
+            $this->request->session()->destroy();
+            $this->autoRender = false;
+            echo json_encode($saved);
+            exit;
+        }
+      
       header('Content-Type: application/json');
       echo json_encode('Loaded...');
 
@@ -263,8 +284,10 @@ class FilesController extends AppController
       header('HTTP/1.0 400 Bad error');
       echo json_encode('Error loading file...');
     }
+    
+    
+    
   }
-
 
   /**
    * uploadFileToResizeFolder function
@@ -272,11 +295,12 @@ class FilesController extends AppController
   public function uploadFileToResizeFolder()
   {
     $this->viewBuilder()->layout('ajax'); // Vista per ajax
-    $imgName = $this->request->data('imgName');
-
+    
     $site = $this->extractSite();
     $folderId = $this->getFolderResized($site);
 
+    $imgName = $this->request->data('imgName');
+    
     // Check duplicate name
     $fileNameExists = $this->Files->find('all')
         ->select(['id'])
@@ -287,6 +311,7 @@ class FilesController extends AppController
       $file = $this->Files->newEntity();
       $file->file = $this->request->data('imgData');
       $this->loadModel('Files'); // It's necessary because the name "media" was reserved
+      
       try {
         $file->folder_id = $folderId;
 
@@ -297,23 +322,31 @@ class FilesController extends AppController
         $file->name = $path;
         
         $file->path = '/Resized/';
-
-        if ($this->Files->save($file)) {
-          header('Content-Type: application/json');
-          // Return path + name
-          echo json_encode(__('Saved!'));
-        } else {
-          header('Content-Type: application/json');
-          echo json_encode(__('The file could not be saved. Please, try again.'));
-        }
+        
+        
+        $idFIle = $this->Files->save($file);
+        echo json_encode($idFIle);
+        exit;
+        
+//        if () {
+//          // Return path + name
+//          echo json_encode(__('Saved!'));
+//          exit;
+//        } else {
+//          echo json_encode(__('The file could not be saved. Please, try again.'));
+//          exit;
+//        }
 
       } catch (Exception $e) {
         echo 'Error: ', $e->getMessage();
+          exit;
       }
 
     }  else {
       echo 'An error occurred.';
+          exit;
     }
+    return;
   }
 
 
@@ -543,9 +576,9 @@ class FilesController extends AppController
    * @return mixed
    */
   private function getFolderResized($site) {
-    $this->loadModel('Folders');
+    $this->loadModel('S3FileManager.Folders');
     try {
-      $rootFolder = $this->Files->Folders->getRootFolder($site);
+      $rootFolder = $this->Folders->getRootFolder($site);
       $rootFolderId = $rootFolder->id;
 
       $folder = $this->Folders->find('all')
@@ -792,5 +825,38 @@ class FilesController extends AppController
     }
     return $actualFolderPath;
   }
+ 
+  /**
+   * @param $string base64
+   * @return string url
+   */
+  
+  public function convertBase64toImg($base64) {
+
+      $re = '/^data:image\/([a-zA-Z]+[a-zA-Z]+);/';
+      preg_match_all($re, $base64, $matches, PREG_SET_ORDER, 0);
+
+      $extension = $matches[0][1];
+      
+    $img = $base64;
+    $img = str_replace("data:image/".$extension.";base64,", '', $img);
+    $img = str_replace(' ', '+', $img);
+    $data = base64_decode($img);
+    $image = TMP . uniqid() . '.'.$extension;
+    $fileUploaded = file_put_contents($image, $data);
+
+    $mime_tipe =  mime_content_type($image);
+    $fileName = basename($image);
+    $fileSize = filesize($image);
+
+    return [
+        'name' => $fileName,
+        'type' => $mime_tipe,
+        'size' => $fileSize,
+        'tmp_name' => $image,
+    ];
+        
+  }
+  
 }
 
