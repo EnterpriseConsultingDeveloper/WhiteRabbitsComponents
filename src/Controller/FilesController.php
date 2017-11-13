@@ -149,7 +149,8 @@ class FilesController extends AppController
     $this->viewBuilder()->layout('ajax'); // Vista per ajax
     $this->request->session()->write('Auth.User.fc_customer_site', $site);
     $completeUrl = 'https://' . $site . SUITE_DOMAIN_THIRD_LEVELS . $this->request->domain();
-
+    $typeImage = (isset($this->request->query['box'])) ? $this->request->query['box'] : null; // serve per far funzionare corretamente il plugin grafico delle landing e newsletter
+       
     $file = $this->Files->newEntity();
 
     $folderList = $this->Files->Folders->find('treeList', [
@@ -169,7 +170,7 @@ class FilesController extends AppController
 
     $this->set(compact('file', 'files', 'folders',
         'folderList', 'actualFolder', 'actualFolderName',
-        'initialPreview', 'initialPreviewConfig', 'completeUrl'));
+        'initialPreview', 'initialPreviewConfig', 'completeUrl', 'typeImage'));
 
     $this->set('_serialize', ['file', 'files']);
 

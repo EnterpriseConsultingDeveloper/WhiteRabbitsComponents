@@ -4,6 +4,20 @@
 
 <?= $this->fetch('css') ?>
 
+<style>
+.buttons-left {
+    display: block;
+    width: fit-content;
+    margin: 10px 10px;
+    float: left;
+}
+#ctcText {
+    background: rgba(0, 0, 0, 0.22);
+    border: none;
+    width: 90%;
+    padding: 1px 5px;
+}
+</style>
 <div class="row">
     <div class="col-lg-2">
         <strong>Folders</strong>
@@ -70,8 +84,6 @@
 'S3FileManager.jstree/dist/jstree.min.js'
 ], ['block' => 'script', 'fullBase' => true]); ?>
 
-
-
 <?= $this->fetch('script') ?>
 
 <script>
@@ -79,6 +91,7 @@
     var choosenFolder;
     var ip1 = <?=json_encode($initialPreview) ?>;
     var ip2 = <?=json_encode($initialPreviewConfig) ?>;
+    var typeImage = '<?=$typeImage ?>';
 
     var fileInputConfig = {
         initialPreview: ip1,
@@ -564,6 +577,8 @@
                 $('#myInsertButton').attr('file-path-partial', objData.partialUrl); //data.path);
             }
 
+            $('#myInsertButton').attr('file-type-image', typeImage); //data.path);
+
             if(selectedFiles.length > 0) {
                 $("#file-bar").show();
             } else {
@@ -592,7 +607,7 @@
                 async: false,
                 success: function(data) {
                     var completeUrl = '<?= $completeUrl ?>/s3_file_manager/Files/media' + data.path;
-                    var url = completeUrl;
+                    var url = '//' + completeUrl.slice(2);
                     window.open(url,'_blank');
 
                 },
@@ -636,10 +651,16 @@
                 async: false,
                 success: function(data) {
                     var public = '';
+                    var isDisplayed = 'display: none';
+                    var notIsDisplayed = 'display: block';
                     if(data.public == '1') {
                         public = '<i class="fa fa-unlock" aria-hidden="true" style="color: #e90000;"></i> Public';
+                        isDisplayed = 'display: block';
+                        notIsDisplayed = 'display: none';
                     } else {
                         public = '<i class="fa fa-lock" aria-hidden="true" style="color: #62cb31;"></i> Private';
+                        isDisplayed = 'display: none';
+                        notIsDisplayed = 'display: block';
                     }
                     var completeUrl = '<?= $completeUrl ?>/s3_file_manager/Files/media' + data.path;
                     var htmlInfo = '<ul class="info-list">';
@@ -648,10 +669,14 @@
                     htmlInfo += '<li><strong>Status</strong>: ' + public + '</li>';
                     htmlInfo += '<li><strong>Type</strong>: ' + data.type + '</li>';
                     htmlInfo += '<li><strong>Size</strong>: ' + data.size + 'kB </li>';
-                    htmlInfo += '<li><a class="btn btn-primary btn-xs" href="' + completeUrl + '" target="_blank"><i class="fa fa-download" aria-hidden="true"></i> Download</a></li>';
+                    htmlInfo += '<li style="' + notIsDisplayed + '"><a class="btn btn-primary btn-xs buttons-left" style="margin: 10px 0;" href="' + completeUrl + '" target="_blank"><i class="fa fa-download" aria-hidden="true"></i> Download</a></li>';
+                    htmlInfo += '<li style="' + isDisplayed + '"><strong>URL</strong>: <input type="text" id="ctcText" readonly="readonly" value="' + completeUrl + '"/> <a class="btn btn-success btn-xs buttons-left" style="margin: 10px 0;" href="#" id="ctcBtn"><i class="fa fa-copy" aria-hidden="true"></i> Copy URL to clipboard</a> <a class="btn btn-primary btn-xs buttons-left" href="' + completeUrl + '" target="_blank"><i class="fa fa-download" aria-hidden="true"></i> Download</a></li>';
                     htmlInfo += '</ul>';
 
                     $('#info-div').html(htmlInfo);
+
+
+
 
                     objData = {'name':data.name, 'url':completeUrl, 'partialUrl':data.path};
 
@@ -662,6 +687,27 @@
             });
             return objData;
         }
+
+        /**
+         * function copyToClipboard
+         *
+         */
+        $(document).on('click', "#ctcBtn", function () {
+            var toCopy = document.querySelector('#ctcText');
+            toCopy.select();
+
+            try {
+                var successful = document.execCommand('copy');
+                var msg = successful ? 'successful' : 'unsuccessful';
+                console.log('Copying text command was ' + msg);
+            } catch (err) {
+                console.log('Oops, unable to copy');
+            }
+
+
+        });
+
+
 
         /**
          * Delete a single file
