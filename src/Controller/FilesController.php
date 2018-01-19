@@ -835,10 +835,10 @@ class FilesController extends AppController
   
   public function convertBase64toImg($base64) {
 
-      $re = '/^data:image\/([a-zA-Z]+[a-zA-Z]+);/';
-      preg_match_all($re, $base64, $matches, PREG_SET_ORDER, 0);
+    $re = '/^data:image\/([a-zA-Z]+[a-zA-Z]+);/';
+    preg_match_all($re, $base64, $matches, PREG_SET_ORDER, 0);
 
-      $extension = $matches[0][1];
+    $extension = isset($matches[0][1]) ? $matches[0][1] : 'image/jpeg';
       
     $img = $base64;
     debug($base64);
