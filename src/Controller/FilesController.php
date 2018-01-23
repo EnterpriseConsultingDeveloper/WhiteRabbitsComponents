@@ -841,7 +841,6 @@ class FilesController extends AppController
     $extension = isset($matches[0][1]) ? $matches[0][1] : 'image/jpeg';
       
     $img = $base64;
-    debug($base64);
     $img = str_replace("data:image/".$extension.";base64,", '', $img);
     $img = str_replace(' ', '+', $img);
     $data = base64_decode($img);
