@@ -42,16 +42,16 @@ class FilesController extends AppController
    *
    * @return \Cake\Network\Response|null
    */
-  public function index()
-  {
-    $this->paginate = [
-        'contain' => ['Folders']
-    ];
-    $files = $this->paginate($this->Files);
-
-    $this->set(compact('files'));
-    $this->set('_serialize', ['files']);
-  }
+//  public function index()
+//  {
+//    $this->paginate = [
+//        'contain' => ['Folders']
+//    ];
+//    $files = $this->paginate($this->Files);
+//
+//    $this->set(compact('files'));
+//    $this->set('_serialize', ['files']);
+//  }
 
   /**
    * View method
@@ -60,15 +60,15 @@ class FilesController extends AppController
    * @return \Cake\Network\Response|null
    * @throws \Cake\Datasource\Exception\RecordNotFoundException When record not found.
    */
-  public function view($id = null)
-  {
-    $file = $this->Files->get($id, [
-        'contain' => ['Folders']
-    ]);
-
-    $this->set('file', $file);
-    $this->set('_serialize', ['file']);
-  }
+//  public function view($id = null)
+//  {
+//    $file = $this->Files->get($id, [
+//        'contain' => ['Folders']
+//    ]);
+//
+//    $this->set('file', $file);
+//    $this->set('_serialize', ['file']);
+//  }
 
   /**
    * Add method
@@ -99,24 +99,24 @@ class FilesController extends AppController
    * @return \Cake\Network\Response|void Redirects on successful edit, renders view otherwise.
    * @throws \Cake\Network\Exception\NotFoundException When record not found.
    */
-  public function edit($id = null)
-  {
-    $file = $this->Files->get($id, [
-        'contain' => []
-    ]);
-    if ($this->request->is(['patch', 'post', 'put'])) {
-      $file = $this->Files->patchEntity($file, $this->request->data);
-      if ($this->Files->save($file)) {
-        $this->Flash->success(__('The file has been saved.'));
-        return $this->redirect(['action' => 'index']);
-      } else {
-        $this->Flash->error(__('The file could not be saved. Please, try again.'));
-      }
-    }
-    $folders = $this->Files->Folders->find('list', ['limit' => 200]);
-    $this->set(compact('file', 'folders'));
-    $this->set('_serialize', ['file']);
-  }
+//  public function edit($id = null)
+//  {
+//    $file = $this->Files->get($id, [
+//        'contain' => []
+//    ]);
+//    if ($this->request->is(['patch', 'post', 'put'])) {
+//      $file = $this->Files->patchEntity($file, $this->request->data);
+//      if ($this->Files->save($file)) {
+//        $this->Flash->success(__('The file has been saved.'));
+//        return $this->redirect(['action' => 'index']);
+//      } else {
+//        $this->Flash->error(__('The file could not be saved. Please, try again.'));
+//      }
+//    }
+//    $folders = $this->Files->Folders->find('list', ['limit' => 200]);
+//    $this->set(compact('file', 'folders'));
+//    $this->set('_serialize', ['file']);
+//  }
 
   /**
    * Delete method
