@@ -23,16 +23,16 @@ class FoldersController extends AppController
    *
    * @return \Cake\Network\Response|null
    */
-  public function index()
-  {
-    $this->paginate = [
-      'contain' => ['ParentFolders']
-    ];
-    $folders = $this->paginate($this->Folders);
-
-    $this->set(compact('folders'));
-    $this->set('_serialize', ['folders']);
-  }
+//  public function index()
+//  {
+//    $this->paginate = [
+//      'contain' => ['ParentFolders']
+//    ];
+//    $folders = $this->paginate($this->Folders);
+//
+//    $this->set(compact('folders'));
+//    $this->set('_serialize', ['folders']);
+//  }
 
   /**
    * View method
