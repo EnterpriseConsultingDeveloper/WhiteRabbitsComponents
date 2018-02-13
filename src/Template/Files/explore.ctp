@@ -607,8 +607,7 @@
                 async: false,
                 success: function(data) {
                     var completeUrl = '<?= $completeUrl ?>/s3_file_manager/Files/media' + data.path;
-                    var url = '//' + completeUrl.slice(2);
-                    window.open(url,'_blank');
+                    window.open(completeUrl,'_blank');
 
                 },
                 error: function(jqXHR, error, errorThrown) {
