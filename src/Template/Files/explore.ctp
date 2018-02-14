@@ -5,18 +5,18 @@
 <?= $this->fetch('css') ?>
 
 <style>
-.buttons-left {
-    display: block;
-    width: fit-content;
-    margin: 10px 10px;
-    float: left;
-}
-#ctcText {
-    background: rgba(0, 0, 0, 0.22);
-    border: none;
-    width: 90%;
-    padding: 1px 5px;
-}
+    .buttons-left {
+        display: block;
+        width: fit-content;
+        margin: 10px 10px;
+        float: left;
+    }
+    #ctcText {
+        background: rgba(0, 0, 0, 0.22);
+        border: none;
+        width: 90%;
+        padding: 1px 5px;
+    }
 </style>
 <div class="row">
     <div class="col-lg-2">
@@ -46,10 +46,10 @@
                     <?= $this->Form->hidden('folder_id', ['id' => 'folder-id', 'value' => $actualFolder]); ?>
                     <div class="form-group">
                         <?= $this->Form->input('file', [
-                        'type' => 'file',
-                        'multiple' => 'true',
+                            'type' => 'file',
+                            'multiple' => 'true',
 
-                        'id' => 'myFile'
+                            'id' => 'myFile'
                         ]) ?>
                     </div>
                     <div id="errorBlock" class="help-block"></div>
@@ -77,11 +77,11 @@
 
 <?= $this->Html->script([
 //'S3FileManager.jquery-2.0.0.min.js',
-'S3FileManager.plugins/canvas-to-blob.min.js',
-'S3FileManager.fileinput.min.js',
+    'S3FileManager.plugins/canvas-to-blob.min.js',
+    'S3FileManager.fileinput.min.js',
 //'S3FileManager.bootstrap.min.js',
-'S3FileManager.fileinput_locale_it.js',
-'S3FileManager.jstree/dist/jstree.min.js'
+    'S3FileManager.fileinput_locale_it.js',
+    'S3FileManager.jstree/dist/jstree.min.js'
 ], ['block' => 'script', 'fullBase' => true]); ?>
 
 <?= $this->fetch('script') ?>
@@ -130,21 +130,21 @@
             '</div>\n',
         },
         otherActionButtons:
-            '<button type="button" ' +
-            'class="kv-file-select btn btn-xs btn-default" ' +
-            'title="Select this file" {dataKey}>\n' + // the {dataKey} tag will be auto replaced
-            '<i class="glyphicon glyphicon-unchecked"></i>\n' +
-            '</button>\n'+
-            '<button type="button" ' +
-            'class="kv-file-download btn btn-xs btn-default" ' +
-            'title="Download this file" {dataKey}>\n' +
-            '<i class="fa fa-download" aria-hidden="true"></i>\n' +
-            '</button>\n'+
-            '<button type="button" ' +
-            'class="kv-file-edit btn btn-xs btn-default" ' +
-            'title="Change status" {dataKey}>\n' +
-            '<i class="fa fa-unlock" style="color: #999999"></i>\n' +
-            '</button>\n'
+        '<button type="button" ' +
+        'class="kv-file-select btn btn-xs btn-default" ' +
+        'title="Select this file" {dataKey}>\n' + // the {dataKey} tag will be auto replaced
+        '<i class="glyphicon glyphicon-unchecked"></i>\n' +
+        '</button>\n'+
+        '<button type="button" ' +
+        'class="kv-file-download btn btn-xs btn-default" ' +
+        'title="Download this file" {dataKey}>\n' +
+        '<i class="fa fa-download" aria-hidden="true"></i>\n' +
+        '</button>\n'+
+        '<button type="button" ' +
+        'class="kv-file-edit btn btn-xs btn-default" ' +
+        'title="Change status" {dataKey}>\n' +
+        '<i class="fa fa-unlock" style="color: #999999"></i>\n' +
+        '</button>\n'
     }
 
     $(document).ready(function () {
@@ -154,6 +154,8 @@
         $(document).off('click', '.kv-file-select');
         $(document).off('click', '.kv-file-download');
         $(document).off('click', '#delete-files');
+
+
 
         var selectedFiles = new Array(0);
         var jsonFiles = {};
@@ -194,21 +196,21 @@
                         event.preventDefault();
 
                         swal({
-                                    title: "Are you sure?",
-                                    text: "If you delete a folder, you will lose ALL files in it!",
-                                    type: "warning",
-                                    showCancelButton: true,
-                                    confirmButtonColor: "#DD6B55",
-                                    confirmButtonText: "Yes",
-                                    cancelButtonText: "No",
-                                    closeOnConfirm: true,
-                                    closeOnCancel: true
-                                },
-                                function(isConfirm){
-                                    if (isConfirm) {
-                                        tree.delete_node(node);
-                                    }
-                                });
+                                title: "Are you sure?",
+                                text: "If you delete a folder, you will lose ALL files in it!",
+                                type: "warning",
+                                showCancelButton: true,
+                                confirmButtonColor: "#DD6B55",
+                                confirmButtonText: "Yes",
+                                cancelButtonText: "No",
+                                closeOnConfirm: true,
+                                closeOnCancel: true
+                            },
+                            function(isConfirm){
+                                if (isConfirm) {
+                                    tree.delete_node(node);
+                                }
+                            });
 
 
 
@@ -235,23 +237,23 @@
             event.preventDefault();
 
             swal({
-                title: "Are you sure?",
-                text: "If you delete a folder, you will lose ALL files in it!",
-                type: "warning",
-                showCancelButton: true,
-                confirmButtonColor: "#DD6B55",
-                confirmButtonText: "Yes",
-                cancelButtonText: "No",
-                closeOnConfirm: true,
-                closeOnCancel: true
-            },
-            function(isConfirm){
-                if (isConfirm) {
-                    $('#folderListContainer').jstree().delete_node(choosenFolder, function(){
-                        console.log("done on " + choosenFolder);
-                    });
-                }
-            });
+                    title: "Are you sure?",
+                    text: "If you delete a folder, you will lose ALL files in it!",
+                    type: "warning",
+                    showCancelButton: true,
+                    confirmButtonColor: "#DD6B55",
+                    confirmButtonText: "Yes",
+                    cancelButtonText: "No",
+                    closeOnConfirm: true,
+                    closeOnCancel: true
+                },
+                function(isConfirm){
+                    if (isConfirm) {
+                        $('#folderListContainer').jstree().delete_node(choosenFolder, function(){
+                            console.log("done on " + choosenFolder);
+                        });
+                    }
+                });
         });
 
 
@@ -289,137 +291,141 @@
                 is_draggable: false
             },
         })
-                .on("loaded.jstree", function() {
-                    myTree.jstree('open_all');
-                })
-                .on("changed.jstree", function (e, data) {
-                    choosenFolder = data.selected[0];
+            .on("loaded.jstree", function() {
+                myTree.jstree('open_all');
+                updateStatusPublic();
+            })
+            .on("changed.jstree", function (e, data) {
+                choosenFolder = data.selected[0];
 
-                    if (choosenFolder != null) {
-                        var url = '<?= $this->Url->build(["controller" => "Files", "action" => "getActualFolderFiles"]); ?>/' + choosenFolder;
-                        $.get(url, function(response){
-                            var data = $.parseJSON(response);
+                if (choosenFolder != null) {
+                    var url = '<?= $this->Url->build(["controller" => "Files", "action" => "getActualFolderFiles"]); ?>/' + choosenFolder;
+                    $.get(url, function(response){
+                        var data = $.parseJSON(response);
 
-                            updateFiles(data);
-                            resetInfo();
-                        });
-
-                        // Open bar for rename, delete and add subfolder
-                        $('#folder-bar').val = choosenFolder;
-                        $('#folder-bar').show();
-                    }
-
-                })
-                .on("create_node.jstree", function (e, data) {
-                    var node = $.extend(true, {}, data.node);
-                    node.type = "Folder";
-                    node.name = node.text;
-                    node.parentId = data.node.parent;
-
-                    $.ajax({ url: '<?= $this->Url->build(["controller" => "Folders", "action" => "addFolder", "_ext" => "json"]); ?>',
-                        data: {
-                            pId: data.node.parent,
-                            text: data.node.text
-                        },
-                        type: 'post',
-                        success: function(output) {
-                            data.instance.set_id(node, output.id);
-                            data.instance.edit(output.id);
-                        },
-                        error: function(jqXHR, error, errorThrown) {
-                            console.log('jqXHR: ', jqXHR);
-                        }
+                        updateFiles(data);
+                        updateStatusPublic(choosenFolder);
+                        resetInfo();
                     });
-                })
-                .on("rename_node.jstree", function (e, data) {
-                    if (data.node.id != null ) {
-                        console.log('rename_node', data.node.id);
-                        $.ajax({ url: '<?= $this->Url->build(["controller" => "Folders", "action" => "rename", "_ext" => "json"]); ?>',
-                            data: {
-                                id: data.node.id,
-                                text: data.text
-                            },
-                            type: 'post',
-                            success: function(output) {
-                            },
-                            error: function(jqXHR, error, errorThrown) {
-                                console.log('jqXHR: ', jqXHR);
-                            }
-                        });
+
+                    // Open bar for rename, delete and add subfolder
+                    $('#folder-bar').val = choosenFolder;
+                    $('#folder-bar').show();
+
+
+                }
+
+            })
+            .on("create_node.jstree", function (e, data) {
+                var node = $.extend(true, {}, data.node);
+                node.type = "Folder";
+                node.name = node.text;
+                node.parentId = data.node.parent;
+
+                $.ajax({ url: '<?= $this->Url->build(["controller" => "Folders", "action" => "addFolder", "_ext" => "json"]); ?>',
+                    data: {
+                        pId: data.node.parent,
+                        text: data.node.text
+                    },
+                    type: 'post',
+                    success: function(output) {
+                        data.instance.set_id(node, output.id);
+                        data.instance.edit(output.id);
+                    },
+                    error: function(jqXHR, error, errorThrown) {
+                        console.log('jqXHR: ', jqXHR);
                     }
-                })
-                .on("delete_node.jstree", function (e, data) {
-                    $.ajax({ url: '<?= $this->Url->build(["controller" => "Folders", "action" => "deleteFolder", "_ext" => "json"]); ?>',
+                });
+            })
+            .on("rename_node.jstree", function (e, data) {
+                if (data.node.id != null ) {
+                    console.log('rename_node', data.node.id);
+                    $.ajax({ url: '<?= $this->Url->build(["controller" => "Folders", "action" => "rename", "_ext" => "json"]); ?>',
                         data: {
                             id: data.node.id,
+                            text: data.text
                         },
                         type: 'post',
                         success: function(output) {
-                            console.log('output: ', output);
                         },
                         error: function(jqXHR, error, errorThrown) {
                             console.log('jqXHR: ', jqXHR);
                         }
                     });
-                })
-                .on('copy_node.jstree', function (e, data) {
-                    // Prevent folder creation on file move
-                    var myTree = $('#folderListContainer').jstree(true);
-                    myTree.delete_node(data.node);
+                }
+            })
+            .on("delete_node.jstree", function (e, data) {
+                $.ajax({ url: '<?= $this->Url->build(["controller" => "Folders", "action" => "deleteFolder", "_ext" => "json"]); ?>',
+                    data: {
+                        id: data.node.id,
+                    },
+                    type: 'post',
+                    success: function(output) {
+                        console.log('output: ', output);
+                    },
+                    error: function(jqXHR, error, errorThrown) {
+                        console.log('jqXHR: ', jqXHR);
+                    }
                 });
+            })
+            .on('copy_node.jstree', function (e, data) {
+                // Prevent folder creation on file move
+                var myTree = $('#folderListContainer').jstree(true);
+                myTree.delete_node(data.node);
+            });
 
         $(document).on('mousedown', ".file-selectable", function (e) {
             return $.vakata.dnd.start(e,
-                    {
-                        'jstree' : true,
-                        'obj' : $(this),
-                        'nodes' : [
-                            {
-                                id : true,
-                                text: $(this).text()
-                            }
-                        ]
-                    },
-                    '<div id="jstree-dnd" class="jstree-default"><i class="jstree-icon jstree-er"></i>' + $(this).text() + '</div>');
+                {
+                    'jstree' : true,
+                    'obj' : $(this),
+                    'nodes' : [
+                        {
+                            id : true,
+                            text: $(this).text()
+                        }
+                    ]
+                },
+                '<div id="jstree-dnd" class="jstree-default"><i class="jstree-icon jstree-er"></i>' + $(this).text() + '</div>');
         });
 
         $(document)
-                .on('dnd_move.vakata', function (e, data) {
-                    var t = $(data.event.target);
-                    if(t.closest('.jstree-node').length) {
-                        data.helper.find('.jstree-icon').removeClass('jstree-er').addClass('jstree-ok');
-                    } else {
-                        data.helper.find('.jstree-icon').removeClass('jstree-ok').addClass('jstree-er');
-                    }
-                })
-                .on('dnd_stop.vakata', function (e, data) {
-                    var t = $(data.event.target);
-                    if(t.closest('.jstree-node').length) {
-                        choosenFolder =  (t.context.id).substring(0, (t.context.id).indexOf('_'));  // remove '_anchor'
-                        var fileid = data.element.attributes['my-data-key'].value;
+            .on('dnd_move.vakata', function (e, data) {
+                var t = $(data.event.target);
+                if(t.closest('.jstree-node').length) {
+                    data.helper.find('.jstree-icon').removeClass('jstree-er').addClass('jstree-ok');
+                } else {
+                    data.helper.find('.jstree-icon').removeClass('jstree-ok').addClass('jstree-er');
+                }
+            })
+            .on('dnd_stop.vakata', function (e, data) {
+                var t = $(data.event.target);
+                if(t.closest('.jstree-node').length) {
+                    choosenFolder =  (t.context.id).substring(0, (t.context.id).indexOf('_'));  // remove '_anchor'
+                    var fileid = data.element.attributes['my-data-key'].value;
 
-                        $.ajax({ url: '<?= $this->Url->build(["controller" => "Files", "action" => "changeFolder", "_ext" => "json"]); ?>',
-                            data: {
-                                id: fileid,
-                                folder: choosenFolder
-                            },
-                            type: 'post',
-                            success: function(output) {
-                                var myTree = $('#folderListContainer').jstree(true);
-                                var myNode = myTree.get_node( t.context.id );
-                                myTree.deselect_all();
-                                myTree.select_node(myNode, false, false);
+                    $.ajax({ url: '<?= $this->Url->build(["controller" => "Files", "action" => "changeFolder", "_ext" => "json"]); ?>',
+                        data: {
+                            id: fileid,
+                            folder: choosenFolder
+                        },
+                        type: 'post',
+                        success: function(output) {
+                            var myTree = $('#folderListContainer').jstree(true);
+                            var myNode = myTree.get_node( t.context.id );
+                            myTree.deselect_all();
+                            myTree.select_node(myNode, false, false);
 
-                                updateFiles(output);
-                                resetInfo();
-                                myTree.open_node(myNode, false, true);
-                            },
-                            error: function(jqXHR, error, errorThrown) {
-                                console.log('jqXHR: ', jqXHR);
-                            }
-                        });
-                    }
-                });
+                            updateFiles(output);
+                            resetInfo();
+                            myTree.open_node(myNode, false, true);
+                        },
+                        error: function(jqXHR, error, errorThrown) {
+                            console.log('jqXHR: ', jqXHR);
+                        }
+                    });
+                }
+            });
 
 
         /**
@@ -447,29 +453,29 @@
                 return info;
             }
         })
-                .on("filebatchselected", function(event, files) {
-                    $("#myFile").fileinput("upload");
-                })
-                .on('filebatchuploadcomplete', function (event, files, extra) {
+            .on("filebatchselected", function(event, files) {
+                $("#myFile").fileinput("upload");
+            })
+            .on('filebatchuploadcomplete', function (event, files, extra) {
 
-                    $.get('<?= $this->Url->build(["controller" => "Files", "action" => "getActualFolderFiles"]); ?>/' + choosenFolder, function(response){
-                        var data = $.parseJSON(response);
-                        fileInputConfig.initialPreview = data.initialPreview;
-                        fileInputConfig.initialPreviewConfig = data.initialPreviewConfig;
+                $.get('<?= $this->Url->build(["controller" => "Files", "action" => "getActualFolderFiles"]); ?>/' + choosenFolder, function(response){
+                    var data = $.parseJSON(response);
+                    fileInputConfig.initialPreview = data.initialPreview;
+                    fileInputConfig.initialPreviewConfig = data.initialPreviewConfig;
 
-                        $el.fileinput('refresh', fileInputConfig);
+                    $el.fileinput('refresh', fileInputConfig);
 
-                        //Probably a chenge request would not to switch immediately
-                        $('#exploreTab li:eq(1) a').tab('show') // Select third tab (0-indexed)
-                    });
-                })
-                .on('filebatchuploaderror', function (event, data, msg) {
-                    var form = data.form, files = data.files, extra = data.extra,
-                            response = data.response, reader = data.reader;
-                    console.log('File batch upload error');
-                    // get message
-                    alert(msg);
+                    //Probably a chenge request would not to switch immediately
+                    $('#exploreTab li:eq(1) a').tab('show') // Select third tab (0-indexed)
                 });
+            })
+            .on('filebatchuploaderror', function (event, data, msg) {
+                var form = data.form, files = data.files, extra = data.extra,
+                    response = data.response, reader = data.reader;
+                console.log('File batch upload error');
+                // get message
+                alert(msg);
+            });
 
 
 
@@ -478,15 +484,15 @@
          */
         var $el = $('#preview'), initPlugin = function() {
             $el.fileinput(fileInputConfig)
-                    .off('filepreupload').on('filepreupload', function() {
-                        console.log("Initial pre-upload message!");
-                    })
-                    .on("filepredelete", function(jqXHR) {
-                        var abort = true;
-                        if (confirm("Are you sure you want to delete this image?")) {
-                            abort = false;
-                        }
-                        return abort; // you can also send any data/object that you can receive on `filecustomerror` event
+                .off('filepreupload').on('filepreupload', function() {
+                console.log("Initial pre-upload message!");
+            })
+                .on("filepredelete", function(jqXHR) {
+                    var abort = true;
+                    if (confirm("Are you sure you want to delete this image?")) {
+                        abort = false;
+                    }
+                    return abort; // you can also send any data/object that you can receive on `filecustomerror` event
 
 
 //                        swal({
@@ -502,7 +508,7 @@
 //                            return true;
 //                        });
 
-                    });
+                });
         };
         initPlugin();
 
@@ -521,19 +527,19 @@
                 type: 'post',
                 success: function(output) {
                     $("button.kv-file-edit[ data-key='" + key + "']")
-                            .removeClass(
+                        .removeClass(
                             function (index, css) {
                                 return (css.match (/(^|\s)access-\S+/g) || []).join(' ');
                             })
-                            .addClass('access-' + output)
-                            .blur();
+                        .addClass('access-' + output)
+                        .blur();
 
-                    /* icon live change
+                    /* icon live change*/
                     if(output == true) {
                         $(".kv-file-edit[data-key='"+key+"']").html('<i class="fa fa-unlock" aria-hidden="true" style="color: #e90000"></i>');
                     } else {
                         $(".kv-file-edit[data-key='"+key+"']").html('<i class="fa fa-lock" aria-hidden="true" style="color: #62cb31"></i>');
-                    }*/
+                    }
                     updateInfo(key);
                 },
                 error: function(jqXHR, error, errorThrown) {
@@ -556,16 +562,22 @@
             var newState = $(".kv-file-select[data-key='"+key+"']").html() == '<i class="glyphicon glyphicon-check" style="color: #62cb31;"></i>' ? 0 : 1;
 
             $(".kv-file-select[data-key='"+key+"']").html(cssStyles[newState]);
-            $(".file-selectable[my-data-key='"+key+"']").css('border', '1px solid #3498db');
+            $(".file-selectable[my-data-key='"+key+"']").css('outline', '3px solid #62cb31');
+
+
+            console.log("newState: ", newState);
+            console.log("public: ", objData.public);
 
             if(newState === 0) { // It was already selected, so it's time to remove it!!!
                 delete selectedFiles[key];
                 delete jsonFiles[key];
-
+                $(".file-selectable[my-data-key='"+key+"']").css('outline', '');
                 $('#myInsertButton').attr('file-path', ''); //data.path);
                 $('#myInsertButton').attr('file-id', ''); //data.id);
                 $('#myInsertButton').attr('file-name', ''); //data.id);
                 $('#myInsertButton').attr('file-path-partial', ''); //data.path);
+
+
 
             } else {
                 selectedFiles[key] = [objData.name, objData.url];
@@ -575,6 +587,14 @@
                 $('#myInsertButton').attr('file-id', key); //data.id);
                 $('#myInsertButton').attr('file-name', objData.name); //data.id);
                 $('#myInsertButton').attr('file-path-partial', objData.partialUrl); //data.path);
+
+            }
+
+            if(objData.public === 0){
+                $('#myInsertButton').attr('disabled', true);
+
+            }else{
+                $('#myInsertButton').attr('disabled', false);
             }
 
             $('#myInsertButton').attr('file-type-image', typeImage); //data.path);
@@ -597,7 +617,7 @@
          */
         $(document).on('click', ".kv-file-download", function () {
             var key = $(this).data('key'); // get the file key
-            $(".file-selectable[my-data-key='"+key+"']").css('border', '1px solid #3498db');
+            $(".file-selectable[my-data-key='"+key+"']").css('border', '0px solid #3498db');
             var url = '<?= $this->Url->build(["controller" => "Files", "action" => "mediaInfo", "_ext" => "json"]); ?>';
             $.ajax({ url: url,
                 data: {
@@ -606,9 +626,8 @@
                 type: 'post',
                 async: false,
                 success: function(data) {
-                    var completeUrl = '<?= $completeUrl ?>/s3_file_manager/Files/media' + data.path;
-                    var url = '//' + completeUrl.slice(2);
-                    window.open(url,'_blank');
+                    var completeUrl = '<?= $completeUrl ?>/s3_file_manager/Files/media_auth' + data.path;
+                    window.open(completeUrl,'_blank');
 
                 },
                 error: function(jqXHR, error, errorThrown) {
@@ -662,7 +681,7 @@
                         isDisplayed = 'display: none';
                         notIsDisplayed = 'display: block';
                     }
-                    var completeUrl = '<?= $completeUrl ?>/s3_file_manager/Files/media' + data.path;
+                    var completeUrl = '<?= $completeUrl ?>/s3_file_manager/Files/media_auth' + data.path;
                     var htmlInfo = '<ul class="info-list">';
                     htmlInfo += '<li><strong>Name</strong>: ' + data.name + '</li>';
                     htmlInfo += '<li><strong>Path</strong>: ' + data.path + '</li>';
@@ -678,7 +697,7 @@
 
 
 
-                    objData = {'name':data.name, 'url':completeUrl, 'partialUrl':data.path};
+                    objData = {'name':data.name, 'url':completeUrl, 'partialUrl':data.path,'public':data.public};
 
                 },
                 error: function(jqXHR, error, errorThrown) {
@@ -785,6 +804,39 @@
         function getFileStatus() {
             return 'lock';
         }
+
+        function updateStatusPublic(choosenFolder) {
+            // console.log("go updateStatus") ;
+            // console.log(choosenFolder) ;
+            $.ajax({ url: '<?= $this->Url->build(["controller" => "Files", "action" => "getFilesExplore", "_ext" => "json"]); ?>',
+                data: {
+                    id_folder: choosenFolder
+                },
+                type: 'post',
+                success: function(output) {
+                    //   console.log(output.files) ;
+                    Object.keys(output.files).forEach(function(key) {
+                        var public = (output.files[key].public);
+                        var datakey = (output.files[key].id);
+                        //   console.log(public) ;
+                        //  console.log(datakey) ;
+                        if(public == true) {
+                            $(".kv-file-edit[data-key='"+datakey+"']").html('<i class="fa fa-unlock" aria-hidden="true" style="color: #e90000"></i>');
+                            // console.log("unlock") ;
+                        } else {
+                            $(".kv-file-edit[data-key='"+datakey+"']").html('<i class="fa fa-lock" aria-hidden="true" style="color: #62cb31"></i>');
+                            //console.log("lock") ;
+                        }
+                    });
+
+                },
+                error: function(jqXHR, error, errorThrown) {
+                    console.log('jqXHR: ', jqXHR);
+                }
+            });
+        }
+
+
 
     });
 </script>

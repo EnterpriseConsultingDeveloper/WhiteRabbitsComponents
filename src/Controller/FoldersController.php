@@ -159,24 +159,27 @@ class FoldersController extends AppController
    * folderList method (ajax)
    *
    */
-  public function folderList()
-  {
-    $this->viewBuilder()->layout('ajax'); // Vista per ajax
-    $site = $this->request->query('site');
-    $selectedFolder = $this->request->query('sel');
+    public function folderList()
+    {
+        $this->viewBuilder()->layout('ajax'); // Vista per ajax
+        $site = $this->request->query('site');
+        $selectedFolder = $this->request->query('sel');
 
-    if ($selectedFolder == null) {
-      $rootFolder = $this->Folders->getRootFolder($site);
-      $selectedFolder = $rootFolder->id;
+        if ($selectedFolder == null) {
+            $rootFolder = $this->Folders->getRootFolder($site);
+            $selectedFolder = $rootFolder->id;
+        }
+
+        $this->request->session()->write('Auth.User.fc_customer_site', $site);
+
+        //edit 09/02/2018 Fabio Mugnano Aggiunta condizione 'name <>' =>'Resized' sotto indicazione di Raffaele per eliminare dall'albero la visualizzazione
+        // della cartella Resized usata dalle newsletter
+
+        $folderList = $this->Folders->find('threaded', [
+            'conditions' => ['bucket' => $site , 'name <>' =>'Resized']])->toArray();
+
+        $this->set(compact('folderList', 'selectedFolder'));
     }
-
-    $this->request->session()->write('Auth.User.fc_customer_site', $site);
-
-    $folderList = $this->Folders->find('threaded', [
-      'conditions' => ['bucket' => $site]])->toArray();
-
-    $this->set(compact('folderList', 'selectedFolder'));
-  }
 
 
   /**
