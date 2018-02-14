@@ -876,7 +876,11 @@ class FilesController extends AppController
         $file = new File($tempPath, true, 0644);
         $file->write(@file_get_contents($plainUrl));
 
-        $tempPath = $this->resizeImage($tempPath);
+        $tempPathResize = $this->resizeImage($tempPath, $fileName, $fileId);
+        if ($tempPathResize != false) {
+          $file->delete();
+          $tempPath = $tempPathResize;
+        }
 
         //debug($this->request->query['resize']);
         $this->response->file($tempPath);
@@ -893,40 +897,57 @@ class FilesController extends AppController
      * - urlimage?s=50 ridimensione l'immagine e la scala del 50%
      *
      * @param $tempPath
+     * @param $fileName
+     * @param $fileId
      * @return $tempPath url fisico del file
      */
-    private function resizeImage($tempPath)
+    private function resizeImage($tempPath, $fileName, $fileId)
     {
+
+      $tempPathResize = ROOT . DS . 'tmp' . DS . 'cache' . DS . 'cache'. $fileId .'_resized_'. $fileName;
+
+      $query = $this->request->query;
+
+      if ((count($query) == 0) || (!$tempPath)) {
+        return;
+      }
+
+      $valueAccepted = ['w' => null, 'h' => null, 'r' => null, 's' => null];
+      foreach ($query as $key => $value) {
+        if (!array_key_exists($key, $valueAccepted)) {
+          return;
+        }
+      }
+
       $image = new ImageResize($tempPath);
 
       // ridimensiona witdh
-      if ($this->request->query['w']) {
-        $image->resizeToWidth($this->request->query['w']);
+      if (isset($query['w'])) {
+        $image->resizeToWidth($query['w']);
       }
 
       // ridimensiona height
-      if ($this->request->query['h']) {
-        $image->resizeToHeight($this->request->query['h']);
+      if (isset($query['h'])) {
+        $image->resizeToHeight($query['h']);
       }
 
       // ridimensiona witdh x height
-      if ($this->request->query['r']) {
-        $resize = explode("x", $this->request->query['r']);
+      if (isset($query['r'])) {
+        $resize = explode("x", $query['r']);
         if (count($resize) == 2) {
         	$image->resize($resize[0], $resize[1]);
         }
       }
 
       // ridimensiona in scale
-      if ($this->request->query['s']) {
-        $image->scale($this->request->query['s']);
+      if (isset($query['s'])) {
+        $image->scale($query['s']);
       }
-      $image->save($tempPath);
 
       $file = new File($tempPath, true, 0644);
-      $file->write(@file_get_contents($image->output()));
+      $file->write(@file_get_contents($image->save($tempPathResize)));
 
-      return $tempPath;
+      return $tempPathResize;
     }
 
 
