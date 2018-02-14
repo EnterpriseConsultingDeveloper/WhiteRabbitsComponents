@@ -8,6 +8,7 @@ use Cake\Network\Exception\NotFoundException;
 use Cake\Routing\Router;
 use S3FileManager\Utils\WRS3Client;
 use S3FileManager\Utils\WRClient;
+use \Gumlet\ImageResize;
 
 /**
  * Files Controller
@@ -859,7 +860,6 @@ class FilesController extends AppController
         return $file->path . $file->original_filename;
     }
 
-
     /**
      * @param $path
      * @param $fileName
@@ -876,9 +876,57 @@ class FilesController extends AppController
         $file = new File($tempPath, true, 0644);
         $file->write(@file_get_contents($plainUrl));
 
+        $tempPath = $this->resizeImage($tempPath);
+
+        //debug($this->request->query['resize']);
         $this->response->file($tempPath);
 
         return $this->response;
+    }
+
+    /**
+     * Metodo per fare il resize delle immagini
+     * esempio:
+     * - urlimage?w=100 ridimensione l'immagine a 100 di width mantenendo il ratio
+     * - urlimage?h=100 ridimensione l'immagine a 100 di height mantenendo il ratio
+     * - urlimage?r=100x50 ridimensione l'immagine a 100 di width e 50 di height
+     * - urlimage?s=50 ridimensione l'immagine e la scala del 50%
+     *
+     * @param $tempPath
+     * @return $tempPath url fisico del file
+     */
+    private function resizeImage($tempPath)
+    {
+      $image = new ImageResize($tempPath);
+
+      // ridimensiona witdh
+      if ($this->request->query['w']) {
+        $image->resizeToWidth($this->request->query['w']);
+      }
+
+      // ridimensiona height
+      if ($this->request->query['h']) {
+        $image->resizeToHeight($this->request->query['h']);
+      }
+
+      // ridimensiona witdh x height
+      if ($this->request->query['r']) {
+        $resize = explode("x", $this->request->query['r']);
+        if (count($resize) == 2) {
+        	$image->resize($resize[0], $resize[1]);
+        }
+      }
+
+      // ridimensiona in scale
+      if ($this->request->query['s']) {
+        $image->scale($this->request->query['s']);
+      }
+      $image->save($tempPath);
+
+      $file = new File($tempPath, true, 0644);
+      $file->write(@file_get_contents($image->output()));
+
+      return $tempPath;
     }
 
 
@@ -976,4 +1024,3 @@ class FilesController extends AppController
     }
 
 }
-

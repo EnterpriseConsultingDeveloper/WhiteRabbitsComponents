@@ -5,8 +5,7 @@
     "require": {
         "php": ">=5.4.16",
         "cakephp/cakephp": "~3.0",
-        "components/jquery": ">=2.0.0",
-        "gumlet/php-image-resize": "1.8.*"
+        "components/jquery": ">=2.0.0"
     },
     "require-dev": {
         "phpunit/phpunit": "*"
