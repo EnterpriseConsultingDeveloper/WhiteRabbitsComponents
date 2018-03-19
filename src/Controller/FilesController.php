@@ -544,12 +544,12 @@ class FilesController extends AppController
 
         $this->viewBuilder()->layout('ajax'); // Vista per ajax
 
-        if (isset($_GET['first_read']) && isset($_GET['ref_id'])) {
-            $ref_id = $_GET['ref_id'];
-            $MtNewsletters = $this->loadModel("MarketingTools.MtNewsletters");
-            $MtNewsletters->readImg($ref_id);
-            return;
-        }
+//        if (isset($_GET['first_read']) && isset($_GET['ref_id'])) {
+//            $ref_id = $_GET['ref_id'];
+//            $MtNewsletters = $this->loadModel("MarketingTools.MtNewsletters");
+//            $MtNewsletters->readImg($ref_id);
+//            return;
+//        }
 
         if ($completePath == null) {
             throw new NotFoundException('File not found.');
@@ -622,12 +622,12 @@ class FilesController extends AppController
     public function media_auth($completePath = null)
     {
         $this->viewBuilder()->layout('ajax'); // Vista per ajax
-        if (isset($_GET['first_read']) && isset($_GET['ref_id'])) {
-            $ref_id = $_GET['ref_id'];
-            $MtNewsletters = $this->loadModel("MarketingTools.MtNewsletters");
-            $MtNewsletters->readImg($ref_id);
-            return;
-        }
+//        if (isset($_GET['first_read']) && isset($_GET['ref_id'])) {
+//            $ref_id = $_GET['ref_id'];
+//            $MtNewsletters = $this->loadModel("MarketingTools.MtNewsletters");
+//            $MtNewsletters->readImg($ref_id);
+//            return;
+//        }
 
         if ($completePath == null) {
             throw new NotFoundException('File not found.');
