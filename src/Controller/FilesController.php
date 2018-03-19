@@ -544,12 +544,19 @@ class FilesController extends AppController
 
         $this->viewBuilder()->layout('ajax'); // Vista per ajax
 
-//        if (isset($_GET['first_read']) && isset($_GET['ref_id'])) {
-//            $ref_id = $_GET['ref_id'];
-//            $MtNewsletters = $this->loadModel("MarketingTools.MtNewsletters");
-//            $MtNewsletters->readImg($ref_id);
-//            return;
-//        }
+        if (isset($_GET['first_read']) && isset($_GET['ref_id'])) {
+            
+            \Cake\Log\Log::error("-- image first_read found");
+            
+            $ref_id = $_GET['ref_id'];
+            $MtNewsletters = $this->loadModel("MarketingTools.MtNewsletters");
+            $MtNewsletters->readImg($ref_id);
+            
+            $imgRead = SUITE_PATH."img/email/1x1.png";
+            $localFile = $this->sendFile(SUITE_PATH."img/email/1x1.png", '1x1.png', null, null);
+            return $localFile;
+            
+        }
 
         if ($completePath == null) {
             throw new NotFoundException('File not found.');
@@ -622,13 +629,21 @@ class FilesController extends AppController
     public function media_auth($completePath = null)
     {
         $this->viewBuilder()->layout('ajax'); // Vista per ajax
-//        if (isset($_GET['first_read']) && isset($_GET['ref_id'])) {
-//            $ref_id = $_GET['ref_id'];
-//            $MtNewsletters = $this->loadModel("MarketingTools.MtNewsletters");
-//            $MtNewsletters->readImg($ref_id);
-//            return;
-//        }
-
+        
+        if (isset($_GET['first_read']) && isset($_GET['ref_id'])) {
+            
+            \Cake\Log\Log::error("-- image first_read found");
+            
+            $ref_id = $_GET['ref_id'];
+            $MtNewsletters = $this->loadModel("MarketingTools.MtNewsletters");
+            $MtNewsletters->readImg($ref_id);
+            
+            $imgRead = SUITE_PATH."img/email/1x1.png";
+            $localFile = $this->sendFile(SUITE_PATH."img/email/1x1.png", '1x1.png', null, null);
+            return $localFile;
+            
+        }
+        
         if ($completePath == null) {
             throw new NotFoundException('File not found.');
             return;
@@ -868,8 +883,14 @@ class FilesController extends AppController
      */
     private function sendFile($path, $fileName, $fileId, $bucketName)
     {
-        $S3Client = new WRS3Client();
-        $plainUrl = $S3Client->getObjectUrl($bucketName, $path);
+    	if ($fileId != null) {
+	        $S3Client = new WRS3Client();
+	        $plainUrl = $S3Client->getObjectUrl($bucketName, $path);
+    	} 
+
+    	if ($fileId == null) {
+    		$plainUrl = $path;
+    	}
         
         $image = $this->resizeImageFromString(@file_get_contents($plainUrl));
         
