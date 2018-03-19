@@ -870,10 +870,22 @@ class FilesController extends AppController
     {
         $S3Client = new WRS3Client();
         $plainUrl = $S3Client->getObjectUrl($bucketName, $path);
-
-        $tempPath = ROOT . DS . 'tmp' . DS . 'cache' . DS . $fileId . $fileName;
-
-        $file = new File($tempPath, true, 0644);
+        
+        $image = $this->resizeImageFromString(@file_get_contents($plainUrl));
+        
+        $this->response = $this->response->withType(image_type_to_mime_type(exif_imagetype($plainUrl)));
+        
+        $this->response->body(function () use ($image) {
+            return $image;
+        });
+        return $this->response;
+/*
+        // $tempPath = ROOT . DS . 'tmp' . DS . 'cache' . DS . $fileId . $fileName;
+        $tempPath = tempnam(ROOT . DS . 'tmp' . DS . 'cache', $fileId );
+        rename($tempPath, $tempPath.$fileName);
+        $tempPath = $tempPath.$fileName;
+        
+        $file = new File($tempPath, false, 0644);
         $file->write(@file_get_contents($plainUrl));
 
         $tempPathResize = $this->resizeImage($tempPath, $fileName, $fileId);
@@ -886,8 +898,64 @@ class FilesController extends AppController
         $this->response->file($tempPath);
 
         return $this->response;
+ */
     }
 
+        /**
+     * Metodo per fare il resize delle immagini
+     * esempio:
+     * - urlimage?w=100 ridimensione l'immagine a 100 di width mantenendo il ratio
+     * - urlimage?h=100 ridimensione l'immagine a 100 di height mantenendo il ratio
+     * - urlimage?r=100x50 ridimensione l'immagine a 100 di width e 50 di height
+     * - urlimage?s=50 ridimensione l'immagine e la scala del 50%
+     *
+     * @param $rawimage string immagine originale
+     * @return string immagine ridimensionata
+     */
+    private function resizeImageFromString($rawimage)
+    {
+
+      $query = $this->request->query;
+
+      if (count($query) == 0) {
+        return $rawimage;
+      }
+
+      $valueAccepted = ['w' => null, 'h' => null, 'r' => null, 's' => null];
+      foreach ($query as $key => $value) {
+        if (!array_key_exists($key, $valueAccepted)) {
+          return $rawimage;
+        }
+      }
+
+      $image = ImageResize::createFromString($rawimage);
+
+      // ridimensiona witdh
+      if (isset($query['w'])) {
+        $image->resizeToWidth($query['w']);
+      }
+
+      // ridimensiona height
+      if (isset($query['h'])) {
+        $image->resizeToHeight($query['h']);
+      }
+
+      // ridimensiona witdh x height
+      if (isset($query['r'])) {
+        $resize = explode("x", $query['r']);
+        if (count($resize) == 2) {
+        	$image->resize($resize[0], $resize[1]);
+        }
+      }
+
+      // ridimensiona in scale
+      if (isset($query['s'])) {
+        $image->scale($query['s']);
+      }
+
+      return $image->getImageAsString();
+    }
+    
     /**
      * Metodo per fare il resize delle immagini
      * esempio:
@@ -904,8 +972,11 @@ class FilesController extends AppController
     private function resizeImage($tempPath, $fileName, $fileId)
     {
 
-      $tempPathResize = ROOT . DS . 'tmp' . DS . 'cache' . DS . 'cache'. $fileId .'_resized_'. $fileName;
-
+      // $tempPathResize = ROOT . DS . 'tmp' . DS . 'cache' . DS . 'cache'. $fileId .'_resized_'. $fileName;
+      $tempPathResize = tempnam(ROOT . DS . 'tmp' . DS . 'cache', $fileId );
+      rename($tempPathResize, $tempPathResize.'_resized_'. $fileName);
+      $tempPathResize = $tempPathResize.'_resized_'. $fileName;
+      
       $query = $this->request->query;
 
       if ((count($query) == 0) || (!$tempPath)) {
