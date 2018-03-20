@@ -546,7 +546,7 @@ class FilesController extends AppController
 
         if (isset($_GET['first_read']) && isset($_GET['ref_id'])) {
             
-            \Cake\Log\Log::error("-- image first_read found");
+//            \Cake\Log\Log::error("-- image first_read found");
             
             $ref_id = $_GET['ref_id'];
             $MtNewsletters = $this->loadModel("MarketingTools.MtNewsletters");
@@ -632,7 +632,7 @@ class FilesController extends AppController
         
         if (isset($_GET['first_read']) && isset($_GET['ref_id'])) {
             
-            \Cake\Log\Log::error("-- image first_read found");
+//            \Cake\Log\Log::error("-- image first_read found");
             
             $ref_id = $_GET['ref_id'];
             $MtNewsletters = $this->loadModel("MarketingTools.MtNewsletters");
