@@ -1114,7 +1114,7 @@ class FilesController extends AppController
         $re = '/^data:image\/([a-zA-Z]+[a-zA-Z]+);/';
         preg_match_all($re, $base64, $matches, PREG_SET_ORDER, 0);
 
-        $extension = isset($matches[0][1]) ? $matches[0][1] : 'image/jpeg';
+        $extension = isset($matches[0][1]) ? $matches[0][1] : 'jpeg';
 
         $img = $base64;
         $img = str_replace("data:image/" . $extension . ";base64,", '', $img);
