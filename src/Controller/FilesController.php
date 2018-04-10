@@ -894,7 +894,7 @@ class FilesController extends AppController
         
         $image = $this->resizeImageFromString(@file_get_contents($plainUrl));
         
-        $this->response = $this->response->withType(image_type_to_mime_type(exif_imagetype($plainUrl)));
+        $this->response = $this->response->withType(image_type_to_mime_type(@exif_imagetype($plainUrl)));
         
         $this->response->body(function () use ($image) {
             return $image;
