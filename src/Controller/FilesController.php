@@ -135,7 +135,7 @@ class FilesController extends AppController
         $response = $http->post(API_PATH . API_METHOD_SET_LIMITS, [
                                 'customerID' => $this->request->session()->read('Auth.User.customer_id'),
                                 'limit' => 'repository_space',
-                                'value' => -$file-size
+                                'value' => -$file->size
                             ],
                             [
                                 'headers' => ['Authorization' => 'Bearer '.$this->request->session()->read('Auth.User.token'), 'Accept' => 'application/json']
