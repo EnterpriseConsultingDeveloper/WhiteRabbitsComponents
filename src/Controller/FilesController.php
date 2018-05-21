@@ -257,14 +257,14 @@ class FilesController extends AppController
         $saved = $this->Files->save($file);
         if ($saved) {
 
-            $folderController = new FoldersController();
-            $site = $this->request->session()->read('Auth.User.fc_customer_site');
-            $limit = $folderController->folderSize($site);
+            // $folderController = new FoldersController();
+            // $site = $this->request->session()->read('Auth.User.fc_customer_site');
+            // $limit = $folderController->folderSize($site);
             $http = new WRClient();
             $response = $http->post(API_PATH . API_METHOD_SET_LIMITS, [
                                     'customerID' => $this->request->session()->read('Auth.User.customer_id'),
                                     'limit' => 'repository_space',
-                                    'value' => $limit + $_FILES['file']['size']
+                                    'value' => $_FILES['file']['size']
                                 ],
                                 [
                                     'headers' => ['Authorization' => 'Bearer '.$this->request->session()->read('Auth.User.token'), 'Accept' => 'application/json']
