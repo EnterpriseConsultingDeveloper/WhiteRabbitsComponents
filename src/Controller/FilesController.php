@@ -130,6 +130,17 @@ class FilesController extends AppController
     {
         $this->request->allowMethod(['post', 'delete']);
         $file = $this->Files->get($id);
+
+        $http = new WRClient();
+        $response = $http->post(API_PATH . API_METHOD_SET_LIMITS, [
+                                'customerID' => $this->request->session()->read('Auth.User.customer_id'),
+                                'limit' => 'repository_space',
+                                'value' => -$file-size
+                            ],
+                            [
+                                'headers' => ['Authorization' => 'Bearer '.$this->request->session()->read('Auth.User.token'), 'Accept' => 'application/json']
+                            ]);
+
         if ($this->Files->delete($file)) {
             $this->Flash->success(__('The file has been deleted.'));
         } else {
