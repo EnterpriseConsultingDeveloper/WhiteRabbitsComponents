@@ -54,10 +54,10 @@
                         Uploading files to "<span id="actual-folder-name"><?= $actualFolderName ?></span>". You can
                         upload files with a <strong>maximum size of 10MB</strong>.
                     </div>
-                    <?php if ($this->S3File->linkEnabled('repository_space') == false) : ?>
+                    <?php if ($this->S3File->linkEnabled('repository_space') == true) : ?>
                         <?=$this->S3File->infoLimit('repository_space'); ?>
                     <?php endif; ?>
-                    <?php if ($this->S3File->linkEnabled('repository_space') == true) : ?>
+                    <?php if ($this->S3File->linkEnabled('repository_space') == false) : ?>
                         <?= $this->Form->create($file, ['type' => 'file']) ?>
                         <?= $this->Form->hidden('folder_id', ['id' => 'folder-id', 'value' => $actualFolder]); ?>
                         <div class="form-group">
