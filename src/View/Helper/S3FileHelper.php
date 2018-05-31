@@ -17,6 +17,8 @@ namespace S3FileManager\View\Helper;
 use Cake\View\Helper;
 use Cake\View\View;
 use S3FileManager\Utils\WRUtils;
+use Cake\ORM\TableRegistry;
+use Cake\Cache\Cache;
 
 
 /**
@@ -221,5 +223,20 @@ class S3FileHelper extends Helper
             $path = '/' . $path;
 
         return $this->proxyBasePath . $path;
+    }
+
+    /*
+     * controlla se è auth a entrare nel link
+     */
+
+    public function linkEnabled($variations) {
+
+        $package = Cache::read('packages'.$this->request->session()->read('Auth.User.customer_id'), 'db_results_daily');
+        $packageReached = $package['limit'][$variations]['reached'];
+        if (($packageReached == true)) {
+            return true;
+        }
+        return null;
+
     }
 }

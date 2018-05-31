@@ -4,6 +4,12 @@
 
 <?= $this->fetch('css') ?>
 
+<?php
+
+debug($this->Packages->linkEnabled('repository_space'));
+
+?>
+
 <style>
     .buttons-left {
         display: block;
