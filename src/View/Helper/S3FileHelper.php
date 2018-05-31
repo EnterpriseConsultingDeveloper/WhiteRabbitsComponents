@@ -305,8 +305,6 @@ class S3FileHelper extends Helper
         $variationsTable = TableRegistry::get('Variations');
         $variation = $variationsTable->find()->select(['display_name'])->where(['name' => $variations])->first();
 
-
-
         return $variation;
 
     }

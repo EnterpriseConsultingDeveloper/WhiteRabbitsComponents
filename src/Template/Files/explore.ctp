@@ -4,12 +4,6 @@
 
 <?= $this->fetch('css') ?>
 
-<?php
-
-debug($this->Packages->linkEnabled('repository_space'));
-
-?>
-
 <style>
     .buttons-left {
         display: block;
@@ -60,18 +54,23 @@ debug($this->Packages->linkEnabled('repository_space'));
                         Uploading files to "<span id="actual-folder-name"><?= $actualFolderName ?></span>". You can
                         upload files with a <strong>maximum size of 10MB</strong>.
                     </div>
-                    <?= $this->Form->create($file, ['type' => 'file']) ?>
-                    <?= $this->Form->hidden('folder_id', ['id' => 'folder-id', 'value' => $actualFolder]); ?>
-                    <div class="form-group">
-                        <?= $this->Form->input('file', [
-                            'type' => 'file',
-                            'multiple' => 'true',
+                    <?php if ($this->S3File->linkEnabled('repository_space') == false) : ?>
+                        <?=$this->S3File->infoLimit('repository_space'); ?>
+                    <?php endif; ?>
+                    <?php if ($this->S3File->linkEnabled('repository_space') == true) : ?>
+                        <?= $this->Form->create($file, ['type' => 'file']) ?>
+                        <?= $this->Form->hidden('folder_id', ['id' => 'folder-id', 'value' => $actualFolder]); ?>
+                        <div class="form-group">
+                            <?= $this->Form->input('file', [
+                                'type' => 'file',
+                                'multiple' => 'true',
 
-                            'id' => 'myFile'
-                        ]) ?>
-                    </div>
-                    <div id="errorBlock" class="help-block"></div>
-                    <?= $this->Form->end() ?>
+                                'id' => 'myFile'
+                            ]) ?>
+                        </div>
+                        <div id="errorBlock" class="help-block"></div>
+                        <?= $this->Form->end() ?>
+                    <?php endif; ?>
                 </div>
             </div>
             <div role="tabpanel" class="tab-pane fade in active" id="fileListTab">
