@@ -236,7 +236,78 @@ class S3FileHelper extends Helper
         if (($packageReached == true)) {
             return true;
         }
-        return null;
+        return false;
+
+    }
+
+    public function infoLimit($variationName) {
+
+        $package = Cache::read('packages'.$this->request->session()->read('Auth.User.customer_id'), 'db_results_daily');
+
+        $packageUsed = $package['limit'][$variationName]['used'];
+        $packagePeak = $package['limit'][$variationName]['peak'];
+        $packageReached = $package['limit'][$variationName]['reached'];
+
+        // if (!$packageReached)
+        //     return;
+
+        $progressBar = 'progress-bar-success';
+
+        if ($packagePeak == '-1') {
+            $perc = 100;
+            $perc_label = __('No Limits');
+        }
+
+        if ($packagePeak != '-1') {
+            $perc = round($packageUsed/$packagePeak * 100);
+            $perc_label = $perc.' %';
+        }
+
+        if ($perc >= 100) {
+            $perc = 100;
+            $progressBar = 'progress-bar-danger';
+        }
+
+        //if ($packageReached == false) return;
+
+        $infos = $this->getInfo($variationName);
+
+        $html = null;
+
+        $html .= "<div class=\"hpanel\">";
+        $html .= "<div class=\"panel-body\">";
+
+        $html .= "<div class=\"row\">";
+        $html .= "<div class=\"col-md-12 text-left\">";
+        $html .= "<h2>".__('Limit Reached for: ').$infos->display_name."</h2>";
+
+        $html .= "<div class=\"m\">";
+        $html .= "<div class=\"progress m-t-xs full progress-striped\">";
+        $html .= "<div style=\"width: ".$perc."%\" aria-valuemax=\"100\" aria-valuemin=\"0\" aria-valuenow=\"".$perc."\" role=\"progressbar\" class=\"progress-bar ".$progressBar."\">";
+        $html .= $perc_label;
+        $html .= "</div>";
+        $html .= "</div>";
+        $html .= "</div>";
+        $html .= "</div>";
+
+        $html .= "</div>";
+        $html .= "</div>";
+
+        $html .= "</div>";
+
+        return $html;
+    }
+
+    private function getInfo($variations) {
+
+        $customer_id = $this->request->session()->read('Auth.User.customer_id');
+
+        $variationsTable = TableRegistry::get('Variations');
+        $variation = $variationsTable->find()->select(['display_name'])->where(['name' => $variations])->first();
+
+
+
+        return $variation;
 
     }
 }
