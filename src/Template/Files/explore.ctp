@@ -839,8 +839,8 @@
                     htmlInfo += '<li><strong>Status</strong>: ' + public + '</li>';
                     htmlInfo += '<li><strong>Type</strong>: ' + data.type + '</li>';
                     htmlInfo += '<li><strong>Size</strong>: ' + data.size + 'kB </li>';
-                    htmlInfo += '<li style="' + notIsDisplayed + '"><a class="btn btn-primary btn-xs buttons-left" style="margin: 10px 0;" href="' + completeUrl + '" target="_blank"><i class="fa fa-download" aria-hidden="true"></i> Download</a></li>';
-                    htmlInfo += '<li style="' + isDisplayed + '"><strong>URL</strong>: <input type="text" id="ctcText" readonly="readonly" value="' + completeUrl + '"/> <a class="btn btn-success btn-xs buttons-left" style="margin: 10px 0;" href="#" id="ctcBtn"><i class="fa fa-copy" aria-hidden="true"></i> Copy URL to clipboard</a> <a class="btn btn-primary btn-xs buttons-left" href="' + completeUrl + '" target="_blank"><i class="fa fa-download" aria-hidden="true"></i> Download</a></li>';
+                    htmlInfo += '<li style="' + notIsDisplayed + '"><a class="btn btn-primary buttons-left" style="margin: 10px 0;" href="' + completeUrl + '" target="_blank"><i class="fa fa-download" aria-hidden="true"></i> Download</a></li>';
+                    htmlInfo += '<li style="' + isDisplayed + '"><strong>URL</strong>: <input type="text" id="ctcText" readonly="readonly" value="' + completeUrl + '"/> <a class="btn btn-success buttons-left" style="margin: 10px 0;" href="#" id="ctcBtn"><i class="fa fa-copy" aria-hidden="true"></i> Copy URL to clipboard</a> <a class="btn btn-primary btn-xs buttons-left" href="' + completeUrl + '" target="_blank"><i class="fa fa-download" aria-hidden="true"></i> Download</a></li>';
                     htmlInfo += '</ul>';
 
                     $('#info-div').html(htmlInfo);
