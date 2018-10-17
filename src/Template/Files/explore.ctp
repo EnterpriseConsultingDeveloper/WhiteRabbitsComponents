@@ -544,6 +544,7 @@
          */
         //$('.kv-file-edit').on('click', function () {
         $(document).on('click', ".kv-file-edit", function () {
+            $(this).removeData("key");
             var key = $(this).data('key'); // get the file key
 
             $.ajax({
@@ -577,7 +578,7 @@
         });
 
 
-        $(document).on('click', ".file-selectable", function () {
+        $(document).on('dblclick', ".file-selectable", function () {
             // console.log($(this));
 
             var key = $(this).attr('my-data-key');
@@ -614,15 +615,17 @@
                 $('#myInsertButton').attr('file-name', objData.name); //data.id);
                 $('#myInsertButton').attr('file-path-partial', objData.partialUrl); //data.path);
             }
-
+                
             $('#myInsertButton').attr('file-type-image', typeImage); //data.path);
 
             // Create the JSON object to pass within an attribute on the button
             $('#myInsertButton').attr('files', JSON.stringify(jsonFiles)); // contains id and path of the selected files
+
         });
 
 
         $(document).on('click', ".kv-file-remove", function () {
+            $(this).removeData("key");
             var key = $(this).data('key');
             if (refresh == true) {
                 selectedImages.forEach(function (entry) {
@@ -641,6 +644,7 @@
          */
         //$(".kv-file-select").on('click', function () {
         $(document).on('click', ".kv-file-select", function () {
+            $(this).removeData("key");
             var key = $(this).data('key'); // get the file key
             var objData = getInfo(key);
 
@@ -713,6 +717,7 @@
          * Function for the download file button
          */
         $(document).on('click', ".kv-file-download", function () {
+            $(this).removeData("key");
             var key = $(this).data('key'); // get the file key
             $(".file-selectable[my-data-key='" + key + "']").css('border', '0px solid #3498db');
             var url = '<?= $this->Url->build(["controller" => "Files", "action" => "mediaInfo", "_ext" => "json"]); ?>';
