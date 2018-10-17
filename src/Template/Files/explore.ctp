@@ -106,7 +106,9 @@
 
 <script>
 
-    var choosenFolder;
+    $(document).ready(function () {
+
+            var choosenFolder;
     var ip1 = <?=json_encode($initialPreview) ?>;
     var ip2 = <?=json_encode($initialPreviewConfig) ?>;
     var typeImage = '<?=$typeImage ?>';
@@ -164,9 +166,7 @@
         '<i class="fa fa-unlock" style="color: #999999"></i>\n' +
         '</button>\n'
     }
-
-    $(document).ready(function () {
-
+    
         $(document).off('mousedown', '.file-selectable');
         $(document).off('click', '.kv-file-edit');
         $(document).off('click', '.kv-file-select');
@@ -520,20 +520,6 @@
 
                     return abort; // you can also send any data/object that you can receive on `filecustomerror` event
 
-
-//                        swal({
-//                            title: "Are you sure?",
-//                            text: "You are deleting selected files",
-//                            type: "warning",
-//                            showCancelButton: true,
-//                            confirmButtonColor: "#DD6B55",
-//                            confirmButtonText: "Yes!",
-//                            closeOnConfirm: true
-//                        },
-//                        function(){
-//                            return true;
-//                        });
-
                 });
         };
         initPlugin();
@@ -579,7 +565,8 @@
 
 
         $(document).on('dblclick', ".file-selectable", function () {
-            // console.log($(this));
+
+            console.log($(this));
 
             var key = $(this).attr('my-data-key');
             var objData = updateInfo(key);
