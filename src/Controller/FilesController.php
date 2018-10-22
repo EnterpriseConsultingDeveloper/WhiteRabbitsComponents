@@ -943,7 +943,7 @@ class FilesController extends AppController
 
       $query = $this->request->query;
 
-      if (count($query) == 0) {
+      if (@count($query) == 0) {
         return $rawimage;
       }
 
@@ -969,7 +969,7 @@ class FilesController extends AppController
       // ridimensiona witdh x height
       if (isset($query['r'])) {
         $resize = explode("x", $query['r']);
-        if (count($resize) == 2) {
+        if (@count($resize) == 2) {
         	$image->resize($resize[0], $resize[1]);
         }
       }
@@ -1005,7 +1005,7 @@ class FilesController extends AppController
       
       $query = $this->request->query;
 
-      if ((count($query) == 0) || (!$tempPath)) {
+      if ((@count($query) == 0) || (!$tempPath)) {
         return;
       }
 
@@ -1031,7 +1031,7 @@ class FilesController extends AppController
       // ridimensiona witdh x height
       if (isset($query['r'])) {
         $resize = explode("x", $query['r']);
-        if (count($resize) == 2) {
+        if (@count($resize) == 2) {
         	$image->resize($resize[0], $resize[1]);
         }
       }
