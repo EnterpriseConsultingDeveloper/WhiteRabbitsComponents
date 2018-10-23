@@ -17,7 +17,7 @@ trait WRTrait
     public function loadModel($modelClass = null, $type = 'Table') {
         $model = parent::loadModel($modelClass, $type);
         $listener = new LoggedInCustomerListener($this->request);
-        $model->eventManager()->attach($listener);
+        $model->setEventManager()->attach($listener);
         return $model;
     }
 }

@@ -73,7 +73,7 @@ class S3FileHelper extends Helper
      */
     public function __construct(\Cake\View\View $View, array $config = [])
     {
-        $config = $this->config();
+        $config = $this->getConfig();
 
         parent::__construct($View, $config + [
                 'helpers' => ['Html'],
