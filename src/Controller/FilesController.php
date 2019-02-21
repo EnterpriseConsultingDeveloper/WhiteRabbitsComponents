@@ -4,7 +4,7 @@ namespace S3FileManager\Controller;
 use Cake\Core\Exception\Exception;
 use Cake\Event\Event;
 use Cake\Filesystem\File;
-use Cake\Network\Exception\NotFoundException;
+use Cake\Http\Exception\NotFoundException;
 use Cake\Routing\Router;
 use S3FileManager\Utils\WRS3Client;
 use S3FileManager\Utils\WRClient;
