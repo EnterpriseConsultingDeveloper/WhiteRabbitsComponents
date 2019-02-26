@@ -202,14 +202,13 @@ class FilesController extends AppController
 
         $this->viewBuilder()->layout('ajax'); // Vista per ajax
 
-        if ($this->request->data['session']) {
+        if ($this->request->getSession()->read('Auth.User')) {
 
-            foreach ($this->request->data['session'] as $key => $value) {
-                $this->request->session()->write('Auth.User.' . $key, $value);
-            }
+          foreach ($this->request->getSession()->read('Auth.User') as $key => $value) {
+            $this->request->session()->write('Auth.User.' . $key, $value);
+          }
 
         }
-
 
         // Undefined | Multiple Files | $_FILES Corruption Attack
         // If this request falls under any of them, treat it invalid.
