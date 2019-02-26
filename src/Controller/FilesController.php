@@ -563,7 +563,7 @@ class FilesController extends AppController
         }
 
         if ($completePath == null) {
-            throw new NotFoundException('File not found.');
+            exit;
         }
 
         $site = $this->extractSite();
