@@ -189,7 +189,7 @@ class UploadableBehavior extends Behavior
         if(!$this->_s3Client->doesBucketExist($bucketName)) {
             $this->_s3Client->createBucket(array('Bucket' => $bucketName,
 		'CreateBucketConfiguration' => [
-        	'LocationConstraint' => $config['S3Region'],
+        	'LocationConstraint' => 'eu-west-1',
     		],
 	  ));
         }

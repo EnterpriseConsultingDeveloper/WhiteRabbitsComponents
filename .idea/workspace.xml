@@ -2,11 +2,9 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="4681370d-45b8-4d08-8469-998adf7b9985" name="Default" comment="Merge remote-tracking branch 'origin/master'&#10;&#10;# Conflicts:&#10;#&#9;src/Template/Files/explore.ctp">
-      <change beforePath="$PROJECT_DIR$/.idea/WhiteRabbitComponents.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/WhiteRabbitComponents.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/deployment.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/deployment.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/php.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/php.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Controller/FilesController.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Controller/FilesController.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Model/Behavior/UploadableBehavior.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Model/Behavior/UploadableBehavior.php" afterDir="false" />
     </list>
     <ignored path="WhiteRabbitComponents.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -45,11 +43,17 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/Controller/FilesController.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="433">
-              <caret line="565" selection-start-line="565" selection-end-line="565" selection-end-column="17" />
-              <folding>
-                <element signature="e#43#77#0#PHP" expanded="true" />
-              </folding>
+            <state relative-caret-position="854">
+              <caret line="1147" lean-forward="true" selection-start-line="1147" selection-end-line="1147" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/Model/Behavior/UploadableBehavior.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="2941">
+              <caret line="191" column="44" selection-start-line="191" selection-start-column="44" selection-end-line="191" selection-end-column="44" />
             </state>
           </provider>
         </entry>
@@ -60,6 +64,9 @@
     <findStrings>
       <find>us-east-1</find>
       <find>AKIAJMF5RMYVJVFEBOLQ</find>
+      <find>uploadFile</find>
+      <find>UploadableBehavior</find>
+      <find>S3Region</find>
     </findStrings>
     <dirStrings>
       <dir>$PROJECT_DIR$</dir>
@@ -78,10 +85,10 @@
         <option value="$PROJECT_DIR$/README.md" />
         <option value="$PROJECT_DIR$/webroot/css/fmstyle.css" />
         <option value="$PROJECT_DIR$/src/Controller/FoldersController.php" />
-        <option value="$PROJECT_DIR$/src/Model/Behavior/UploadableBehavior.php" />
         <option value="$PROJECT_DIR$/src/Utils/WRS3Client.php" />
         <option value="$PROJECT_DIR$/src/Template/Files/explore.ctp" />
         <option value="$PROJECT_DIR$/src/Controller/WRTrait.php" />
+        <option value="$PROJECT_DIR$/src/Model/Behavior/UploadableBehavior.php" />
         <option value="$PROJECT_DIR$/src/Controller/FilesController.php" />
       </list>
     </option>
@@ -121,6 +128,19 @@
               <item name="WhiteRabbitsComponents" type="462c0819:PsiDirectoryNode" />
               <item name="src" type="462c0819:PsiDirectoryNode" />
               <item name="Controller" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="WhiteRabbitsComponents" type="b2602c69:ProjectViewProjectNode" />
+              <item name="WhiteRabbitsComponents" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="Model" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="WhiteRabbitsComponents" type="b2602c69:ProjectViewProjectNode" />
+              <item name="WhiteRabbitsComponents" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="Model" type="462c0819:PsiDirectoryNode" />
+              <item name="Behavior" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
           <select />
@@ -197,7 +217,9 @@
       <workItem from="1551096095305" duration="317000" />
       <workItem from="1551105997543" duration="881000" />
       <workItem from="1551168939066" duration="3202000" />
-      <workItem from="1551184541539" duration="506000" />
+      <workItem from="1551184541539" duration="1721000" />
+      <workItem from="1551881723171" duration="494000" />
+      <workItem from="1551885558573" duration="4000" />
     </task>
     <task id="LOCAL-00001" summary="commit&#10;">
       <created>1476280802206</created>
@@ -472,18 +494,25 @@
       <option name="project" value="LOCAL" />
       <updated>1551169756683</updated>
     </task>
-    <option name="localTasksCounter" value="40" />
+    <task id="LOCAL-00040" summary="Merge remote-tracking branch 'origin/master'&#10;&#10;# Conflicts:&#10;#&#9;src/Template/Files/explore.ctp">
+      <created>1551185051372</created>
+      <option name="number" value="00040" />
+      <option name="presentableId" value="LOCAL-00040" />
+      <option name="project" value="LOCAL" />
+      <updated>1551185051372</updated>
+    </task>
+    <option name="localTasksCounter" value="41" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="10877000" />
+    <option name="totallyTimeSpent" value="12590000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="0" y="23" width="1680" height="1027" extended-state="0" />
+    <frame x="0" y="23" width="1680" height="1027" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.49946523" weight="0.16971917" />
-      <window_info active="true" id="Structure" order="1" visible="true" weight="0.24969475" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" sideWeight="0.49946523" visible="true" weight="0.17155068" />
+      <window_info id="Structure" order="1" weight="0.25274727" />
       <window_info id="Favorites" order="2" sideWeight="0.5005348" side_tool="true" weight="0.16971917" />
       <window_info anchor="bottom" id="Messages" order="0" />
       <window_info anchor="bottom" id="Find" order="1" weight="0.33224756" />
@@ -561,13 +590,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/Model/Behavior/UploadableBehavior.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1037">
-          <caret line="79" column="39" selection-start-line="79" selection-start-column="39" selection-end-line="79" selection-end-column="39" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/Utils/WRS3Client.php">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="578">
@@ -619,11 +641,15 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/Controller/FilesController.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="433">
-          <caret line="565" selection-start-line="565" selection-end-line="565" selection-end-column="17" />
-          <folding>
-            <element signature="e#43#77#0#PHP" expanded="true" />
-          </folding>
+        <state relative-caret-position="854">
+          <caret line="1147" lean-forward="true" selection-start-line="1147" selection-end-line="1147" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Model/Behavior/UploadableBehavior.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="2941">
+          <caret line="191" column="44" selection-start-line="191" selection-start-column="44" selection-end-line="191" selection-end-column="44" />
         </state>
       </provider>
     </entry>
