@@ -638,19 +638,31 @@ class FilesController extends AppController
   {
     $this->viewBuilder()->layout('ajax'); // Vista per ajax
 
-    if (isset($_GET['first_read']) && isset($_GET['ref_id'])) {
+		if (isset($_GET['first_read']) && isset($_GET['ref_id'])) {
+
+			$ref_id = $_GET['ref_id'];
+			if (isset($_GET['automationfilter'])) {
+				$MktgAutomationTable = $this->loadModel("MarketingTools.MktgAutomationFilters");
+				$MktgAutomationTable->setReadDate($ref_id);
+			}
+
+			if (isset($_GET['automation'])) {
+				$MktgAutomationTable = $this->loadModel("MarketingTools.MktgAutomation");
+				$MktgAutomationTable->setReadDate($ref_id);
+			}
+
+			if (!isset($_GET['automation']) && !isset($_GET['automationfilter'])) {
+				$MtNewsletters = $this->loadModel("MarketingTools.MtNewsletters");
+				$MtNewsletters->readImg($ref_id);
+			}
 
 //            \Cake\Log\Log::error("-- image first_read found");
 
-      $ref_id = $_GET['ref_id'];
-      $MtNewsletters = $this->loadModel("MarketingTools.MtNewsletters");
-      $MtNewsletters->readImg($ref_id);
+			$imgRead = SUITE_PATH."img/email/1x1.png";
+			$localFile = $this->sendFile(SUITE_PATH."img/email/1x1.png", '1x1.png', null, null);
+			return $localFile;
 
-      $imgRead = SUITE_PATH."img/email/1x1.png";
-      $localFile = $this->sendFile(SUITE_PATH."img/email/1x1.png", '1x1.png', null, null);
-      return $localFile;
-
-    }
+		}
 
     if ($completePath == null) {
       throw new NotFoundException('File not found.');
