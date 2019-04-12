@@ -233,70 +233,116 @@ class S3FileHelper extends Helper
 
         $package = Cache::read('packages'.$this->request->session()->read('Auth.User.customer_id'), 'db_results_daily');
         $packageReached = $package['limit'][$variations]['reached'];
-        if (($packageReached == true)) {
-            return true;
-        }
+				$packagePeak = $package['limit'][$variations]['peak'];
+
+				if (($packageReached == true) || ($packagePeak == 0) || ($packagePeak == -1)) {
+					return 'disabled';
+				}
         return false;
 
     }
 
-    public function infoLimit($variationName) {
 
-        $package = Cache::read('packages'.$this->request->session()->read('Auth.User.customer_id'), 'db_results_daily');
+		public function infoLimit($variationNames) {
 
-        $packageUsed = $package['limit'][$variationName]['used'];
-        $packagePeak = $package['limit'][$variationName]['peak'];
-        $packageReached = $package['limit'][$variationName]['reached'];
+		// può essere che arrivi una richiesta di una stringa (vecchie release) quindi controllo
+		// perchè ora possono anche vedere piò limiti in una pagina
+		if (!is_array($variationNames))
+			$variationNames = (array)$variationNames;
 
-        // if (!$packageReached)
-        //     return;
+		$variations = array();
+		foreach ($variationNames as $id => $variationName) {
 
-        $progressBar = 'progress-bar-success';
+			$package = Cache::read('packages'.$this->request->getSession()->read('Auth.User.customer_id'), 'db_results_daily');
 
-        if ($packagePeak == '-1') {
-            $perc = 100;
-            $perc_label = __('No Limits');
-        }
+			$packageUsed = $package['limit'][$variationName]['used'];
+			$packagePeak = $package['limit'][$variationName]['peak'];
+			$packageReached = $package['limit'][$variationName]['reached'];
 
-        if ($packagePeak != '-1') {
-            $perc = round($packageUsed/$packagePeak * 100);
-            $perc_label = $perc.' %';
-        }
+			$usage = $package['limit'][$variationName];
 
-        if ($perc >= 100) {
-            $perc = 100;
-            $progressBar = 'progress-bar-danger';
-        }
+			if ($usage['peak'] > 0) {
+				if ($usage['peak'] != '-1') {
+					$perc = round($usage['used'] / $usage['peak'] * 100);
+					$perc_label = $perc . ' %';
+					$progressBar = 'progress-bar-success';
+				}
 
-        //if ($packageReached == false) return;
+				if ($perc >= 100) {
+					$perc = 100;
+					$progressBar = 'progress-bar-danger';
+				}
 
-        $infos = $this->getInfo($variationName);
+				if ($usage['peak'] == '-1') {
+					$perc = 100;
+					$perc_label = __('No Limits');
+					$progressBar = 'progress-bar-success';
+				}
+			}
 
-        $html = null;
+			if ($usage['peak'] == 0) {
+				$perc = 100;
+				$perc_label = __('No available');
+				$progressBar = 'progress-bar-warning';
+			}
 
-        $html .= "<div class=\"hpanel\">";
-        $html .= "<div class=\"panel-body\">";
+			$infos = $this->getInfo($variationName);
 
-        $html .= "<div class=\"row\">";
-        $html .= "<div class=\"col-md-12 text-left\">";
-        $html .= "<h2>".__('Limit Reached for: ').$infos->display_name."</h2>";
+			// $variations[$id]['display_name'] = $infos->display_name;
 
-        $html .= "<div class=\"m\">";
-        $html .= "<div class=\"progress m-t-xs full progress-striped\">";
-        $html .= "<div style=\"width: ".$perc."%\" aria-valuemax=\"100\" aria-valuemin=\"0\" aria-valuenow=\"".$perc."\" role=\"progressbar\" class=\"progress-bar ".$progressBar."\">";
-        $html .= $perc_label;
-        $html .= "</div>";
-        $html .= "</div>";
-        $html .= "</div>";
-        $html .= "</div>";
+			$html = null;
+			$html .= __('Limit Reached for: ').$infos->display_name.' ('.$packageUsed.' used)';
 
-        $html .= "</div>";
-        $html .= "</div>";
+			$html .= "<div class=\"m\">";
+			$html .= "<div class=\"progress m-t-xs full progress-striped\">";
+			$html .= "<div style=\"width: ".$perc."%\" aria-valuemax=\"100\" aria-valuemin=\"0\" aria-valuenow=\"".$perc."\" role=\"progressbar\" class=\"active progress-bar ".$progressBar."\">";
+			$html .= $perc_label;
+			$html .= "</div>";
+			$html .= "</div>";
+			$html .= "</div>";
 
-        $html .= "</div>";
+			$variations[$id]['bar'] = $html;
 
-        return $html;
-    }
+		}
+
+		if (@count($variations) == 0)
+			return;
+
+
+		$html = null;
+		$html .= "<div class=\"row\">";
+
+		$html .= "<div class=\"modal fade in\" id=\"packagesModal\" tabindex=\"-1\" role=\"dialog\" aria-hidden=\"true\" style=\"display: block; padding-right: 15px;\">";
+		// $html .= "<div class=\"modal hmodal-danger fade in\" id=\"packagesModal\" tabindex=\"-1\" role=\"dialog\" aria-hidden=\"true\" style=\"display: block; padding-right: 15px;\">";
+		$html .= "<div class=\"modal-dialog\">";
+		$html .= "<div class=\"modal-content\">";
+		$html .= "<div class=\"modal-header\">";
+		$html .= "<h4 class=\"modal-title text-white\">Limit Reached</h4>";
+		$html .= "</div>";
+		$html .= "<div class=\"modal-body\">";
+		$html .= "<div class=\"row\">";
+		$html .= "<div class=\"col-md-12 text-left\">";
+
+		foreach ($variations as $variation) {
+			$html .= $variation['bar'];
+		}
+
+		$html .= "</div>";
+		$html .= "</div>";
+		$html .= "<div class=\"row\">";
+		$html .= "<div class=\"col-md-12 text-right\">";
+		$html .= "<button type=\"button\" class=\"btn btn-default\" data-dismiss=\"modal\">Close</button>";
+		$html .= "</div>";
+		$html .= "</div>";
+		$html .= "</div>";
+		$html .= "</div>";
+		$html .= "</div>";
+		$html .= "</div>";
+
+		$html .= "</div>";
+
+		return $html;
+	}
 
     private function getInfo($variations) {
 
