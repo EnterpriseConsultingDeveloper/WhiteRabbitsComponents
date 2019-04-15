@@ -647,12 +647,14 @@ class FilesController extends AppController
 				$MktgAutomationTable->setReadDate($ref_id);
 			}
 
-			if (!isset($_GET['automation']) && !isset($_GET['automationfilter'])) {
+			if (!isset($_GET['automation']) || !isset($_GET['automationfilter'])) {
 				$MtNewsletters = $this->loadModel("MarketingTools.MtNewsletters");
 				$MtNewsletters->readImg($ref_id);
 			}
 
 //            \Cake\Log\Log::error("-- image first_read found");
+			$MtNewsletters = $this->loadModel("MarketingTools.MtNewsletters");
+			$MtNewsletters->readImg($ref_id);
 
 			$imgRead = SUITE_PATH."img/email/1x1.png";
 			$localFile = $this->sendFile(SUITE_PATH."img/email/1x1.png", '1x1.png', null, null);
