@@ -652,7 +652,7 @@ class FilesController extends AppController
 				$MtNewsletters->readImg($ref_id);
 			}
 
-//            \Cake\Log\Log::error("-- image first_read found");
+//            \Cake\Log\Log::info("-- image first_read found");
 			$MtNewsletters = $this->loadModel("MarketingTools.MtNewsletters");
 			$MtNewsletters->readImg($ref_id);
 
