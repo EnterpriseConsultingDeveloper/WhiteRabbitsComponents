@@ -154,6 +154,48 @@ class S3FileHelper extends Helper
         return $html;
     }
 
+
+    /**
+     * videoWithDefault
+     *
+     * Return an video. If image isn't available return default image or default html placeholder
+     *
+     * ### Example:
+     *
+     * `$this->S3File->videoWithDefault($path, $options);`
+     *
+     * $options are the same as for HTML image, like ['class'=>'img-responsive']
+     * if you want to show an HTML piece of code when no image is retrieved pass, for example, in $options ['noimagehtml'=>'<span>no image</span>']
+     *
+     * $path is the path of the image in the S3 bucket
+     *
+     * @param string $path
+     * @param array $options
+     * @return string
+     */
+    public function videoWithDefault($path, array $options = [])
+    {
+        $html = '';
+        if (
+            $path != null && $path != ''
+            && WRUtils::guessKindOfFile($path) === 'other'
+            // && @getimagesize($path)
+        )
+        {
+            try {
+                $html .= $this->Html->media($this->preparePath($path), $options);
+            } catch(\Exception $e) {
+                $html .= $this->getDefaultVideo($options);
+            }
+        } else {
+            $html .= $this->getDefaultVideo($options);
+        }
+
+        return $html;
+    }
+
+
+
     /**
      * fileInfo
      *
@@ -212,6 +254,35 @@ class S3FileHelper extends Helper
 
         return $html;
     }
+
+    /**
+     * getDefaultVideo
+     *
+     * Return a default video or html.
+     *
+     * @param array $options
+     * @return string
+     */
+    private function getDefaultVideo(array $options = []) {
+        $html = '';
+
+        if (!isset($options['novideohtml'])) {
+            $options['novideohtml'] = '';
+        }
+
+        if (!isset($options['novideovideo'])) {
+            $options['novideovideo'] = '';
+        }
+
+        if ($options['novideovideo'] != '') {
+            $html .= $this->Html->media($options['novideovideo'], $options);
+        } else {
+            $html .= $options['noimagehtml'];
+        }
+
+        return $html;
+    }
+
 
 
     private function preparePath($path) {
