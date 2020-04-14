@@ -211,7 +211,7 @@
                 return $('<div class="modal fade" tabindex="-1"><style>.modal-xl{width:96%;}</style>'
                 + '<div class=modal-dialog>'
                 + '<div class=modal-content>'
-                + ' <div class=modal-header><button type=button class="x close" data-dismiss=modal><span aria-hidden=true>&times;</span><span class=sr-only>Close</span></button><h4 class=modal-title></h4></div>'
+                + ' <div class=modal-header><button type=button class="x close" data-dismiss=modal><span aria-hidden=true>&times;</span><span class=sr-only>Close</span></button><h4 class="modal-title modal-title-s3filemanger"></h4></div>'
                 + '</div>'
                 + '</div>'
                 + '</div>')
@@ -343,7 +343,9 @@
             _setup(data, title);
 
             var dfd = data.deferred || _createDeferred();
-            var $message = $(div).append(_getMessage(data), _getFooter(data.buttons));
+            //var $message = $(div).append(_getMessage(data), _getFooter(data.buttons));
+            /*In questo modo sposto quello che normalemente sta nel basso del footer sopra il content*/
+            var $message = $(div).append( _getFooter(data.buttons),_getMessage(data));
 
             _build($message);
 
